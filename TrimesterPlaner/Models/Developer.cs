@@ -15,7 +15,6 @@ namespace TrimesterPlaner.Models
             FreeDays = [DayOfWeek.Saturday, DayOfWeek.Sunday];
             Vacations = [];
             Plans = [];
-            Tickets = [];
         }
 
         public string Name { get; set; }
@@ -29,7 +28,5 @@ namespace TrimesterPlaner.Models
         public List<Vacation> Vacations { get; }
         [JsonIgnore]
         public List<Plan> Plans { get; }
-        [JsonIgnore]
-        public List<Ticket> Tickets { get; }
     }
 }
