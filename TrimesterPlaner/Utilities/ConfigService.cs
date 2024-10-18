@@ -87,6 +87,7 @@ namespace TrimesterPlaner.Utilities
 
         private void SaveConfigImpl(Config config, string path)
         {
+            FileName = path;
             File.WriteAllText(path, JsonSerializer.Serialize(config, SerializerOptions));
         }
     }
