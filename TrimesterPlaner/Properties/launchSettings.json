@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TrimesterPlaner": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\wst\\Documents\\TrimesterPlaner\\TrimesterPlaner_24.3.json"
+    }
+  }
+}

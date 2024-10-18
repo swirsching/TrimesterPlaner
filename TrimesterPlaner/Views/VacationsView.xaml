@@ -1,0 +1,48 @@
+﻿<UserControl
+    x:Class="TrimesterPlaner.Views.VacationsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:TrimesterPlaner.Models"
+    xmlns:ext="clr-namespace:TrimesterPlaner.Extensions"
+    xmlns:views="clr-namespace:TrimesterPlaner.Views"
+    xmlns:vm="clr-namespace:TrimesterPlaner.ViewModels"
+    d:DataContext="{d:DesignInstance {x:Type vm:VacationProviderViewModel}}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    DataContext="{ext:Inject {x:Type vm:VacationProviderViewModel}}"
+    mc:Ignorable="d">
+    <GroupBox materialDesign:ColorZoneAssist.Mode="PrimaryDark">
+        <GroupBox.Header>
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button
+                        Margin="0,-10"
+                        Command="{Binding AddVacationCommand}"
+                        Foreground="White"
+                        IsEnabled="{Binding SelectedDeveloper, Converter={StaticResource NotNullToBoolConv}}"
+                        Style="{StaticResource MaterialDesignToolForegroundButton}">
+                        <materialDesign:PackIcon Kind="Add" />
+                    </Button>
+                </StackPanel>
+
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="White"
+                    Style="{StaticResource MaterialDesignBody2TextBlock}"
+                    Text="Urlaub" />
+            </DockPanel>
+        </GroupBox.Header>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding VacationsView}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:Vacation}">
+                        <views:VacationView DataContext="{Binding ., Converter={StaticResource Injector}, ConverterParameter={x:Type vm:VacationViewModel}}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </GroupBox>
+</UserControl>

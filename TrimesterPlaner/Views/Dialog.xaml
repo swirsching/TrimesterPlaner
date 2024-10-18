@@ -1,0 +1,103 @@
+﻿<Window
+    x:Class="TrimesterPlaner.Views.Dialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ext="clr-namespace:TrimesterPlaner.Extensions"
+    xmlns:local="clr-namespace:TrimesterPlaner.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:TrimesterPlaner.Models"
+    xmlns:sys="clr-namespace:System;assembly=System"
+    xmlns:util="clr-namespace:TrimesterPlaner.Utilities"
+    xmlns:vm="clr-namespace:TrimesterPlaner.ViewModels"
+    Title="Urlaub hinzufügen"
+    MinWidth="300"
+    MinHeight="200"
+    d:DataContext="{d:DesignInstance {x:Type vm:DialogViewModel}}"
+    ResizeMode="NoResize"
+    SizeToContent="WidthAndHeight"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button
+                Click="CancelButton_Click"
+                Content="Abbrechen"
+                IsCancel="True" />
+            <Button
+                Click="OkButton_Click"
+                Content="Ok"
+                IsDefault="True" />
+        </StackPanel>
+        <ItemsControl ItemsSource="{Binding Fields}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Grid.IsSharedSizeScope="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:Field}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="TitleColumn" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Content="{Binding Title}" />
+
+                        <ContentControl Grid.Column="1" Content="{Binding Value}">
+                            <ContentControl.Resources>
+                                <util:BindingProxy x:Key="Proxy" Data="{Binding}" />
+                            </ContentControl.Resources>
+                            <ContentControl.ContentTemplateSelector>
+                                <util:TypeBasedDataTemplateSelector>
+                                    <util:TypeBasedDataTemplateSelector.Templates>
+                                        <DataTemplate DataType="{x:Type sys:String}">
+                                            <TextBox Text="{Binding Data.Value, Source={StaticResource Proxy}}" />
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type sys:DateTime}">
+                                            <DatePicker SelectedDate="{Binding Data.Value, Source={StaticResource Proxy}}" />
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type models:Developer}">
+                                            <ComboBox
+                                                d:DataContext="{d:DesignInstance {x:Type vm:DeveloperProviderViewModel}}"
+                                                DataContext="{ext:Inject {x:Type vm:DeveloperProviderViewModel}}"
+                                                ItemsSource="{Binding Developers}"
+                                                SelectedItem="{Binding Data.Value, Source={StaticResource Proxy}}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type models:Developer}">
+                                                        <TextBlock Text="{Binding Name}" />
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type models:Ticket}">
+                                            <ComboBox
+                                                d:DataContext="{d:DesignInstance {x:Type vm:TicketProviderViewModel}}"
+                                                DataContext="{ext:Inject {x:Type vm:TicketProviderViewModel}}"
+                                                ItemsSource="{Binding Tickets}"
+                                                SelectedItem="{Binding Data.Value, Source={StaticResource Proxy}}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type models:Ticket}">
+                                                        <TextBlock>
+                                                            <TextBlock.Text>
+                                                                <MultiBinding StringFormat="{}{0}: {1}">
+                                                                    <Binding Path="Key" />
+                                                                    <Binding Path="Summary" />
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </util:TypeBasedDataTemplateSelector.Templates>
+                                </util:TypeBasedDataTemplateSelector>
+                            </ContentControl.ContentTemplateSelector>
+                        </ContentControl>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
+</Window>
