@@ -20,6 +20,12 @@ namespace TrimesterPlaner.ViewModels
         public void RefreshEntwicklungsplan();
     }
 
+    public interface IDeveloperManager
+    {
+        public Developer AddDeveloper(string name);
+        public void RemoveDeveloper(Developer developer);
+    }
+
     public interface IVacationManager
     {
         public void AddVacation(Developer developer);
@@ -46,6 +52,7 @@ namespace TrimesterPlaner.ViewModels
     public class MainWindowViewModel 
         : BindableBase
         , IEntwicklungsplanManager
+        , IDeveloperManager
         , IVacationManager
         , ITicketManager
         , IPlanManager
@@ -273,6 +280,35 @@ namespace TrimesterPlaner.ViewModels
         public IEnumerable<Plan> GetPlans()
         {
             return Plans;
+        }
+
+        public Developer AddDeveloper(string name)
+        {
+            Developer developer = new()
+            {
+                Name = name,
+                Abbreviation = name[0..3].ToUpper(),
+            };
+            Developers.Add(developer);
+            IsDirty = true;
+            return developer;
+        }
+
+        public void RemoveDeveloper(Developer developer)
+        {
+            List<Vacation> vacationsToRemove = [.. developer.Vacations];
+            List<Plan> plansToRemove = [.. developer.Plans];
+            foreach (var vacation in vacationsToRemove)
+            {
+                RemoveVacation(vacation);
+            }
+            foreach (var plan in plansToRemove)
+            {
+                RemovePlan(plan); 
+            }
+
+            Developers.Remove(developer);
+            IsDirty = true;
         }
 
         public void AddVacation(Developer developer)

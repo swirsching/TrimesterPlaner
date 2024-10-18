@@ -1,4 +1,5 @@
-﻿using TrimesterPlaner.Models;
+﻿using System.Windows.Input;
+using TrimesterPlaner.Models;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
@@ -8,9 +9,17 @@ namespace TrimesterPlaner.ViewModels
         public IEnumerable<Developer> GetDevelopers();
     }
 
-    public class DeveloperProviderViewModel(IDeveloperProvider developerProvider) : BindableBase
+    public class DeveloperProviderViewModel : BindableBase
     {
-        public IEnumerable<Developer> Developers { get; } = developerProvider.GetDevelopers();
+        public DeveloperProviderViewModel(IDeveloperManager developerManager, IDeveloperProvider developerProvider)
+        {
+            Developers = developerProvider.GetDevelopers();
+
+            AddDeveloperCommand = new RelayCommand((o) => SelectedDeveloper = developerManager.AddDeveloper("Neuling"));
+            RemoveDeveloperCommand = new RelayCommand((o) => developerManager.RemoveDeveloper(SelectedDeveloper!));
+        }
+
+        public IEnumerable<Developer> Developers { get; }
 
         private Developer? _SelectedDeveloper;
         public Developer? SelectedDeveloper
@@ -21,5 +30,8 @@ namespace TrimesterPlaner.ViewModels
 
         public delegate void OnSelectedDeveloperChangedEventHandler(Developer? selectedDeveloper);
         public event OnSelectedDeveloperChangedEventHandler? OnSelectedDeveloperChanged;
+
+        public ICommand AddDeveloperCommand { get; }
+        public ICommand RemoveDeveloperCommand { get; }
     }
 }

@@ -13,6 +13,16 @@ namespace TrimesterPlaner.ViewModels
 
         private Developer Developer { get; }
 
+        public string Name
+        {
+            get => Developer.Name;
+            set 
+            {
+                Developer.Name = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string Abbreviation
         {
             get => Developer.Abbreviation;
