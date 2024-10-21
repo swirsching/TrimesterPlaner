@@ -11,6 +11,7 @@
     xmlns:svg="clr-namespace:Svg;assembly=Svg"
     xmlns:views="clr-namespace:TrimesterPlaner.Views"
     xmlns:vm="clr-namespace:TrimesterPlaner.ViewModels"
+    Title="Trimester Planer"
     d:DataContext="{d:DesignInstance {x:Type vm:MainWindowViewModel}}"
     d:Height="450"
     d:Width="800"
