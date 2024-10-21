@@ -17,13 +17,11 @@
             Margin="10,0"
             VerticalAlignment="Center"
             Text="{Binding Description}" />
-        <CheckBox Content="PT" IsChecked="{Binding HasPT}" />
         <TextBox
             Width="60"
             VerticalAlignment="Center"
             HorizontalContentAlignment="Right"
-            materialDesign:TextFieldAssist.SuffixText="PT"
-            Text="{Binding PT}"
-            Visibility="{Binding HasPT, Converter={StaticResource BoolToVisConv}}" />
+            materialDesign:TextFieldAssist.SuffixText="Tage"
+            Text="{Binding Days}" />
     </StackPanel>
 </UserControl>

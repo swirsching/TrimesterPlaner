@@ -65,8 +65,6 @@ namespace TrimesterPlaner.Models
         }
 
         public string Description { get; set; }
-        public double? PT { get; set; }
-        public DateTime? Start { get; set; }
-        public DateTime? End { get; set; }
+        public int Days { get; set; }
     }
 }

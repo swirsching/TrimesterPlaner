@@ -14,53 +14,12 @@ namespace TrimesterPlaner.ViewModels
             }
         }
 
-        public bool HasPT
+        public int Days
         {
-            get => plan.PT is not null;
+            get => plan.Days;
             set
             {
-                plan.PT = value ? 0 : null;
-                OnPropertyChanged();
-            }
-        }
-
-        public double? PT
-        {
-            get => plan.PT;
-            set
-            {
-                plan.PT = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool HasStartAndEnd
-        {
-            get => plan.Start is not null && plan.End is not null;
-            set
-            {
-                plan.Start = value ? DateTime.Now : null;
-                plan.End = value ? DateTime.Now : null;
-                OnPropertyChanged();
-            }
-        }
-
-        public DateTime? Start
-        {
-            get => plan.Start;
-            set
-            {
-                plan.Start = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public DateTime? End
-        {
-            get => plan.End;
-            set
-            {
-                plan.End = value;
+                plan.Days = value;
                 OnPropertyChanged();
             }
         }

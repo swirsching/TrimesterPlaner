@@ -198,7 +198,7 @@ namespace TrimesterPlaner.Extensions
             }
             else if (plan is SpecialPlan specialPlan)
             {
-                return specialPlan.PT ?? 0;
+                return specialPlan.Days * plan.Developer!.GetDailyPT();
             }
             return 0;
         }
