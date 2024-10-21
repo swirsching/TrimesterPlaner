@@ -19,8 +19,8 @@
     Style="{StaticResource MaterialDesignWindow}"
     WindowState="Maximized"
     mc:Ignorable="d">
-    <StackPanel>
-        <DockPanel>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
             <DockPanel DockPanel.Dock="Left">
                 <StackPanel DockPanel.Dock="Top">
                     <Button
@@ -110,5 +110,5 @@
                 <views:StatisticsView Grid.Row="1" DataContext="{Binding Settings, Converter={StaticResource Injector}, ConverterParameter={x:Type vm:StatisticsViewModel}}" />
             </Grid>
         </Grid>
-    </StackPanel>
+    </DockPanel>
 </Window>
