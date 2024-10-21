@@ -12,80 +12,62 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <StackPanel>
-        <Grid Margin="5,0">
+        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding Summary}" />
+        <TextBox
+            MinWidth="80"
+            HorizontalAlignment="Left"
+            Text="{Binding Description}" />
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ToggleButton
-                VerticalAlignment="Center"
-                IsChecked="{Binding ShowDetails}"
-                Style="{StaticResource MaterialDesignExpanderToggleButton}" />
-            <ToggleButton
-                Grid.Column="1"
-                HorizontalContentAlignment="Left"
-                Content="{Binding Summary}"
-                IsChecked="{Binding ShowDetails}"
-                Style="{StaticResource MaterialDesignToolButton}" />
-        </Grid>
-        <StackPanel Visibility="{Binding ShowDetails, Converter={StaticResource BoolToVisConv}}">
+            <ToggleButton VerticalAlignment="Center" IsChecked="{Binding HasTimeEstimateOverride}">
+                <ToggleButton.Style>
+                    <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type ToggleButton}">
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Content" Value="Von Ticket übernehmen" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Content" Value="Zeit anpassen" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
+
             <TextBox
-                MinWidth="80"
-                HorizontalAlignment="Right"
-                Text="{Binding Description}" />
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Right"
+                materialDesign:TextFieldAssist.PrefixText="O:"
+                materialDesign:TextFieldAssist.SuffixText="PT"
+                IsEnabled="{Binding HasTimeEstimateOverride}"
+                Text="{Binding OriginalEstimate}" />
 
-                <ToggleButton VerticalAlignment="Center" IsChecked="{Binding HasTimeEstimateOverride}">
-                    <ToggleButton.Style>
-                        <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type ToggleButton}">
-                            <Style.Triggers>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter Property="Content" Value="Von Ticket übernehmen" />
-                                </Trigger>
-                                <Trigger Property="IsChecked" Value="False">
-                                    <Setter Property="Content" Value="Zeit anpassen" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ToggleButton.Style>
-                </ToggleButton>
+            <TextBox
+                Grid.Column="2"
+                Margin="5,0"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Right"
+                materialDesign:TextFieldAssist.PrefixText="R:"
+                materialDesign:TextFieldAssist.SuffixText="PT"
+                IsEnabled="{Binding HasTimeEstimateOverride}"
+                Text="{Binding RemainingEstimate}" />
 
-                <TextBox
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    HorizontalContentAlignment="Right"
-                    materialDesign:TextFieldAssist.PrefixText="O:"
-                    materialDesign:TextFieldAssist.SuffixText="PT"
-                    IsEnabled="{Binding HasTimeEstimateOverride}"
-                    Text="{Binding OriginalEstimate}" />
-
-                <TextBox
-                    Grid.Column="2"
-                    Margin="5,0"
-                    VerticalAlignment="Center"
-                    HorizontalContentAlignment="Right"
-                    materialDesign:TextFieldAssist.PrefixText="R:"
-                    materialDesign:TextFieldAssist.SuffixText="PT"
-                    IsEnabled="{Binding HasTimeEstimateOverride}"
-                    Text="{Binding RemainingEstimate}" />
-
-                <TextBox
-                    Grid.Column="3"
-                    VerticalAlignment="Center"
-                    HorizontalContentAlignment="Right"
-                    materialDesign:TextFieldAssist.HasClearButton="True"
-                    materialDesign:TextFieldAssist.PrefixText="T:"
-                    materialDesign:TextFieldAssist.SuffixText="PT"
-                    IsEnabled="{Binding HasTimeEstimateOverride}"
-                    Text="{Binding TimeSpent}" />
-            </Grid>
-        </StackPanel>
+            <TextBox
+                Grid.Column="3"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Right"
+                materialDesign:TextFieldAssist.HasClearButton="True"
+                materialDesign:TextFieldAssist.PrefixText="T:"
+                materialDesign:TextFieldAssist.SuffixText="PT"
+                IsEnabled="{Binding HasTimeEstimateOverride}"
+                Text="{Binding TimeSpent}" />
+        </Grid>
     </StackPanel>
 </UserControl>

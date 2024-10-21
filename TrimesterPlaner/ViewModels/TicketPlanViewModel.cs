@@ -75,12 +75,5 @@ namespace TrimesterPlaner.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        private bool _ShowDetails = true;
-        public bool ShowDetails
-        {
-            get => _ShowDetails;
-            set => SetProperty(ref _ShowDetails, value);
-        }
     }
 }

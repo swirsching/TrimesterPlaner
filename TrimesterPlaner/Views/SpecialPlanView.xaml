@@ -11,15 +11,15 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <StackPanel Orientation="Horizontal">
+    <StackPanel VerticalAlignment="Center">
         <TextBox
-            MinWidth="100"
-            Margin="10,0"
-            VerticalAlignment="Center"
+            MinWidth="80"
+            HorizontalAlignment="Right"
+            HorizontalContentAlignment="Right"
             Text="{Binding Description}" />
         <TextBox
-            Width="60"
-            VerticalAlignment="Center"
+            Width="80"
+            HorizontalAlignment="Right"
             HorizontalContentAlignment="Right"
             materialDesign:TextFieldAssist.SuffixText="Tage"
             Text="{Binding Days}" />
