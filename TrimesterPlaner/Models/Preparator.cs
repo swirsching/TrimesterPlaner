@@ -226,7 +226,7 @@ namespace TrimesterPlaner.Models
                 }
 
                 remainingPT -= dailyPT;
-                if (remainingPT > 0)
+                if (remainingPT > 0.01)
                 {
                     remainingPerDay.Add(dayEnumerator.Current, remainingPT);
                     continue;
