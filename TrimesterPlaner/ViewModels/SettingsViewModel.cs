@@ -2,81 +2,74 @@
 
 namespace TrimesterPlaner.ViewModels
 {
-    public interface ISettingsProvider
+    public class SettingsViewModel(Settings settings, IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
     {
-        public Settings GetSettings();
-    }
-
-    public class SettingsViewModel(ISettingsProvider settingsProvider, IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
-    {
-        private Settings Settings { get; } = settingsProvider.GetSettings();
-
         public DateTime? Start
         {
-            get => Settings.Start;
+            get => settings.Start;
             set
             {
-                Settings.Start = value;
+                settings.Start = value;
                 OnPropertyChanged();
             }
         }
 
         public DateTime? Entwicklungsstart
         {
-            get => Settings.Entwicklungsstart;
+            get => settings.Entwicklungsstart;
             set
             {
-                Settings.Entwicklungsstart = value;
+                settings.Entwicklungsstart = value;
                 OnPropertyChanged();
             }
         }
 
         public DateTime? Entwicklungsschluss
         {
-            get => Settings.Entwicklungsschluss;
+            get => settings.Entwicklungsschluss;
             set
             {
-                Settings.Entwicklungsschluss = value;
+                settings.Entwicklungsschluss = value;
                 OnPropertyChanged();
             }
         }
 
         public string JQL
         {
-            get => Settings.JQL;
+            get => settings.JQL;
             set
             {
-                Settings.JQL = value;
+                settings.JQL = value;
                 OnPropertyChanged();
             }
         }
 
         public double FehlerPT
         {
-            get => Settings.FehlerPT;
+            get => settings.FehlerPT;
             set
             {
-                Settings.FehlerPT = value;
+                settings.FehlerPT = value;
                 OnPropertyChanged();
             }
         }
 
         public bool Fehlerteam
         {
-            get => Settings.Fehlerteam;
+            get => settings.Fehlerteam;
             set
             {
-                Settings.Fehlerteam = value;
+                settings.Fehlerteam = value;
                 OnPropertyChanged();
             }
         }
 
         public bool Burndown
         {
-            get => Settings.Burndown;
+            get => settings.Burndown;
             set
             {
-                Settings.Burndown = value;
+                settings.Burndown = value;
                 OnPropertyChanged();
             }
         }

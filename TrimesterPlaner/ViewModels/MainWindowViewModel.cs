@@ -56,7 +56,6 @@ namespace TrimesterPlaner.ViewModels
         , IVacationManager
         , ITicketManager
         , IPlanManager
-        , ISettingsProvider
         , IDeveloperProvider
         , IVacationProvider
         , ITicketProvider
@@ -387,7 +386,13 @@ namespace TrimesterPlaner.ViewModels
             }
         }
 
-        private Settings Settings { get; set; } = new();
+        private Settings _Settings = new();
+        public Settings Settings
+        {
+            get => _Settings;
+            set => SetProperty(ref _Settings, value);
+        }
+
         private ObservableCollection<Developer> Developers { get; } = [];
         private ObservableCollection<Vacation> Vacations { get; } = [];
         private ObservableCollection<Ticket> Tickets { get; } = [];

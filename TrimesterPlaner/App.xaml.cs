@@ -47,7 +47,6 @@ namespace TrimesterPlaner
             services.AddSingleton(typeof(IVacationManager), mainWindowViewModel);
             services.AddSingleton(typeof(ITicketManager), mainWindowViewModel);
             services.AddSingleton(typeof(IPlanManager), mainWindowViewModel);
-            services.AddSingleton(typeof(ISettingsProvider), mainWindowViewModel);
             services.AddSingleton(typeof(IDeveloperProvider), mainWindowViewModel);
             services.AddSingleton(typeof(IVacationProvider), mainWindowViewModel);
             services.AddSingleton(typeof(ITicketProvider), mainWindowViewModel);

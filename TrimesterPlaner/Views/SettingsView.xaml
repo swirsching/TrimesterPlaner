@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:ext="clr-namespace:TrimesterPlaner.Extensions"
     xmlns:local="clr-namespace:TrimesterPlaner.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,7 +10,6 @@
     d:DataContext="{d:DesignInstance {x:Type vm:SettingsViewModel}}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    DataContext="{ext:Inject {x:Type vm:SettingsViewModel}}"
     mc:Ignorable="d">
     <GroupBox materialDesign:ColorZoneAssist.Mode="PrimaryDark" Header="Einstellungen">
         <StackPanel>
@@ -30,6 +28,7 @@
                 <Label Content="Start:" />
                 <DatePicker
                     Grid.Column="2"
+                    MinWidth="90"
                     HorizontalAlignment="Center"
                     SelectedDate="{Binding Start}" />
 
@@ -37,11 +36,13 @@
                 <DatePicker
                     Grid.Row="1"
                     Grid.Column="1"
+                    MinWidth="90"
                     HorizontalAlignment="Center"
                     SelectedDate="{Binding Entwicklungsstart}" />
                 <DatePicker
                     Grid.Row="1"
                     Grid.Column="2"
+                    MinWidth="90"
                     HorizontalAlignment="Center"
                     SelectedDate="{Binding Entwicklungsschluss}" />
 
@@ -65,10 +66,18 @@
                     IsChecked="{Binding Burndown}" />
             </Grid>
 
-            <StackPanel Margin="0,0,0,10" Orientation="Horizontal">
-                <Label Content="JQL:" />
-                <TextBox Text="{Binding JQL}" />
-            </StackPanel>
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label VerticalAlignment="Center" Content="JQL:" />
+                <TextBox
+                    Grid.Column="1"
+                    MinWidth="90"
+                    HorizontalAlignment="Right"
+                    Text="{Binding JQL}" />
+            </Grid>
         </StackPanel>
     </GroupBox>
 </UserControl>
