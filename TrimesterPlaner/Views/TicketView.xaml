@@ -101,22 +101,23 @@
                 <TextBlock
                     Grid.Column="3"
                     HorizontalAlignment="Center"
-                    Text="{Binding Ticket.OriginalEstimate, StringFormat={}Original: {0} PT}" />
+                    Text="{Binding Ticket.OriginalEstimate, StringFormat={}O: {0} PT}" />
 
                 <TextBlock
                     Grid.Column="4"
                     HorizontalAlignment="Center"
-                    Text="{Binding Ticket.RemainingEstimate, StringFormat={}Remaining: {0} PT}" />
+                    Text="{Binding Ticket.RemainingEstimate, StringFormat={}R: {0} PT}" />
 
                 <TextBlock
                     Grid.Column="5"
                     HorizontalAlignment="Center"
-                    Text="{Binding Ticket.TimeSpent, StringFormat={}Tracked: {0} PT}" />
+                    Text="{Binding Ticket.TimeSpent, StringFormat={}T: {0} PT}"
+                    Visibility="{Binding Ticket.TimeSpent, Converter={StaticResource NotNullToVisConv}}" />
 
                 <TextBlock
                     Grid.Column="6"
                     HorizontalAlignment="Center"
-                    Text="{Binding TicketPT, StringFormat={}Total: {0} PT}" />
+                    Text="{Binding TicketPT, StringFormat={}{0} PT}" />
             </Grid>
         </StackPanel>
     </materialDesign:Card>
