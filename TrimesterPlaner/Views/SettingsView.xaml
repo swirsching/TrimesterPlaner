@@ -66,18 +66,14 @@
                     IsChecked="{Binding Burndown}" />
             </Grid>
 
-            <Grid Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Label VerticalAlignment="Center" Content="JQL:" />
-                <TextBox
-                    Grid.Column="1"
-                    MinWidth="90"
-                    HorizontalAlignment="Right"
-                    Text="{Binding JQL}" />
-            </Grid>
+            <TextBox
+                MinWidth="90"
+                Margin="0,0,0,10"
+                HorizontalAlignment="Right"
+                HorizontalContentAlignment="Left"
+                materialDesign:TextFieldAssist.PrefixText="JQL: "
+                Text="{Binding JQL}"
+                TextWrapping="Wrap" />
         </StackPanel>
     </GroupBox>
 </UserControl>
