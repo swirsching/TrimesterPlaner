@@ -36,7 +36,7 @@ namespace TrimesterPlaner
                 tmpServiceProvider.GetRequiredService<IGenerator>(),
                 tmpServiceProvider.GetRequiredService<IPreparator>(),
                 tmpServiceProvider.GetRequiredService<IConfigService>());
-            if (e.Args.Length > 0)
+            if (e.Args.Length > 0 && File.Exists(e.Args[0]))
             {
                 mainWindowViewModel.LoadCommand.Execute(e.Args[0]);
                 _ = mainWindowViewModel.ReloadTicketsAsync();
