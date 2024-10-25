@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using System.Windows.Shapes;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Utilities;
 
@@ -386,7 +387,23 @@ namespace TrimesterPlaner.Models
                 group.Children.Add(MakeText(plan.TopLeft, SvgTextAnchor.Start, FontSizes.Small, innerWidth).Translate(2 * Margins.Plan, Heights.Developer / 6));
             }
 
-            return group.Translate(Margins.Plan, Margins.Plan);
+            SvgGroup outerGroup;
+            if (plan.PlanType == PlanType.Ticket)
+            {
+                outerGroup = new();
+                SvgAnchor anchor = new() 
+                { 
+                    Href = $"https://confluence.ivu.de/jira/browse/{plan.FirstRow}",
+                    Target = "_blank",
+                };
+                anchor.Children.Add(group);
+                outerGroup.Children.Add(anchor);
+            }
+            else
+            {
+                outerGroup = group;
+            }
+            return outerGroup.Translate(Margins.Plan, Margins.Plan);
         }
 
         private SvgGroup GenerateVacations(IEnumerable<VacationData> vacations)
