@@ -249,8 +249,8 @@ namespace TrimesterPlaner.Models
             return new(
                 GetPlanType(plan),
                 remainingPerDay,
-                ticket?.Key ?? "",
-                ticket?.Summary ?? (plan as SpecialPlan)?.Description ?? "",
+                ticket?.Key ?? (plan as SpecialPlan)?.Description ?? "",
+                ticket?.Summary ?? "",
                 (plan as TicketPlan)?.Description ?? "",
                 ticket is null || ticket.Promised);
         }
