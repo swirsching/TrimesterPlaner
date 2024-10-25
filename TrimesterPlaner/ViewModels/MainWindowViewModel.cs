@@ -99,7 +99,8 @@ namespace TrimesterPlaner.ViewModels
         {
             MemoryStream memoryStream = new();
             Result?.Write(memoryStream);
-            ClipboardService.SetText(Encoding.UTF8.GetString(memoryStream.GetBuffer()));
+            string generated = Encoding.UTF8.GetString(memoryStream.GetBuffer());
+            ClipboardService.SetText($"<div style='width: 100%; overflow-x: scroll;'>\n{generated[generated.IndexOf("<svg")..]}\n</div>");
         }
 
         public void RemoveTicket(Ticket ticket)
