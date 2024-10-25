@@ -3,6 +3,10 @@
     "TrimesterPlaner": {
       "commandName": "Project",
       "commandLineArgs": "C:\\Users\\wst\\Documents\\TrimesterPlaner\\TrimesterPlaner_24.3.json"
+    },
+    "KRR": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\wst\\Documents\\TrimesterPlaner\\TrimesterPlaner_24.3_operations.json"
     }
   }
 }

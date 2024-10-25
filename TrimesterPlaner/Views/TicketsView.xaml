@@ -42,6 +42,14 @@
                         Style="{StaticResource MaterialDesignToolForegroundButton}">
                         <materialDesign:PackIcon Kind="SortVariant" />
                     </Button>
+                    <Button
+                        Margin="0,-10"
+                        Command="{Binding SortTicketsCommand}"
+                        CommandParameter="{x:Static vm:TicketSortingMode.ByUnplannedPT}"
+                        Foreground="White"
+                        Style="{StaticResource MaterialDesignToolForegroundButton}">
+                        <materialDesign:PackIcon Kind="SortClockAscendingOutline" />
+                    </Button>
                 </StackPanel>
                 <TextBlock
                     VerticalAlignment="Center"

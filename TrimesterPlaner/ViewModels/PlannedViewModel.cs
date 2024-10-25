@@ -16,10 +16,7 @@ namespace TrimesterPlaner.ViewModels
 
         private void CalculatePlannedPercentage(PreparedData? data = null)
         {
-            double ticketPT = Ticket.GetTotalPT();
-            double plannedPT = (from plan in Ticket.Plans
-                                select plan?.TimeEstimateOverride?.GetTotalPT() ?? ticketPT).Sum();
-            PlannedPercentage = plannedPT / ticketPT;
+            PlannedPercentage = Ticket.GetPlannedPT() / Ticket.GetTotalPT();
         }
 
         private Ticket Ticket { get; }

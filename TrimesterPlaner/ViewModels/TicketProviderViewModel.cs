@@ -14,6 +14,7 @@ namespace TrimesterPlaner.ViewModels
     {
         Alphabetically,
         BySize,
+        ByUnplannedPT,
     }
 
     public class TicketProviderViewModel : BindableBase
@@ -51,6 +52,7 @@ namespace TrimesterPlaner.ViewModels
             {
                 TicketSortingMode.Alphabetically => SortTicketsAlphabetically,
                 TicketSortingMode.BySize => SortTicketsBySize,
+                TicketSortingMode.ByUnplannedPT => SortTicketsByUnplannedPT,
                 _ => throw new NotImplementedException(),
             });
         }
@@ -73,6 +75,11 @@ namespace TrimesterPlaner.ViewModels
             }
 
             return b.GetTotalPT().CompareTo(a.GetTotalPT());
+        }
+
+        private static int SortTicketsByUnplannedPT(Ticket a, Ticket b)
+        {
+            return (b.GetTotalPT() - b.GetPlannedPT()).CompareTo(a.GetTotalPT() - a.GetPlannedPT());
         }
 
         private static bool TrySortingByPromised(Ticket a, Ticket b, out int value)
