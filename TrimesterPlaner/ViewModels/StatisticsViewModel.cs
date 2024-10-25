@@ -110,6 +110,11 @@ namespace TrimesterPlaner.ViewModels
             double totalCapacityPT = 0, totalVacationPT = 0, totalTicketsPT = 0, totalFehlerPT = 0, totalSpecialPT = 0, totalRemainingPT = 0;
             foreach (var week in data.Weeks)
             {
+                if (week.Days.Count == 0)
+                {
+                    continue;
+                }
+
                 var capacityPT = week.Days.First().Capacity - week.Days.Last().Capacity;
                 totalCapacityPT += capacityPT;
 
