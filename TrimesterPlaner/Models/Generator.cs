@@ -29,7 +29,7 @@ namespace TrimesterPlaner.Models
         private FontSizesType FontSizes { get; } = new(12, 15, 20);
 
         private record HeightsType(int Fehlerteam, int Burndown, int Header, int Developer, int Vacation);
-        private HeightsType Heights { get; } = new(200, 500, 40, 60, 20);
+        private HeightsType Heights { get; } = new(200, 500, 40, 70, 20);
 
         private record WidthsType(int WeekDay, int WeekEndDay, int Left);
         private WidthsType Widths { get; } = new(50, 5, 40);
@@ -366,15 +366,15 @@ namespace TrimesterPlaner.Models
                 {
                     svgText = MakeText(plan.FirstRow[4..], SvgTextAnchor.Middle, FontSizes.Medium);
                 }
-                group.Children.Add(svgText.Translate(width / 2, Heights.Developer / 3));
+                group.Children.Add(svgText.Translate(width / 2, Heights.Developer / 2));
             }
             if (!string.IsNullOrEmpty(plan.SecondRow))
             {
-                group.Children.Add(MakeText(plan.SecondRow, SvgTextAnchor.Middle, FontSizes.Medium, innerWidth).Translate(width / 2, Heights.Developer * 2 / 3));
+                group.Children.Add(MakeText(plan.SecondRow, SvgTextAnchor.Middle, FontSizes.Medium, innerWidth).Translate(width / 2, Heights.Developer * 3 / 4));
             }
             if (!string.IsNullOrEmpty(plan.TopLeft))
             {
-                group.Children.Add(MakeText(plan.TopLeft, SvgTextAnchor.Start, FontSizes.Small, innerWidth).Translate(2 * Margins.Plan, Heights.Developer / 5));
+                group.Children.Add(MakeText(plan.TopLeft, SvgTextAnchor.Start, FontSizes.Small, innerWidth).Translate(2 * Margins.Plan, Heights.Developer / 6));
             }
 
             return group.Translate(Margins.Plan, Margins.Plan);
