@@ -35,7 +35,7 @@ namespace TrimesterPlaner.Models
         private WidthsType Widths { get; } = new(50, 5, 40);
 
         private record MarginsType(int Plan, int BurndownVertical);
-        private MarginsType Margins { get; } = new(1, 50);
+        private MarginsType Margins { get; } = new(2, 50);
 
         private record TextColorsType(SvgColourServer Default, SvgColourServer Vacation);
         private record BurndownColorsType(SvgColourServer Axis, SvgColourServer Grid, SvgColourServer Capacity, SvgColourServer Total, SvgColourServer Promised);
@@ -411,7 +411,7 @@ namespace TrimesterPlaner.Models
             });
             group.Children.Add(MakeText(vacation.Label, SvgTextAnchor.Middle, FontSizes.Small, width, Colors.Text.Vacation).Translate(width / 2, Heights.Vacation / 2));
 
-            return group;
+            return group.Translate(0, Margins.Plan);
         }
     }
 }
