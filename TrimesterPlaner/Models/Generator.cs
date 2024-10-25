@@ -1,5 +1,7 @@
 ﻿using Svg;
+using System.Drawing;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Utilities;
 
@@ -28,18 +30,20 @@ namespace TrimesterPlaner.Models
         private record FontSizesType(int Small, int Medium, int Big);
         private FontSizesType FontSizes { get; } = new(12, 15, 20);
 
-        private record HeightsType(int Fehlerteam, int Burndown, int Header, int Developer, int Vacation);
-        private HeightsType Heights { get; } = new(200, 500, 40, 70, 20);
+        private record HeightsType(int Fehlerteam, int Burndown, int Header, int Developer, int Vacation, int DateRow);
+        private HeightsType Heights { get; } = new(200, 500, 40, 70, 20, 60);
 
         private record WidthsType(int WeekDay, int WeekEndDay, int Left);
         private WidthsType Widths { get; } = new(50, 5, 40);
 
-        private record MarginsType(int Plan, int BurndownVertical);
-        private MarginsType Margins { get; } = new(2, 50);
+        private record LineMarginsType(int Offset, int TextMargin);
+        private record MarginsType(int Plan, LineMarginsType Lines, int BurndownVertical);
+        private MarginsType Margins { get; } = new(2, new(2, 20), 50);
 
         private record TextColorsType(SvgColourServer Default, SvgColourServer Vacation);
         private record BurndownColorsType(SvgColourServer Axis, SvgColourServer Grid, SvgColourServer Capacity, SvgColourServer Total, SvgColourServer Promised);
         private record StartEndBorderColors(SvgColourServer Start, SvgColourServer End, SvgColourServer Border);
+        private record LinesColors(SvgColourServer Today, SvgColourServer Entwicklungsstart, SvgColourServer Entwicklungsschluss);
         private record ColorsType(
             TextColorsType Text,
             SvgColourServer BadArea, 
@@ -48,7 +52,8 @@ namespace TrimesterPlaner.Models
             StartEndBorderColors Ticket, 
             StartEndBorderColors Bug, 
             StartEndBorderColors Special,
-            SvgColourServer Vacation);
+            SvgColourServer Vacation,
+            LinesColors Lines);
         private ColorsType Colors { get; } = new(
             Text: new(new(IvuColors.GRAY10), new(IvuColors.WHITE)),
             BadArea: new(IvuColors.RED60),
@@ -57,7 +62,8 @@ namespace TrimesterPlaner.Models
             Ticket: new(new(IvuColors.CYAN70), new(IvuColors.PRIMARY_CYAN), new(IvuColors.CYAN20)),
             Bug: new(new(IvuColors.MAIGREEN70), new(IvuColors.PRIMARY_GREEN), new(IvuColors.GREEN20)),
             Special: new(new(IvuColors.ORANGE70), new(IvuColors.ORANGE40), new(IvuColors.ORANGE20)),
-            Vacation: new(IvuColors.BLUE20));
+            Vacation: new(IvuColors.BLUE20),
+            Lines: new(new(IvuColors.GREEN30), new(IvuColors.RED40), new(IvuColors.RED40)));
 
         private int CornerRadius { get; } = 5;
         private int BurnDownValueStepSize { get; } = 20;
@@ -137,15 +143,16 @@ namespace TrimesterPlaner.Models
                 }
             }
 
-            int plannedWidth = (from week in data.Weeks
-                                from day in week.Days
-                                where !day.IsBadArea
-                                select day.X).Last();
+            var lastGoodDay = (from week in data.Weeks
+                               from day in week.Days
+                               where !day.IsBadArea
+                               select day).Last();
+            int plannedWidth = lastGoodDay.X + (lastGoodDay.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay);
 
             int fehlerteamHeight = data.Fehlerteam ? Heights.Fehlerteam + Margins.BurndownVertical : 0;
             int burndownHeight = data.Burndown ? Heights.Burndown + Margins.BurndownVertical : 0;
             int planHeight = Heights.Header + data.Developers.Count() * Heights.Developer;
-            int height = fehlerteamHeight + burndownHeight + planHeight;
+            int height = fehlerteamHeight + burndownHeight + planHeight + Heights.DateRow;
             SvgDocument document = new()
             {
                 Width = width,
@@ -156,7 +163,7 @@ namespace TrimesterPlaner.Models
             document.Children.Add(DefineGradients());
             if (width > plannedWidth)
             {
-                document.Children.Add(GenerateBadArea(width - plannedWidth).Translate(plannedWidth, 0));
+                document.Children.Add(GenerateBadArea(width - plannedWidth, height - Heights.DateRow).Translate(plannedWidth, 0));
             }
             if (data.Fehlerteam)
             {
@@ -167,6 +174,8 @@ namespace TrimesterPlaner.Models
                 document.Children.Add(GenerateBurndown(data, width).Translate(0, fehlerteamHeight));
             }
             document.Children.Add(GenerateTrimester(data, width).Translate(0, fehlerteamHeight + burndownHeight));
+
+            document.Children.Add(GenerateLines(data, height));
 
             return document;
         }
@@ -180,14 +189,14 @@ namespace TrimesterPlaner.Models
             return definitions;
         }
 
-        private SvgGroup GenerateBadArea(int width)
+        private SvgGroup GenerateBadArea(int width, int height)
         {
             SvgGroup group = new();
 
             group.Children.Add(new SvgRectangle()
             {
                 Width = width,
-                Height = new SvgUnit(SvgUnitType.Percentage, 100),
+                Height = height,
                 Fill = Colors.BadArea,
             });
 
@@ -412,6 +421,49 @@ namespace TrimesterPlaner.Models
             group.Children.Add(MakeText(vacation.Label, SvgTextAnchor.Middle, FontSizes.Small, width, Colors.Text.Vacation).Translate(width / 2, Heights.Vacation / 2));
 
             return group.Translate(0, Margins.Plan);
+        }
+
+        private SvgGroup GenerateLines(PreparedData data, int height)
+        {
+            SvgGroup group = new();
+
+            group.Children.Add(GenerateLine(data.Weeks, height, DateTime.Now, Colors.Lines.Today, "Heute", Margins.Lines.Offset, Heights.DateRow / 3, false));
+            group.Children.Add(GenerateLine(data.Weeks, height, data.Entwicklungsstart, Colors.Lines.Entwicklungsstart, "Entwicklungsstart", -Margins.Lines.Offset, Heights.DateRow * 2 / 3, false));
+            group.Children.Add(GenerateLine(data.Weeks, height, data.Entwicklungsschluss, Colors.Lines.Entwicklungsschluss, "Entwicklungsschluss", -Margins.Lines.Offset, Heights.DateRow * 2 / 3, true));
+
+            return group;
+        }
+
+        private SvgGroup GenerateLine(IEnumerable<Week> weeks, int height, DateTime date, SvgColourServer color, string label, int offset, int y, bool isEndLine)
+        {
+            SvgGroup group = new();
+
+            var days = from week in weeks
+                        from d in week.Days
+                        where d.Date.IsSameDayAs(date)
+                        select d;
+            if (days.Any())
+            {
+                var day = days.First();
+                var x = day.X + offset;
+                if (isEndLine)
+                {
+                    x += day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay;
+                }
+                group.Children.Add(new SvgLine()
+                {
+                    StartX = x,
+                    EndX = x,
+                    StartY = 0,
+                    EndY = height,
+                    Stroke = color,
+                    StrokeWidth = 2,
+                });
+
+                group.Children.Add(MakeText($"{label}: {days.First().Date:dd.MM.yyyy}", isEndLine ? SvgTextAnchor.End : SvgTextAnchor.Start, FontSizes.Medium, null, color).Translate(x + (isEndLine ? -1 : 1) * Margins.Lines.TextMargin, height - Heights.DateRow + y));
+            }
+
+            return group;
         }
     }
 }

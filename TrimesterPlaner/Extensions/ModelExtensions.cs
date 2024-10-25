@@ -24,6 +24,11 @@ namespace TrimesterPlaner.Extensions
             return (int)date.DayOfWeek;
         }
 
+        public static bool IsSameDayAs(this DateTime date, DateTime other)
+        {
+            return date.Day == other.Day && date.Month == other.Month && date.Year == other.Year;
+        }
+
         public static IEnumerable<DateTime> GetDaysBetweenDates(DateTime? start, DateTime? end)
         {
             if (start is null || end is null)

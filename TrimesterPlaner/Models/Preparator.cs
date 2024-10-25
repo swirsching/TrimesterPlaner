@@ -8,7 +8,7 @@ namespace TrimesterPlaner.Models
         public PreparedData? Prepare(Config config);
     }
 
-    public record PreparedData(bool Fehlerteam, bool Burndown, IEnumerable<Week> Weeks, IEnumerable<DeveloperData> Developers);
+    public record PreparedData(bool Fehlerteam, bool Burndown, DateTime Entwicklungsstart, DateTime Entwicklungsschluss, IEnumerable<Week> Weeks, IEnumerable<DeveloperData> Developers);
     public class Week(int weeknum)
     {
         public int Weeknum { get; } = weeknum;
@@ -124,7 +124,7 @@ namespace TrimesterPlaner.Models
                 }
             }
 
-            return new(config.Settings.Fehlerteam, config.Settings.Burndown, weeks, developers);
+            return new(config.Settings.Fehlerteam, config.Settings.Burndown, config.Settings.Entwicklungsstart.Value, config.Settings.Entwicklungsschluss.Value, weeks, developers);
         }
 
         private static int GetWeeknum(DateTime date) => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
