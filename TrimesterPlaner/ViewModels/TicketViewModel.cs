@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Diagnostics;
+using System.Windows.Input;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Utilities;
@@ -11,6 +12,7 @@ namespace TrimesterPlaner.ViewModels
         { 
             Ticket = ticket;
 
+            OpenTicketInBrowserCommand = new RelayCommand((o) => OpenTicketInBrowser());
             RemoveTicketCommand = new RelayCommand((o) => ticketManager.RemoveTicket(ticket));
             AddPlanCommand = new RelayCommand((o) => planManager.AddTicketPlan(SelectedDeveloper!, Ticket));
 
@@ -32,6 +34,7 @@ namespace TrimesterPlaner.ViewModels
         public Ticket Ticket { get; }
         public double TicketPT { get => Ticket.GetTotalPT(); }
 
+        public ICommand OpenTicketInBrowserCommand { get; }
         public ICommand RemoveTicketCommand { get; }
         public ICommand AddPlanCommand { get; }
 
@@ -40,6 +43,11 @@ namespace TrimesterPlaner.ViewModels
         {
             get => _ShowDetails;
             set => SetProperty(ref _ShowDetails, value);
+        }
+
+        private void OpenTicketInBrowser()
+        {
+            Process.Start(new ProcessStartInfo($"https://confluence.ivu.de/jira/browse/{Ticket.Key}") { UseShellExecute = true });
         }
     }
 }

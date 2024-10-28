@@ -75,7 +75,11 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock HorizontalAlignment="Center" Text="{Binding Ticket.Key}" />
+                <Button
+                    HorizontalAlignment="Center"
+                    Command="{Binding OpenTicketInBrowserCommand}"
+                    Content="{Binding Ticket.Key}"
+                    Style="{StaticResource MaterialDesignFlatButton}" />
 
                 <TextBlock
                     Grid.Column="1"
