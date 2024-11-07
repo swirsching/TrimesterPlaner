@@ -31,8 +31,8 @@ namespace TrimesterPlaner.Models
         private record FontSizesType(int Small, int Medium, int Big);
         private FontSizesType FontSizes { get; } = new(12, 15, 20);
 
-        private record HeightsType(int Fehlerteam, int Burndown, int Header, int Developer, int Vacation, int DateRow);
-        private HeightsType Heights { get; } = new(200, 500, 40, 70, 20, 60);
+        private record HeightsType(int Fehlerteam, int Burndown, int Header, int Developer, int Remaining, int Vacation, int DateRow);
+        private HeightsType Heights { get; } = new(200, 500, 40, 70, 5, 20, 60);
 
         private record WidthsType(int WeekDay, int WeekEndDay, int Left);
         private WidthsType Widths { get; } = new(50, 5, 40);
@@ -53,6 +53,7 @@ namespace TrimesterPlaner.Models
             StartEndBorderColors Ticket, 
             StartEndBorderColors Bug, 
             StartEndBorderColors Special,
+            SvgColourServer Remaining,
             SvgColourServer Vacation,
             LinesColors Lines);
         private ColorsType Colors { get; } = new(
@@ -63,6 +64,7 @@ namespace TrimesterPlaner.Models
             Ticket: new(new(IvuColors.CYAN70), new(IvuColors.PRIMARY_CYAN), new(IvuColors.CYAN20)),
             Bug: new(new(IvuColors.MAIGREEN70), new(IvuColors.PRIMARY_GREEN), new(IvuColors.GREEN20)),
             Special: new(new(IvuColors.ORANGE70), new(IvuColors.ORANGE40), new(IvuColors.ORANGE20)),
+            Remaining: new(IvuColors.GREEN40),
             Vacation: new(IvuColors.BLUE20),
             Lines: new(new(IvuColors.GREEN30), new(IvuColors.RED40), new(IvuColors.RED40)));
 
@@ -349,12 +351,13 @@ namespace TrimesterPlaner.Models
 
             int width = plan.RemainingPerDay.Last().Key.X - plan.RemainingPerDay.First().Key.X + Widths.WeekDay;
             int innerWidth = width - 2 * Margins.Plan;
-            group.Children.Add(new SvgRectangle()
+            int innerHeight = Heights.Developer - 2 * Margins.Plan;
+            group.Children.Add(new SvgRectangle
             { 
                 CornerRadiusX = CornerRadius,
                 CornerRadiusY = CornerRadius,
                 Width = innerWidth,
-                Height = Heights.Developer - 2 * Margins.Plan,
+                Height = innerHeight,
                 Fill = plan.PlanType switch
                 {
                     PlanType.Ticket => TicketGradient,
@@ -362,7 +365,13 @@ namespace TrimesterPlaner.Models
                     PlanType.Special => SpecialGradient,
                     _ => throw new NotImplementedException(),
                 },
-                Stroke = Colors.Ticket.Border,
+                Stroke = plan.PlanType switch
+                {
+                    PlanType.Ticket => Colors.Ticket.Border,
+                    PlanType.Bug => Colors.Bug.Border,
+                    PlanType.Special => Colors.Special.Border,
+                    _ => throw new NotImplementedException(),
+                },
             });
 
             if (!string.IsNullOrEmpty(plan.FirstRow))
@@ -385,6 +394,27 @@ namespace TrimesterPlaner.Models
             if (!string.IsNullOrEmpty(plan.TopLeft))
             {
                 group.Children.Add(MakeText(plan.TopLeft, SvgTextAnchor.Start, FontSizes.Small, innerWidth).Translate(2 * Margins.Plan, Heights.Developer / 6));
+            }
+
+            if (plan.RemainingPT is not null)
+            {
+                var daysWithBiggerRemaining = from dayAndRemaining in plan.RemainingPerDay
+                                              where dayAndRemaining.Value > plan.RemainingPT || plan.RemainingPT < 0.01
+                                              select dayAndRemaining.Key;
+                if (daysWithBiggerRemaining.Any())
+                {
+                    int remainingWidth = daysWithBiggerRemaining.Last().X - daysWithBiggerRemaining.First().X;
+                    remainingWidth += daysWithBiggerRemaining.Last().Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay;
+                    remainingWidth -= 2 * Margins.Plan;
+                    group.Children.Add(new SvgRectangle
+                    {
+                        CornerRadiusX = CornerRadius,
+                        CornerRadiusY = CornerRadius,
+                        Width = remainingWidth,
+                        Height = Heights.Remaining,
+                        Fill = Colors.Remaining,
+                    }.Translate(0, innerHeight - Heights.Remaining));
+                }
             }
 
             SvgGroup outerGroup;

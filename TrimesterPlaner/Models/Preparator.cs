@@ -28,10 +28,11 @@ namespace TrimesterPlaner.Models
     public record DeveloperData(string Abbreviation, IEnumerable<Day> FreeDays, IEnumerable<PlanData> Plans, IEnumerable<VacationData> Vacations);
     public class PlanData
     {
-        public PlanData(PlanType planType, Dictionary<Day, double> remainingPerDay, string firstRow, string secondRow, string topLeft, bool promised)
+        public PlanData(PlanType planType, Dictionary<Day, double> remainingPerDay, double? remainingPT, string firstRow, string secondRow, string topLeft, bool promised)
         {
             PlanType = planType;
             RemainingPerDay = remainingPerDay;
+            RemainingPT = remainingPT;
             FirstRow = firstRow;
             SecondRow = secondRow; 
             TopLeft = topLeft;
@@ -49,6 +50,7 @@ namespace TrimesterPlaner.Models
 
         public PlanType PlanType { get; }
         public Dictionary<Day, double> RemainingPerDay { get; }
+        public double? RemainingPT { get; }
         public string FirstRow { get; }
         public string SecondRow { get; }
         public string TopLeft { get; }
@@ -249,6 +251,7 @@ namespace TrimesterPlaner.Models
             return new(
                 GetPlanType(plan),
                 remainingPerDay,
+                (plan as TicketPlan)?.TimeEstimateOverride?.RemainingEstimate ?? ticket?.RemainingEstimate,
                 ticket?.Key ?? (plan as SpecialPlan)?.Description ?? "",
                 ticket?.Summary ?? "",
                 (plan as TicketPlan)?.Description ?? "",
