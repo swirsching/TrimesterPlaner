@@ -51,7 +51,7 @@ namespace TrimesterPlaner.Models
                        Key = issue.key,
                        Summary = issue.fields.summary,
                        PlanningPeriod = planningPeriodHelper.GetTrimesterTaskPlanningPeriod(issue.key),
-                       Promised = planningPeriodHelper.IsPromised(issue.key, issue.fields.customfield_22082.value),
+                       Promised = planningPeriodHelper.IsPromised(issue.key, issue.fields.customfield_22082?.value),
                        Shirt = issue.fields.customfield_24003?.value.ToShirtSize(),
                        OriginalEstimate = ConvertToPT(issue.fields.timeoriginalestimate),
                        RemainingEstimate = ConvertToPT(issue.fields.timeestimate),
@@ -74,7 +74,7 @@ namespace TrimesterPlaner.Models
                 return trimesterTaskPlanningPeriod;
             }
 
-            internal bool IsPromised(string issueKey, string issuePlanningPeriod)
+            internal bool IsPromised(string issueKey, string? issuePlanningPeriod)
             {
                 string trimesterTaskPlanningPeriod = GetTrimesterTaskPlanningPeriod(issueKey);
                 if (string.IsNullOrEmpty(trimesterTaskPlanningPeriod))
@@ -87,6 +87,11 @@ namespace TrimesterPlaner.Models
 
         private async Task<Dictionary<string, string>> GetPlanningPeriods(ImmutableSortedSet<string> trimesterTaskKeys)
         {
+            if (trimesterTaskKeys.Count == 0)
+            {
+                return [];
+            }
+
             var parameters = new
             {
                 jql = $"key in ({string.Join(",", trimesterTaskKeys)})",
