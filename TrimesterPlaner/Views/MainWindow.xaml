@@ -56,6 +56,12 @@
                         ToolTip="In Zwischenablage kopieren">
                         <materialDesign:PackIcon Kind="ClipboardOutline" />
                     </Button>
+                    <Button
+                        Command="{Binding PushToConfluenceCommand}"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        ToolTip="Hochladen (Confluence)">
+                        <materialDesign:PackIcon Kind="ExportVariant" />
+                    </Button>
                 </StackPanel>
 
                 <Separator />

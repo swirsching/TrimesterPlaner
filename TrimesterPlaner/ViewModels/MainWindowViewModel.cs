@@ -61,9 +61,14 @@ namespace TrimesterPlaner.ViewModels
         , ITicketProvider
         , IPlanProvider
     {
-        public MainWindowViewModel(JiraClient client, IGenerator generator, IPreparator preparator, IConfigService configService)
+        public MainWindowViewModel(
+            ConfluenceClient confluenceClient, 
+            JiraClient jiraClient,
+            IGenerator generator,
+            IPreparator preparator,
+            IConfigService configService)
         {
-            Client = client;
+            JiraClient = jiraClient;
             Generator = generator;
             Preparator = preparator;
 
@@ -71,12 +76,13 @@ namespace TrimesterPlaner.ViewModels
             SaveCommand = new RelayCommand((o) => configService.SaveConfig(MakeConfig()));
             SaveCopyCommand = new RelayCommand((o) => configService.SaveConfigCopy(MakeConfig()));
             ExportCommand = new RelayCommand((o) => Export());
-            CopyToClipboardCommand = new RelayCommand((o) => CopyToClipboard());
+            CopyToClipboardCommand = new RelayCommand((o) => ClipboardService.SetText(Result.ConvertToPastableHTML()));
+            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(Result.ConvertToPastableHTML()));
 
             var timer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.Background, GenerateIfDirty, Dispatcher.CurrentDispatcher);
         }
 
-        private JiraClient Client { get; }
+        private JiraClient JiraClient { get; }
         private IGenerator Generator { get; }
         private IPreparator Preparator { get; }
 
@@ -93,14 +99,6 @@ namespace TrimesterPlaner.ViewModels
             {
                 Result?.Write(dialog.FileName);
             }
-        }
-
-        private void CopyToClipboard()
-        {
-            MemoryStream memoryStream = new();
-            Result?.Write(memoryStream);
-            string generated = Encoding.UTF8.GetString(memoryStream.GetBuffer());
-            ClipboardService.SetText($"<div style='width: 100%; overflow-x: scroll;'>\n{generated[generated.IndexOf("<svg")..]}\n</div>");
         }
 
         public void RemoveTicket(Ticket ticket)
@@ -128,7 +126,7 @@ namespace TrimesterPlaner.ViewModels
 
         public async Task<IEnumerable<Ticket>> ReloadTicketsAsync()
         {
-            var loadedTickets = await Client.LoadTickets(Settings.JQL);
+            var loadedTickets = await JiraClient.LoadTickets(Settings.JQL);
             if (loadedTickets is null)
             {
                 return [];
@@ -418,5 +416,6 @@ namespace TrimesterPlaner.ViewModels
         public ICommand SaveCopyCommand { get; }
         public ICommand ExportCommand { get; }
         public ICommand CopyToClipboardCommand { get; }
+        public ICommand PushToConfluenceCommand { get; }
     }
 }

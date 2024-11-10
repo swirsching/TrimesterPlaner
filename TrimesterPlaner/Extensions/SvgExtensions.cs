@@ -1,5 +1,8 @@
 ﻿using Svg.Transforms;
 using Svg;
+using System.IO;
+using System.Text;
+using TextCopy;
 
 namespace TrimesterPlaner.Extensions
 {
@@ -41,6 +44,19 @@ namespace TrimesterPlaner.Extensions
             }
 
             return text[..^1].Shorten(fontFamily, fontSize, maxWidth);
+        }
+
+        public static string ConvertToPastableHTML(this SvgDocument? document)
+        {
+            if (document is null)
+            {
+                return "";
+            }
+
+            MemoryStream memoryStream = new();
+            document.Write(memoryStream);
+            string generated = Encoding.UTF8.GetString(memoryStream.GetBuffer());
+            return $"<div style='width: 100%; overflow-x: scroll;'>\n{generated[generated.IndexOf("<svg")..]}\n</div>";
         }
     }
 }

@@ -18,6 +18,7 @@ namespace TrimesterPlaner
 
             ServiceCollection services = new();
             services.AddSingleton(typeof(IConfigService), configService);
+            services.AddSingleton(typeof(ConfluenceClient));
             services.AddSingleton(typeof(JiraClient));
             services.AddSingleton(typeof(DeveloperProviderViewModel));
 
@@ -32,6 +33,7 @@ namespace TrimesterPlaner
             
             var tmpServiceProvider = services.BuildServiceProvider();
             MainWindowViewModel mainWindowViewModel = new(
+                tmpServiceProvider.GetRequiredService<ConfluenceClient>(),
                 tmpServiceProvider.GetRequiredService<JiraClient>(),
                 tmpServiceProvider.GetRequiredService<IGenerator>(),
                 tmpServiceProvider.GetRequiredService<IPreparator>(),
