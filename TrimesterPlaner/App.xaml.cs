@@ -12,6 +12,8 @@ namespace TrimesterPlaner
 {
     public partial class App : Application
     {
+        private ExceptionHandler ExceptionHandler { get; } = new();
+
         protected override void OnStartup(StartupEventArgs e)
         {
             ConfigService configService = new(Directory.GetCurrentDirectory());
