@@ -139,15 +139,6 @@ namespace TrimesterPlaner.Extensions
             };
         }
 
-        // Original | Remaining | Tracked | Result
-        // A | 3 | 3 | 0 | 3
-        // B | 3 | 5 | 0 | 5
-        // C | 3 | 2 | 0 | 3
-        // D | 3 | 0 | 0 | 3
-        // E | 3 | 0 | 5 | 5
-        // F | 3 | 0 | 2 | 2
-        // G | 3 | 1 | 2 | 3
-        // H | 3 | 1 | 1 | 2
         public static double GetTotalPT(this TimeEstimate timeEstimate)
         {
             double original = timeEstimate.OriginalEstimate ?? 0;
@@ -159,33 +150,7 @@ namespace TrimesterPlaner.Extensions
                 return ticket.Shirt?.ToPT() ?? 0;
             }
 
-            // G + H
-            if (remaining > 0.0 && tracked > 0.0)
-            {
-                return remaining + tracked;
-            }
-
-            // D + E + F
-            if (remaining <= 0.0)
-            {
-                // E + F
-                if (tracked > 0.0)
-                {
-                    return tracked;
-                }
-
-                // D
-                return original;
-            }
-
-            // A + B + C
-            if (tracked <= 0.0)
-            {
-                return Math.Max(original, remaining);
-            }
-
-            // This cannot be reached
-            return original;
+            return tracked > 0.0 ? remaining + tracked : Math.Max(original, remaining);
         }
     }
 
