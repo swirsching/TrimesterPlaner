@@ -6,10 +6,17 @@ namespace TrimesterPlaner.Models
 {
     public class JiraClient
     {
+        private string BaseUri { get; } = "https://confluence.ivu.de/jira/rest/api/2/";
+        private string SearchUri { get; } = "https://confluence.ivu.de/jira/rest/api/2/search";
+
         public JiraClient()
         {
-            Client = new(new RestClientOptions("https://confluence.ivu.de/jira/rest/api/2/"));
-            Client.AddDefaultHeader("Authorization", "Bearer OTg5MjMyMDY5Mzk0Olk3tmB8BUoScs5a0g5eMKuK9yfG");
+            Client = new(new RestClientOptions(BaseUri));
+            var jat = Environment.GetEnvironmentVariable("JAT", EnvironmentVariableTarget.User);
+            if (jat is not null)
+            {
+                Client.AddDefaultHeader("Authorization", $"Bearer {jat}");
+            }
         }
 
         public async Task<IEnumerable<Ticket>?> LoadTickets(string jql)
@@ -29,7 +36,7 @@ namespace TrimesterPlaner.Models
                 }),
                 maxResults = 500
             };
-            var tickets = await Client.GetAsync<TicketList>("https://confluence.ivu.de/jira/rest/api/2/search", parameters);
+            var tickets = await Client.GetAsync<TicketList>(SearchUri, parameters);
             if (tickets is null)
             {
                 return null;
@@ -99,7 +106,7 @@ namespace TrimesterPlaner.Models
                 maxResults = 100
             };
 
-            var trimesterTasks = await Client.GetAsync<TrimesterTaskList>("https://confluence.ivu.de/jira/rest/api/2/search", parameters);
+            var trimesterTasks = await Client.GetAsync<TrimesterTaskList>(SearchUri, parameters);
             if (trimesterTasks is null)
             {
                 return [];
