@@ -17,6 +17,10 @@ namespace TrimesterPlaner.Models
             {
                 Client.AddDefaultHeader("Authorization", $"Bearer {jat}");
             }
+            else
+            {
+                throw new Exception("Missing your jira access token. Please create a jira access token and save it in an environment variable called JAT in order to use the program.");
+            }
         }
 
         public async Task<IEnumerable<Ticket>?> LoadTickets(string jql)
