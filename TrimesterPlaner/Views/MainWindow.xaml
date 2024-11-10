@@ -59,7 +59,8 @@
                     <Button
                         Command="{Binding PushToConfluenceCommand}"
                         Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="Hochladen (Confluence)">
+                        ToolTip="Hochladen (Confluence)"
+                        Visibility="{Binding HasCAT, Converter={StaticResource BoolToVisConv}}">
                         <materialDesign:PackIcon Kind="ExportVariant" />
                     </Button>
                 </StackPanel>

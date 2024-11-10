@@ -2,8 +2,6 @@
 using Svg;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Text;
 using System.Windows.Input;
 using System.Windows.Threading;
 using TextCopy;
@@ -71,6 +69,8 @@ namespace TrimesterPlaner.ViewModels
             JiraClient = jiraClient;
             Generator = generator;
             Preparator = preparator;
+
+            HasCAT = confluenceClient.HasCAT;
 
             LoadCommand = new RelayCommand((o) => Load(configService.LoadConfig(o as string)));
             SaveCommand = new RelayCommand((o) => configService.SaveConfig(MakeConfig()));
@@ -392,6 +392,7 @@ namespace TrimesterPlaner.ViewModels
             set => SetProperty(ref _Settings, value);
         }
 
+        public bool HasCAT { get; }
         private ObservableCollection<Developer> Developers { get; } = [];
         private ObservableCollection<Vacation> Vacations { get; } = [];
         private ObservableCollection<Ticket> Tickets { get; } = [];

@@ -13,6 +13,11 @@ namespace TrimesterPlaner.Models
             if (cat is not null)
             {
                 Client.AddDefaultHeader("Authorization", $"Bearer {cat}");
+                HasCAT = true;
+            }
+            else
+            {
+                HasCAT = false;
             }
         }
 
@@ -22,5 +27,7 @@ namespace TrimesterPlaner.Models
         }
 
         private RestClient Client { get; }
+
+        public bool HasCAT { get; }
     }
 }
