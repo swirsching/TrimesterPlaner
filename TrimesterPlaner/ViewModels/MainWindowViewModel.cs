@@ -126,7 +126,13 @@ namespace TrimesterPlaner.ViewModels
 
         public async Task<IEnumerable<Ticket>> ReloadTicketsAsync()
         {
-            var loadedTickets = await JiraClient.LoadTickets(Settings.JQL);
+            var jql = Settings.JQL;
+            if (Tickets.Count > 0)
+            {
+                jql += $" OR key in ({string.Join(",", from ticket in Tickets select ticket.Key)})";
+            }
+
+            var loadedTickets = await JiraClient.LoadTickets(jql);
             if (loadedTickets is null)
             {
                 return [];
