@@ -1,4 +1,5 @@
-﻿using TrimesterPlaner.Models;
+﻿using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Models;
 
 namespace TrimesterPlaner.ViewModels
 {
@@ -9,6 +10,9 @@ namespace TrimesterPlaner.ViewModels
             Developer = developer;
             WorkDays = from dayOfWeek in Enumerable.Range((int)DayOfWeek.Monday, 5)
                        select new WorkDayViewModel((DayOfWeek)(dayOfWeek % 7), Developer, entwicklungsplanManager);
+
+            entwicklungsplanManager.EntwicklungsplanChanged += (data) => CalculatePT();
+            CalculatePT();
         }
 
         private Developer Developer { get; }
@@ -64,5 +68,26 @@ namespace TrimesterPlaner.ViewModels
         }
 
         public IEnumerable<WorkDayViewModel> WorkDays { get; }
+
+        private void CalculatePT()
+        {
+            var dailyPT = Developer.GetDailyPT();
+            DailyPT = Math.Round(dailyPT, 1);
+            WeeklyPT = Math.Round(dailyPT * (7 - Developer.FreeDays.Count), 1);
+        }
+
+        private double _DailyPT = 0.0;
+        public double DailyPT
+        {
+            get => _DailyPT;
+            set => SetProperty(ref _DailyPT, value);
+        }
+
+        private double _WeeklyPT = 0.0;
+        public double WeeklyPT
+        {
+            get => _WeeklyPT;
+            set => SetProperty(ref _WeeklyPT, value);
+        }
     }
 }

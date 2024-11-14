@@ -23,6 +23,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Label Content="Name:" />
@@ -69,6 +70,20 @@
                 HorizontalContentAlignment="Right"
                 materialDesign:TextFieldAssist.SuffixText="%"
                 Text="{Binding Verwaltung}" />
+
+            <Label Grid.Row="5" Content="Pro Tag / Woche:" />
+            <TextBlock
+                Grid.Row="5"
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} / {1} PT">
+                        <Binding Path="DailyPT" />
+                        <Binding Path="WeeklyPT" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
         </Grid>
 
         <ItemsControl Margin="0,5,0,0" ItemsSource="{Binding WorkDays}">
