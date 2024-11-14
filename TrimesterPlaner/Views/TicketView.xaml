@@ -53,7 +53,8 @@
                         VerticalAlignment="Center"
                         Command="{Binding AddPlanCommand}"
                         IsEnabled="{Binding SelectedDeveloper, Converter={StaticResource NotNullToBoolConv}}"
-                        Style="{StaticResource MaterialDesignFlatButton}">
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        ToolTip="An Entwickler zuweisen">
                         <materialDesign:PackIcon Kind="ArrowRight" />
                     </Button>
                     <Button
@@ -79,11 +80,13 @@
                     HorizontalAlignment="Center"
                     Command="{Binding OpenTicketInBrowserCommand}"
                     Content="{Binding Ticket.Key}"
-                    Style="{StaticResource MaterialDesignFlatButton}" />
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    ToolTip="In Browser öffnen" />
 
                 <TextBlock
                     Grid.Column="1"
                     HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
                     Text="{Binding Ticket.PlanningPeriod}">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
@@ -100,28 +103,37 @@
                 <TextBlock
                     Grid.Column="2"
                     HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
                     Text="{Binding Ticket.Shirt}" />
 
                 <TextBlock
                     Grid.Column="3"
                     HorizontalAlignment="Center"
-                    Text="{Binding Ticket.OriginalEstimate, StringFormat={}O: {0} PT}" />
+                    VerticalAlignment="Center"
+                    Text="{Binding Ticket.OriginalEstimate, StringFormat={}O: {0} PT}"
+                    ToolTip="Original Estimate" />
 
                 <TextBlock
                     Grid.Column="4"
                     HorizontalAlignment="Center"
-                    Text="{Binding Ticket.RemainingEstimate, StringFormat={}R: {0} PT}" />
+                    VerticalAlignment="Center"
+                    Text="{Binding Ticket.RemainingEstimate, StringFormat={}R: {0} PT}"
+                    ToolTip="Remaining Estimate" />
 
                 <TextBlock
                     Grid.Column="5"
                     HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
                     Text="{Binding Ticket.TimeSpent, StringFormat={}T: {0} PT}"
+                    ToolTip="Time Spent"
                     Visibility="{Binding Ticket.TimeSpent, Converter={StaticResource NotNullToVisConv}}" />
 
                 <TextBlock
                     Grid.Column="6"
                     HorizontalAlignment="Center"
-                    Text="{Binding TicketPT, StringFormat={}{0} PT}" />
+                    VerticalAlignment="Center"
+                    Text="{Binding TicketPT, StringFormat={}{0} PT}"
+                    ToolTip="Gesamt-PT" />
             </Grid>
         </StackPanel>
     </materialDesign:Card>

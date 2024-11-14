@@ -73,7 +73,8 @@
                 <ToggleButton
                     Grid.Row="1"
                     IsChecked="{Binding IsChangingDeveloper}"
-                    Style="{StaticResource MaterialDesignFlatButton}">
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    ToolTip="An anderen Entwickler zuweisen">
                     <materialDesign:PackIcon Kind="UserConvert" />
                 </ToggleButton>
                 <Button

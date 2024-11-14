@@ -23,7 +23,8 @@
                         Margin="0,-10"
                         Command="{Binding ReloadTicketsCommand}"
                         Foreground="White"
-                        Style="{StaticResource MaterialDesignToolButton}">
+                        Style="{StaticResource MaterialDesignToolButton}"
+                        ToolTip="Neu laden">
                         <materialDesign:PackIcon Kind="Reload" />
                     </Button>
                     <Button
@@ -31,7 +32,8 @@
                         Command="{Binding SortTicketsCommand}"
                         CommandParameter="{x:Static vm:TicketSortingMode.Alphabetically}"
                         Foreground="White"
-                        Style="{StaticResource MaterialDesignToolButton}">
+                        Style="{StaticResource MaterialDesignToolButton}"
+                        ToolTip="Alphabetisch sortieren">
                         <materialDesign:PackIcon Kind="SortAlphabeticalAscending" />
                     </Button>
                     <Button
@@ -39,7 +41,8 @@
                         Command="{Binding SortTicketsCommand}"
                         CommandParameter="{x:Static vm:TicketSortingMode.BySize}"
                         Foreground="White"
-                        Style="{StaticResource MaterialDesignToolForegroundButton}">
+                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                        ToolTip="Nach Größe sortieren">
                         <materialDesign:PackIcon Kind="SortVariant" />
                     </Button>
                     <Button
@@ -47,7 +50,8 @@
                         Command="{Binding SortTicketsCommand}"
                         CommandParameter="{x:Static vm:TicketSortingMode.ByUnplannedPT}"
                         Foreground="White"
-                        Style="{StaticResource MaterialDesignToolForegroundButton}">
+                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                        ToolTip="Nach Unverplantheit sortieren">
                         <materialDesign:PackIcon Kind="SortClockAscendingOutline" />
                     </Button>
                 </StackPanel>
