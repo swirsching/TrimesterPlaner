@@ -38,7 +38,26 @@
                     IsChecked="{Binding ShowDetails}"
                     Style="{StaticResource MaterialDesignToolButton}" />
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <views:PlannedView Margin="10,0,-50,0" DataContext="{Binding Ticket, Converter={StaticResource Injector}, ConverterParameter={x:Type vm:PlannedViewModel}}" />
+                    <StackPanel Margin="10,0,-50,0" Orientation="Horizontal">
+                        <ProgressBar
+                            Width="30"
+                            Height="20"
+                            Background="#9BD8F5"
+                            BorderBrush="#EF9C96"
+                            Foreground="#039EE6"
+                            Maximum="1"
+                            Minimum="0"
+                            Value="{Binding PlannedPercentage, Mode=OneWay}" />
+                        <ProgressBar
+                            Width="50"
+                            Height="20"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="#EF9C96"
+                            Maximum="3"
+                            Minimum="1"
+                            Value="{Binding PlannedPercentage, Mode=OneWay}" />
+                    </StackPanel>
                     <Button
                         VerticalAlignment="Center"
                         Command="{Binding AddPlanCommand}"

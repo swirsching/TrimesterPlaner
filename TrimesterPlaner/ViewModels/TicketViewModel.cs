@@ -8,7 +8,12 @@ namespace TrimesterPlaner.ViewModels
 {
     public class TicketViewModel : BindableBase
     {
-        public TicketViewModel(Ticket ticket, ITicketManager ticketManager, IPlanManager planManager, DeveloperProviderViewModel developerProviderViewModel) : base()
+        public TicketViewModel(
+            Ticket ticket, 
+            ITicketManager ticketManager, 
+            IPlanManager planManager, 
+            DeveloperProviderViewModel developerProviderViewModel,
+            IEntwicklungsplanManager entwicklungsplanManager) : base()
         { 
             Ticket = ticket;
 
@@ -17,6 +22,8 @@ namespace TrimesterPlaner.ViewModels
             AddPlanCommand = new RelayCommand((o) => planManager.AddTicketPlan(SelectedDeveloper!, Ticket));
 
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
+            entwicklungsplanManager.EntwicklungsplanChanged += CalculatePlannedPercentage;
+            CalculatePlannedPercentage();
         }
 
         private void OnSelectedDeveloperChanged(Developer? selectedDeveloper)
@@ -29,6 +36,18 @@ namespace TrimesterPlaner.ViewModels
         {
             get => _SelectedDeveloper;
             set => SetProperty(ref _SelectedDeveloper, value);
+        }
+
+        private void CalculatePlannedPercentage(PreparedData? data = null)
+        {
+            PlannedPercentage = Ticket.GetPlannedPT() / TicketPT;
+        }
+
+        private double _PlannedPercentage;
+        public double PlannedPercentage
+        {
+            get => _PlannedPercentage;
+            set => SetProperty(ref _PlannedPercentage, value);
         }
 
         public Ticket Ticket { get; }
