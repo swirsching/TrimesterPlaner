@@ -164,14 +164,6 @@ namespace TrimesterPlaner.ViewModels
                     {
                         ticketToUpdate.Summary = loadedTicket.Summary;
                     }
-                    if (!ticketToUpdate.PlanningPeriod.Equals(loadedTicket.PlanningPeriod))
-                    {
-                        ticketToUpdate.PlanningPeriod = loadedTicket.PlanningPeriod;
-                    }
-                    if (!ticketToUpdate.Promised.Equals(loadedTicket.Promised))
-                    {
-                        ticketToUpdate.Promised = loadedTicket.Promised;
-                    }
                     if (!ticketToUpdate.Shirt.Equals(loadedTicket.Shirt))
                     {
                         ticketToUpdate.Shirt = loadedTicket.Shirt;

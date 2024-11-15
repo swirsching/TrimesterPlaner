@@ -21,14 +21,13 @@ namespace TrimesterPlaner.Models
         public int X { get; set; } = 0;
         public double Capacity { get; set; } = 0.0;
         public double Total { get; set; } = 0.0;
-        public double Promised { get; set; } = 0.0;
         public Dictionary<PlanData, double> Plans { get; } = [];
         public Dictionary<VacationData, double> Vacations { get; } = [];
     }
     public record DeveloperData(string Abbreviation, IEnumerable<Day> FreeDays, IEnumerable<PlanData> Plans, IEnumerable<VacationData> Vacations);
     public class PlanData
     {
-        public PlanData(PlanType planType, Dictionary<Day, double> remainingPerDay, double? remainingPT, string firstRow, string secondRow, string topLeft, bool promised)
+        public PlanData(PlanType planType, Dictionary<Day, double> remainingPerDay, double? remainingPT, string firstRow, string secondRow, string topLeft)
         {
             PlanType = planType;
             RemainingPerDay = remainingPerDay;
@@ -36,7 +35,6 @@ namespace TrimesterPlaner.Models
             FirstRow = firstRow;
             SecondRow = secondRow; 
             TopLeft = topLeft;
-            Promised = promised;
 
             for (int idx = 0; idx < RemainingPerDay.Count; idx++)
             {
@@ -54,7 +52,6 @@ namespace TrimesterPlaner.Models
         public string FirstRow { get; }
         public string SecondRow { get; }
         public string TopLeft { get; }
-        public bool Promised { get; }
     }
     public enum PlanType { Ticket, Bug, Special };
     public class VacationData
@@ -108,7 +105,7 @@ namespace TrimesterPlaner.Models
                                              select plan;
 
             CalculateCapacity(days, config.Developers);
-            CalculateTotalAndPromised(days, allPlans);
+            CalculateTotal(days, allPlans);
 
             int startWeek = GetWeeknum(days.First().Date);
             int weekCount = Helpers.GetWeeksBetweenDates(days.First().Date, days.Last().Date);
@@ -146,18 +143,13 @@ namespace TrimesterPlaner.Models
             }
         }
 
-        private static void CalculateTotalAndPromised(List<Day> days, IEnumerable<PlanData> plans)
+        private static void CalculateTotal(List<Day> days, IEnumerable<PlanData> plans)
         {
             foreach (Day day in days)
             {
                 foreach (PlanData plan in plans)
                 {
-                    double remaining = GetRemainingAtDate(day.Date, plan);
-                    day.Total += remaining;
-                    if (plan.Promised)
-                    {
-                        day.Promised += remaining;
-                    }
+                    day.Total += (double)GetRemainingAtDate(day.Date, plan);
                 }
             }
         }
@@ -254,8 +246,7 @@ namespace TrimesterPlaner.Models
                 (plan as TicketPlan)?.TimeEstimateOverride?.RemainingEstimate ?? ticket?.RemainingEstimate,
                 ticket?.Key ?? (plan as SpecialPlan)?.Description ?? "",
                 ticket?.Summary ?? "",
-                (plan as TicketPlan)?.Description ?? "",
-                ticket is null || ticket.Promised);
+                (plan as TicketPlan)?.Description ?? "");
         }
 
         private static PlanType GetPlanType(Plan plan)

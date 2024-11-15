@@ -59,39 +59,17 @@ namespace TrimesterPlaner.ViewModels
 
         private static int SortTicketsAlphabetically(Ticket a, Ticket b)
         {
-            if (TrySortingByPromised(a, b, out int value))
-            {
-                return value;
-            }
-
             return a.Summary.CompareTo(b.Summary);
         }
 
         private static int SortTicketsBySize(Ticket a, Ticket b)
         {
-            if (TrySortingByPromised(a, b, out int value))
-            {
-                return value;
-            }
-
             return b.GetTotalPT().CompareTo(a.GetTotalPT());
         }
 
         private static int SortTicketsByUnplannedPT(Ticket a, Ticket b)
         {
             return (b.GetTotalPT() - b.GetPlannedPT()).CompareTo(a.GetTotalPT() - a.GetPlannedPT());
-        }
-
-        private static bool TrySortingByPromised(Ticket a, Ticket b, out int value)
-        {
-            if (a.Promised != b.Promised)
-            {
-                value = (b.Promised ? 1 : 0) - (a.Promised ? 1 : 0);
-                return true;
-            }
-
-            value = 0;
-            return false;
         }
     }
 }

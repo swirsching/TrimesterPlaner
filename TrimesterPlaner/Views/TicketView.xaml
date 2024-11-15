@@ -32,21 +32,11 @@
                 <ToggleButton
                     Grid.Column="1"
                     HorizontalContentAlignment="Left"
+                    Content="{Binding Ticket.Summary}"
+                    FontWeight="Normal"
+                    Foreground="#002D5B"
                     IsChecked="{Binding ShowDetails}"
-                    Style="{StaticResource MaterialDesignToolButton}">
-                    <TextBlock Text="{Binding Ticket.Summary}">
-                        <TextBlock.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignBody2TextBlock}" TargetType="{x:Type TextBlock}">
-                                <Setter Property="Foreground" Value="#039EE6" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Ticket.Promised}" Value="True">
-                                        <Setter Property="Foreground" Value="#002D5B" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </ToggleButton>
+                    Style="{StaticResource MaterialDesignToolButton}" />
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <views:PlannedView Margin="10,0,-50,0" DataContext="{Binding Ticket, Converter={StaticResource Injector}, ConverterParameter={x:Type vm:PlannedViewModel}}" />
                     <Button
@@ -73,7 +63,6 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <Button
@@ -87,41 +76,24 @@
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Text="{Binding Ticket.PlanningPeriod}">
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Foreground" Value="#039EE6" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Ticket.Promised}" Value="True">
-                                    <Setter Property="Foreground" Value="#002D5B" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-
-                <TextBlock
-                    Grid.Column="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
                     Text="{Binding Ticket.Shirt}" />
 
                 <TextBlock
-                    Grid.Column="3"
+                    Grid.Column="2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Text="{Binding Ticket.OriginalEstimate, StringFormat={}O: {0} PT}"
                     ToolTip="Original Estimate" />
 
                 <TextBlock
-                    Grid.Column="4"
+                    Grid.Column="3"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Text="{Binding Ticket.RemainingEstimate, StringFormat={}R: {0} PT}"
                     ToolTip="Remaining Estimate" />
 
                 <TextBlock
-                    Grid.Column="5"
+                    Grid.Column="4"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Text="{Binding Ticket.TimeSpent, StringFormat={}T: {0} PT}"
@@ -129,7 +101,7 @@
                     Visibility="{Binding Ticket.TimeSpent, Converter={StaticResource NotNullToVisConv}}" />
 
                 <TextBlock
-                    Grid.Column="6"
+                    Grid.Column="5"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Text="{Binding TicketPT, StringFormat={}{0} PT}"

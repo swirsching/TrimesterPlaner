@@ -25,8 +25,6 @@ namespace TrimesterPlaner.Models
         {
             Key = "";
             Summary = "";
-            PlanningPeriod = "";
-            Promised = false;
             Shirt = null;
             
             Plans = [];
@@ -34,8 +32,6 @@ namespace TrimesterPlaner.Models
 
         public string Key { get; set; }
         public string Summary { get; set; }
-        public string PlanningPeriod { get; set; }
-        public bool Promised { get; set; }
         public ShirtSize? Shirt { get; set; }
 
         [JsonIgnore]

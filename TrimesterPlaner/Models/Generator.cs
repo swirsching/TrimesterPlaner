@@ -42,7 +42,7 @@ namespace TrimesterPlaner.Models
         private MarginsType Margins { get; } = new(2, new(2, 20), 50);
 
         private record TextColorsType(SvgColourServer Default, SvgColourServer Vacation);
-        private record BurndownColorsType(SvgColourServer Axis, SvgColourServer Grid, SvgColourServer Capacity, SvgColourServer Total, SvgColourServer Promised);
+        private record BurndownColorsType(SvgColourServer Axis, SvgColourServer Grid, SvgColourServer Capacity, SvgColourServer Total);
         private record StartEndBorderColors(SvgColourServer Start, SvgColourServer End, SvgColourServer Border);
         private record LinesColors(SvgColourServer Today, SvgColourServer Entwicklungsstart, SvgColourServer Entwicklungsschluss);
         private record ColorsType(
@@ -59,7 +59,7 @@ namespace TrimesterPlaner.Models
         private ColorsType Colors { get; } = new(
             Text: new(new(IvuColors.GRAY10), new(IvuColors.WHITE)),
             BadArea: new(IvuColors.RED60),
-            BurnDown: new(new(IvuColors.BLACK), new(IvuColors.GRAY40), new(IvuColors.BLACK), new(IvuColors.PRIMARY_CYAN), new(IvuColors.BLUE20)),
+            BurnDown: new(new(IvuColors.BLACK), new(IvuColors.GRAY40), new(IvuColors.BLACK), new(IvuColors.PRIMARY_CYAN)),
             Weekend: new(IvuColors.GRAY70),
             Ticket: new(new(IvuColors.CYAN70), new(IvuColors.PRIMARY_CYAN), new(IvuColors.CYAN20)),
             Bug: new(new(IvuColors.MAIGREEN70), new(IvuColors.PRIMARY_GREEN), new(IvuColors.GREEN20)),
@@ -223,18 +223,17 @@ namespace TrimesterPlaner.Models
             SvgGroup group = new();
             group.Children.Add(MakeAxis(width, Heights.Burndown).Translate(Widths.Left, 0));
             
-            List<Point> capacityPoints = [], totalPoints = [], promisedPoints = [];
+            List<Point> capacityPoints = [], totalPoints = [];
             foreach (Week week in data.Weeks)
             {
                 foreach (Day day in week.Days)
                 {
                     capacityPoints.Add(new Point(day.X, day.Capacity));
                     totalPoints.Add(new Point(day.X, day.Total));
-                    promisedPoints.Add(new Point(day.X, day.Promised));
                 }
             }
-            double maxValue = (from point in capacityPoints.Concat(totalPoints).Concat(promisedPoints)
-                              select point.Y).Max();
+            double maxValue = (from point in capacityPoints.Concat(totalPoints)
+                               select point.Y).Max();
             double roundedMaxValue = BurnDownValueStepSize * Math.Round(maxValue / BurnDownValueStepSize, 0, MidpointRounding.ToPositiveInfinity) + BurnDownValueStepSize / 2;
             double pxPerValue = Heights.Burndown / roundedMaxValue;
 
@@ -255,7 +254,6 @@ namespace TrimesterPlaner.Models
 
             group.Children.Add(MakeLine(capacityPoints, roundedMaxValue, pxPerValue, Colors.BurnDown.Capacity));
             group.Children.Add(MakeLine(totalPoints, roundedMaxValue, pxPerValue, Colors.BurnDown.Total, 2));
-            group.Children.Add(MakeLine(promisedPoints, roundedMaxValue, pxPerValue, Colors.BurnDown.Promised, 2));
 
             return group;
         }
