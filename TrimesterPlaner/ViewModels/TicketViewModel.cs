@@ -10,7 +10,6 @@ namespace TrimesterPlaner.ViewModels
     {
         public TicketViewModel(
             Ticket ticket, 
-            ITicketManager ticketManager, 
             IPlanManager planManager, 
             DeveloperProviderViewModel developerProviderViewModel,
             IEntwicklungsplanManager entwicklungsplanManager) : base()
@@ -18,7 +17,8 @@ namespace TrimesterPlaner.ViewModels
             Ticket = ticket;
 
             OpenTicketInBrowserCommand = new RelayCommand((o) => OpenTicketInBrowser());
-            RemoveTicketCommand = new RelayCommand((o) => ticketManager.RemoveTicket(ticket));
+            ShowPlansCommand = new RelayCommand((o) => ShowPlans());
+            ShowDetailsCommand = new RelayCommand((o) => ShowDetails());
             AddPlanCommand = new RelayCommand((o) => planManager.AddTicketPlan(SelectedDeveloper!, Ticket));
 
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
@@ -40,7 +40,7 @@ namespace TrimesterPlaner.ViewModels
 
         private void CalculatePlannedPercentage(PreparedData? data = null)
         {
-            PlannedPercentage = Ticket.GetPlannedPT() / TicketPT;
+            PlannedPercentage = Ticket.GetPlannedPT() / Ticket.GetTotalPT();
         }
 
         private double _PlannedPercentage;
@@ -51,17 +51,20 @@ namespace TrimesterPlaner.ViewModels
         }
 
         public Ticket Ticket { get; }
-        public double TicketPT { get => Ticket.GetTotalPT(); }
 
         public ICommand OpenTicketInBrowserCommand { get; }
-        public ICommand RemoveTicketCommand { get; }
+        public ICommand ShowPlansCommand { get; }
+        public ICommand ShowDetailsCommand { get; }
         public ICommand AddPlanCommand { get; }
 
-        private bool _ShowDetails;
-        public bool ShowDetails
+        private void ShowPlans()
         {
-            get => _ShowDetails;
-            set => SetProperty(ref _ShowDetails, value);
+            throw new NotImplementedException();
+        }
+
+        private void ShowDetails()
+        {
+            throw new NotImplementedException();
         }
 
         private void OpenTicketInBrowser()

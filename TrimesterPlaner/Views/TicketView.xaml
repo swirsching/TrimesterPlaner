@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:TrimesterPlaner.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:TrimesterPlaner.Models"
     xmlns:views="clr-namespace:TrimesterPlaner.Views"
     xmlns:vm="clr-namespace:TrimesterPlaner.ViewModels"
     d:DataContext="{d:DesignInstance {x:Type vm:TicketViewModel}}"
@@ -14,31 +15,21 @@
     mc:Ignorable="d">
     <materialDesign:Card
         Margin="0,2"
-        Padding="5,0"
+        Padding="10,0,5,0"
         materialDesign:ElevationAssist.Elevation="Dp2"
         Style="{StaticResource MaterialDesignElevatedCard}">
-        <StackPanel>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <ToggleButton
-                    VerticalAlignment="Center"
-                    IsChecked="{Binding ShowDetails}"
-                    Style="{StaticResource MaterialDesignExpanderToggleButton}" />
-                <ToggleButton
-                    Grid.Column="1"
-                    HorizontalContentAlignment="Left"
-                    Content="{Binding Ticket.Summary}"
-                    FontWeight="Normal"
-                    Foreground="#002D5B"
-                    IsChecked="{Binding ShowDetails}"
-                    Style="{StaticResource MaterialDesignToolButton}" />
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <StackPanel Margin="10,0,-50,0" Orientation="Horizontal">
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button
+                    Command="{Binding OpenTicketInBrowserCommand}"
+                    Content="{Binding Ticket.Key}"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    ToolTip="In Browser öffnen" />
+                <Button
+                    Command="{Binding ShowPlansCommand}"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    ToolTip="Verplanungsstatus">
+                    <StackPanel Margin="0,0,-50,0" Orientation="Horizontal">
                         <ProgressBar
                             Width="30"
                             Height="20"
@@ -58,74 +49,22 @@
                             Minimum="1"
                             Value="{Binding PlannedPercentage, Mode=OneWay}" />
                     </StackPanel>
-                    <Button
-                        VerticalAlignment="Center"
-                        Command="{Binding AddPlanCommand}"
-                        IsEnabled="{Binding SelectedDeveloper, Converter={StaticResource NotNullToBoolConv}}"
-                        Style="{StaticResource MaterialDesignFlatButton}"
-                        ToolTip="An Entwickler zuweisen">
-                        <materialDesign:PackIcon Kind="ArrowRight" />
-                    </Button>
-                    <Button
-                        VerticalAlignment="Center"
-                        Command="{Binding RemoveTicketCommand}"
-                        Style="{StaticResource MaterialDesignFlatButton}">
-                        <materialDesign:PackIcon Kind="Delete" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-            <Grid Margin="0,0,0,5" Visibility="{Binding ShowDetails, Converter={StaticResource BoolToVisConv}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
+                </Button>
                 <Button
-                    HorizontalAlignment="Center"
-                    Command="{Binding OpenTicketInBrowserCommand}"
-                    Content="{Binding Ticket.Key}"
+                    Command="{Binding ShowDetailsCommand}"
                     Style="{StaticResource MaterialDesignFlatButton}"
-                    ToolTip="In Browser öffnen" />
-
-                <TextBlock
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="{Binding Ticket.Shirt}" />
-
-                <TextBlock
-                    Grid.Column="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="{Binding Ticket.OriginalEstimate, StringFormat={}O: {0} PT}"
-                    ToolTip="Original Estimate" />
-
-                <TextBlock
-                    Grid.Column="3"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="{Binding Ticket.RemainingEstimate, StringFormat={}R: {0} PT}"
-                    ToolTip="Remaining Estimate" />
-
-                <TextBlock
-                    Grid.Column="4"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="{Binding Ticket.TimeSpent, StringFormat={}T: {0} PT}"
-                    ToolTip="Time Spent"
-                    Visibility="{Binding Ticket.TimeSpent, Converter={StaticResource NotNullToVisConv}}" />
-
-                <TextBlock
-                    Grid.Column="5"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="{Binding TicketPT, StringFormat={}{0} PT}"
-                    ToolTip="Gesamt-PT" />
-            </Grid>
-        </StackPanel>
+                    ToolTip="Details">
+                    <materialDesign:PackIcon Kind="Eye" />
+                </Button>
+                <Button
+                    Command="{Binding AddPlanCommand}"
+                    IsEnabled="{Binding SelectedDeveloper, Converter={StaticResource NotNullToBoolConv}}"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    ToolTip="An Entwickler zuweisen">
+                    <materialDesign:PackIcon Kind="ArrowRight" />
+                </Button>
+            </StackPanel>
+            <TextBlock VerticalAlignment="Center" Text="{Binding Ticket.Summary}" />
+        </DockPanel>
     </materialDesign:Card>
 </UserControl>
