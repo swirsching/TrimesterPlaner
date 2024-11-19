@@ -61,12 +61,12 @@ namespace TrimesterPlaner.ViewModels
 
         private void ShowPlans()
         {
-            DialogService.ShowEmptyDialog($"Verplanungsstatus {Ticket.Key}");
+            throw new NotImplementedException();
         }
 
         private void ShowDetails()
         {
-            DialogService.ShowEmptyDialog($"Details zu {Ticket.Key}");
+            throw new NotImplementedException();
         }
 
         private void OpenTicketInBrowser()
