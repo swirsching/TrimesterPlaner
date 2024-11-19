@@ -50,7 +50,9 @@ namespace TrimesterPlaner.ViewModels
             set => SetProperty(ref _PlannedPercentage, value);
         }
 
-        public Ticket Ticket { get; }
+        private Ticket Ticket { get; }
+        public string Key { get => Ticket.Key; }
+        public string Summary { get => Ticket.Summary; }
 
         public ICommand OpenTicketInBrowserCommand { get; }
         public ICommand ShowPlansCommand { get; }
@@ -59,12 +61,12 @@ namespace TrimesterPlaner.ViewModels
 
         private void ShowPlans()
         {
-            throw new NotImplementedException();
+            DialogService.ShowEmptyDialog($"Verplanungsstatus {Ticket.Key}");
         }
 
         private void ShowDetails()
         {
-            throw new NotImplementedException();
+            DialogService.ShowEmptyDialog($"Details zu {Ticket.Key}");
         }
 
         private void OpenTicketInBrowser()

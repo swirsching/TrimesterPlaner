@@ -5,17 +5,10 @@ namespace TrimesterPlaner.Utilities
 {
     public class DialogService
     {
-        public static T? AskUser<T>(T? initial = default)
+        public static bool? ShowEmptyDialog(string title)
         {
-            DialogViewModel viewModel = new();
-            viewModel.Initialize(initial);
-            Dialog dialog = new() { DataContext = viewModel };
-
-            if (dialog.ShowDialog() == true)
-            {
-                return viewModel.GetResult<T>();
-            }
-            return default;
+            Dialog dialog = new() { DataContext = new DialogViewModel(title) };
+            return dialog.ShowDialog();
         }
     }
 }

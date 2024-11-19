@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Utilities
 {
@@ -18,16 +17,7 @@ namespace TrimesterPlaner.Utilities
                 return base.SelectTemplate(item, container);
             }
 
-            Type? type = null;
-            if (control.DataContext is Field field)
-            {
-                type = Nullable.GetUnderlyingType(field.PropertyInfo.PropertyType) ?? field.PropertyInfo.PropertyType;
-            }
-            else if (item is not null)
-            {
-                type = item.GetType();
-            }
-
+            Type? type = item?.GetType();
             if (type is null)
             {
                 return base.SelectTemplate(item, container);
