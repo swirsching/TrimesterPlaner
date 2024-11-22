@@ -62,14 +62,21 @@
                     Text="Tickets" />
             </DockPanel>
         </GroupBox.Header>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Tickets}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type models:Ticket}">
-                        <views:TicketView DataContext="{Binding ., Converter={StaticResource Injector}, ConverterParameter={x:Type vm:TicketViewModel}}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <materialDesign:DialogHost CloseOnClickAway="True">
+            <materialDesign:DialogHost.Resources>
+                <DataTemplate DataType="{x:Type vm:TicketDetailViewModel}">
+                    <views:TicketDetailView DataContext="{Binding .}" />
+                </DataTemplate>
+            </materialDesign:DialogHost.Resources>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Tickets}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:Ticket}">
+                            <views:TicketView DataContext="{Binding ., Converter={StaticResource Injector}, ConverterParameter={x:Type vm:TicketViewModel}}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </materialDesign:DialogHost>
     </GroupBox>
 </UserControl>

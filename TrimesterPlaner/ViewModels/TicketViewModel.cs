@@ -17,8 +17,6 @@ namespace TrimesterPlaner.ViewModels
             Ticket = ticket;
 
             OpenTicketInBrowserCommand = new RelayCommand((o) => OpenTicketInBrowser());
-            ShowPlansCommand = new RelayCommand((o) => ShowPlans());
-            ShowDetailsCommand = new RelayCommand((o) => ShowDetails());
             AddPlanCommand = new RelayCommand((o) => planManager.AddTicketPlan(SelectedDeveloper!, Ticket));
 
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
@@ -50,24 +48,12 @@ namespace TrimesterPlaner.ViewModels
             set => SetProperty(ref _PlannedPercentage, value);
         }
 
-        private Ticket Ticket { get; }
+        public Ticket Ticket { get; }
         public string Key { get => Ticket.Key; }
         public string Summary { get => Ticket.Summary; }
 
         public ICommand OpenTicketInBrowserCommand { get; }
-        public ICommand ShowPlansCommand { get; }
-        public ICommand ShowDetailsCommand { get; }
         public ICommand AddPlanCommand { get; }
-
-        private void ShowPlans()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void ShowDetails()
-        {
-            throw new NotImplementedException();
-        }
 
         private void OpenTicketInBrowser()
         {

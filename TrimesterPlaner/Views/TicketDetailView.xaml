@@ -1,0 +1,82 @@
+﻿<UserControl
+    x:Class="TrimesterPlaner.Views.TicketDetailView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TrimesterPlaner.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:TrimesterPlaner.ViewModels"
+    d:DataContext="{d:DesignInstance {x:Type vm:TicketDetailViewModel}}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <materialDesign:Card>
+        <DockPanel Margin="10,5">
+            <TextBlock DockPanel.Dock="Top" Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} - {1}">
+                        <Binding Path="Ticket.Key" />
+                        <Binding Path="Ticket.Summary" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <Grid Margin="0,0,5,0" DockPanel.Dock="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition MinWidth="60" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="T-Shirt:" />
+                <TextBlock
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Text="{Binding Ticket.Shirt}" />
+
+                <TextBlock Grid.Row="1" Text="Original Estimate:" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Text="{Binding Ticket.OriginalEstimate, StringFormat={}{0} PT}" />
+
+                <TextBlock Grid.Row="2" Text="Remaining Estimate:" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Text="{Binding Ticket.RemainingEstimate, StringFormat={}{0} PT}" />
+
+                <TextBlock Grid.Row="3" Text="Time Spent:" />
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Text="{Binding Ticket.TimeSpent, Converter={StaticResource DoNothingOnNullConv}, StringFormat={}{0} PT, FallbackValue='?'}" />
+
+                <TextBlock Grid.Row="4" Text="Total:" />
+                <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Text="{Binding TotalPT, StringFormat={}{0} PT}" />
+
+                <TextBlock Grid.Row="5" Text="Planned:" />
+                <TextBlock
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Text="{Binding PlannedPT, StringFormat={}{0} PT}" />
+            </Grid>
+            <TextBlock Text="Pläne" />
+        </DockPanel>
+    </materialDesign:Card>
+</UserControl>

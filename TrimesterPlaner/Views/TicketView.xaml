@@ -6,7 +6,6 @@
     xmlns:local="clr-namespace:TrimesterPlaner.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="clr-namespace:TrimesterPlaner.Models"
     xmlns:views="clr-namespace:TrimesterPlaner.Views"
     xmlns:vm="clr-namespace:TrimesterPlaner.ViewModels"
     d:DataContext="{d:DesignInstance {x:Type vm:TicketViewModel}}"
@@ -26,9 +25,10 @@
                     Style="{StaticResource MaterialDesignFlatButton}"
                     ToolTip="In Browser öffnen" />
                 <Button
-                    Command="{Binding ShowPlansCommand}"
+                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                    CommandParameter="{Binding Ticket, Converter={StaticResource Injector}, ConverterParameter={x:Type vm:TicketDetailViewModel}}"
                     Style="{StaticResource MaterialDesignFlatButton}"
-                    ToolTip="Verplanungsstatus">
+                    ToolTip="Details">
                     <StackPanel Margin="0,0,-50,0" Orientation="Horizontal">
                         <ProgressBar
                             Width="30"
@@ -49,12 +49,6 @@
                             Minimum="1"
                             Value="{Binding PlannedPercentage, Mode=OneWay}" />
                     </StackPanel>
-                </Button>
-                <Button
-                    Command="{Binding ShowDetailsCommand}"
-                    Style="{StaticResource MaterialDesignFlatButton}"
-                    ToolTip="Details">
-                    <materialDesign:PackIcon Kind="Eye" />
                 </Button>
                 <Button
                     Command="{Binding AddPlanCommand}"
