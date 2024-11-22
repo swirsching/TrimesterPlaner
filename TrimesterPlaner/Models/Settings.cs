@@ -4,6 +4,7 @@
     {
         public Settings() 
         {
+            Title = "";
             Start = null;
             Entwicklungsstart = null;
             Entwicklungsschluss = null;
@@ -13,6 +14,7 @@
             Burndown = true;
         }
 
+        public string Title { get; set; }
         public DateTime? Start { get; set; }
         public DateTime? Entwicklungsstart { get; set; }
         public DateTime? Entwicklungsschluss { get; set; }

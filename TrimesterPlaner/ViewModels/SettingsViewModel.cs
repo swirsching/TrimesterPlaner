@@ -34,6 +34,16 @@ namespace TrimesterPlaner.ViewModels
             }
         }
 
+        public string Title
+        {
+            get => settings.Title;
+            set
+            {
+                settings.Title = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string JQL
         {
             get => settings.JQL;

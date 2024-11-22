@@ -13,6 +13,21 @@
     mc:Ignorable="d">
     <GroupBox materialDesign:ColorZoneAssist.Mode="PrimaryDark" Header="Einstellungen">
         <StackPanel>
+            <TextBox
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Right"
+                materialDesign:TextFieldAssist.PrefixText="Titel: "
+                Text="{Binding Title}"
+                TextWrapping="Wrap" />
+
+            <TextBox
+                Margin="0,5"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Right"
+                materialDesign:TextFieldAssist.PrefixText="JQL: "
+                Text="{Binding JQL}"
+                TextWrapping="Wrap" />
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -65,15 +80,6 @@
                     Content="Burndown"
                     IsChecked="{Binding Burndown}" />
             </Grid>
-
-            <TextBox
-                MinWidth="90"
-                Margin="0,0,0,10"
-                HorizontalAlignment="Right"
-                HorizontalContentAlignment="Left"
-                materialDesign:TextFieldAssist.PrefixText="JQL: "
-                Text="{Binding JQL}"
-                TextWrapping="Wrap" />
         </StackPanel>
     </GroupBox>
 </UserControl>
