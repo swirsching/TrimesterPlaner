@@ -11,6 +11,7 @@ namespace TrimesterPlaner.ViewModels
         public TicketViewModel(
             Ticket ticket, 
             IPlanManager planManager, 
+            ITicketManager ticketManager,
             DeveloperProviderViewModel developerProviderViewModel,
             IEntwicklungsplanManager entwicklungsplanManager) : base()
         { 
@@ -18,6 +19,7 @@ namespace TrimesterPlaner.ViewModels
 
             OpenTicketInBrowserCommand = new RelayCommand((o) => OpenTicketInBrowser());
             AddPlanCommand = new RelayCommand((o) => planManager.AddTicketPlan(SelectedDeveloper!, Ticket));
+            RemoveCommand = new RelayCommand((o) => ticketManager.RemoveTicket(Ticket));
 
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
             entwicklungsplanManager.EntwicklungsplanChanged += CalculatePlannedPercentage;
@@ -54,6 +56,7 @@ namespace TrimesterPlaner.ViewModels
 
         public ICommand OpenTicketInBrowserCommand { get; }
         public ICommand AddPlanCommand { get; }
+        public ICommand RemoveCommand { get; }
 
         private void OpenTicketInBrowser()
         {
