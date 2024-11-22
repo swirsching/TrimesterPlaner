@@ -21,6 +21,7 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
+
             <Grid Margin="0,0,5,0" DockPanel.Dock="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -73,10 +74,51 @@
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Text="{Binding PlannedPT, StringFormat={}{0} PT}" />
+                    HorizontalAlignment="Right">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} PT / {1} PT">
+                            <Binding Path="PlannedPT" />
+                            <Binding Path="PreparedPT" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
             </Grid>
-            <TextBlock Text="Pläne" />
+
+            <ItemsControl Grid.IsSharedSizeScope="True" ItemsSource="{Binding PlanDetails}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:PreparedPlanDetailViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition SharedSizeGroup="Developer" />
+                                <ColumnDefinition SharedSizeGroup="Date" />
+                                <ColumnDefinition SharedSizeGroup="PT" />
+                                <ColumnDefinition SharedSizeGroup="Description" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Margin="5,0" Text="{Binding Developer}" />
+
+                            <TextBlock Grid.Column="1" Margin="5,0">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0:dd.MM.yyyy} - {1:dd.MM.yyyy}">
+                                        <Binding Path="Start" />
+                                        <Binding Path="End" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+
+                            <TextBlock
+                                Grid.Column="2"
+                                Margin="5,0"
+                                Text="{Binding PT, StringFormat={}{0} PT}" />
+
+                            <TextBlock
+                                Grid.Column="3"
+                                Margin="5,0"
+                                Text="{Binding Description}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </DockPanel>
     </materialDesign:Card>
 </UserControl>

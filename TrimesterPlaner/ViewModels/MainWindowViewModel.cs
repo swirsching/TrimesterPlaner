@@ -16,6 +16,7 @@ namespace TrimesterPlaner.ViewModels
     {
         public event EntwicklungsplanChangedHandler? EntwicklungsplanChanged;
         public void RefreshEntwicklungsplan();
+        public PreparedData? GetLastPreparedData();
     }
 
     public interface IDeveloperManager
@@ -242,15 +243,20 @@ namespace TrimesterPlaner.ViewModels
         {
             if (IsDirty)
             {
-                var data = Preparator.Prepare(MakeConfig());
-                Result = data is null ? null : Generator.Generate(data);
-                EntwicklungsplanChanged?.Invoke(data);
+                LastPreparedData = Preparator.Prepare(MakeConfig());
+                Result = LastPreparedData is null ? null : Generator.Generate(LastPreparedData);
+                EntwicklungsplanChanged?.Invoke(LastPreparedData);
             }
         }
 
         public void RefreshEntwicklungsplan()
         {
             IsDirty = true;
+        }
+
+        public PreparedData? GetLastPreparedData()
+        {
+            return LastPreparedData;
         }
 
         public Settings GetSettings()
@@ -402,6 +408,8 @@ namespace TrimesterPlaner.ViewModels
             get => _IsDirty;
             set => SetProperty(ref _IsDirty, value);
         }
+
+        private PreparedData? LastPreparedData { get; set; }
 
         private SvgDocument? _Result = null;
         public SvgDocument? Result
