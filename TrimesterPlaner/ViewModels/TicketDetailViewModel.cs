@@ -32,7 +32,7 @@ namespace TrimesterPlaner.ViewModels
                         select new PreparedPlanDetailViewModel(developer.Abbreviation, plan);
             PlanDetails.ClearAndAdd(plans);
 
-            PreparedPT = (from planDetail in PlanDetails select planDetail.PT).Sum();
+            PreparedPT = (from planDetail in PlanDetails select planDetail.ActualPT).Sum();
         }
 
         public Ticket Ticket { get; }
