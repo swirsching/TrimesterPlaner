@@ -213,14 +213,9 @@ namespace TrimesterPlaner.Extensions
 
         public static int GetRemainingX(this PlanData plan)
         {
-            if (plan.RemainingPerDay.Count == 0)
+            if (plan.RemainingPerDay.Count == 0 || plan.RemainingPT is null)
             {
                 return -1;
-            }
-
-            if (plan.RemainingPT is null)
-            {
-                return plan.GetStartX();
             }
 
             var daysWithBiggerRemaining = from dayAndRemaining in plan.RemainingPerDay
