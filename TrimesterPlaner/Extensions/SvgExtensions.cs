@@ -38,7 +38,7 @@ namespace TrimesterPlaner.Extensions
 
         public static string Shorten(this string text, string fontFamily, int fontSize, int? maxWidth)
         {
-            if (text.IsShortEnough(fontFamily, fontSize, maxWidth))
+            if (string.IsNullOrWhiteSpace(text) || text.IsShortEnough(fontFamily, fontSize, maxWidth))
             {
                 return text;
             }
