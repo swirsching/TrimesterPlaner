@@ -323,19 +323,24 @@ namespace TrimesterPlaner.Models
         {
             SvgGroup group = new();
 
+            int? startX = null, endX = null;
             foreach (PlanData plan in plans)
             {
-                group.Children.Add(GeneratePlan(plan));
+                startX ??= plan.GetStartX();
+                endX ??= plan.GetEndX();
+                group.Children.Add(GeneratePlan(plan, startX!.Value, endX!.Value));
+                startX = endX;
+                endX = null;
             }
 
             return group;
         }
 
-        private SvgGroup GeneratePlan(PlanData plan)
+        private SvgGroup GeneratePlan(PlanData plan, int startX, int endX)
         {
             SvgGroup group = new();
 
-            int width = plan.GetEndX() - plan.GetStartX();
+            int width = endX - startX;
             int innerWidth = width - 2 * Margins.Plan;
             int innerHeight = Heights.Developer - 2 * Margins.Plan;
             group.Children.Add(new SvgRectangle
@@ -388,7 +393,7 @@ namespace TrimesterPlaner.Models
                 {
                     CornerRadiusX = CornerRadius,
                     CornerRadiusY = CornerRadius,
-                    Width = plan.GetRemainingX() - plan.GetStartX() - 2 * Margins.Plan,
+                    Width = plan.GetRemainingX() - startX - 2 * Margins.Plan,
                     Height = Heights.Remaining,
                     Fill = Colors.Remaining,
                 }.Translate(0, innerHeight - Heights.Remaining));
@@ -410,7 +415,7 @@ namespace TrimesterPlaner.Models
             {
                 outerGroup = group;
             }
-            return outerGroup.Translate(Margins.Plan, Margins.Plan).Translate(plan.GetStartX(), 0);
+            return outerGroup.Translate(Margins.Plan, Margins.Plan).Translate(startX, 0);
         }
 
         private SvgGroup GenerateVacations(IEnumerable<VacationData> vacations)
