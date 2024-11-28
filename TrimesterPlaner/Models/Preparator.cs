@@ -3,6 +3,13 @@ using TrimesterPlaner.Extensions;
 
 namespace TrimesterPlaner.Models
 {
+    public static class Widths
+    {
+        public static int Left { get; } = 40;
+        public static int WeekDay { get; } = 50;
+        public static int WeekEndDay { get; } = 5;
+    }
+
     public interface IPreparator
     {
         public PreparedData? Prepare(Config config);
@@ -18,11 +25,16 @@ namespace TrimesterPlaner.Models
     {
         public DateTime Date { get; } = date;
         public bool IsBadArea { get; } = isBadArea;
-        public int X { get; set; } = 0;
         public double Capacity { get; set; } = 0.0;
         public double Total { get; set; } = 0.0;
         public Dictionary<PlanData, double> Plans { get; } = [];
         public Dictionary<VacationData, double> Vacations { get; } = [];
+
+        public int X { private get; set; } = 0;
+        public int GetX(double alpha)
+        {
+            return (int)(X + Math.Clamp(alpha, 0, 1) * (this.IsWeekend() ? Widths.WeekEndDay : Widths.WeekDay));
+        }
     }
     public record DeveloperData(string Abbreviation, IEnumerable<Day> FreeDays, IEnumerable<PlanData> Plans, IEnumerable<VacationData> Vacations);
     public class PlanData
@@ -96,6 +108,13 @@ namespace TrimesterPlaner.Models
 
             List<Day> days = new(from date in Helpers.GetDaysBetweenDates(config.Settings.Start.Value, config.Settings.Start.Value.AddYears(1))
                                  select new Day(date, date > config.Settings.Entwicklungsschluss.Value));
+            
+            int width = Widths.Left;
+            foreach (var day in days)
+            {
+                day.X = width;
+                width += day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay;
+            }
 
             List<DeveloperData> developers = new(from developer in config.Developers
                                                  select PrepareDeveloper(days, developer));

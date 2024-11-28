@@ -1,5 +1,4 @@
-﻿using System;
-using TrimesterPlaner.Models;
+﻿using TrimesterPlaner.Models;
 
 namespace TrimesterPlaner.Extensions
 {
@@ -192,6 +191,63 @@ namespace TrimesterPlaner.Extensions
             double plannedPT = (from plan in ticket.Plans
                                 select plan?.TimeEstimateOverride?.GetTotalPT() ?? ticketPT).Sum();
             return plannedPT;
+        }
+    }
+
+    public static class PreparedDataExtensions
+    {
+        public static bool IsWeekend(this Day day)
+        {
+            return day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
+        }
+
+        public static int GetStartX(this PlanData plan)
+        {
+            if (plan.RemainingPerDay.Count == 0)
+            {
+                return -1;
+            }
+
+            return plan.RemainingPerDay.First().Key.GetX(0);
+        }
+
+        public static int GetRemainingX(this PlanData plan)
+        {
+            if (plan.RemainingPerDay.Count == 0)
+            {
+                return -1;
+            }
+
+            if (plan.RemainingPT is null)
+            {
+                return plan.GetStartX();
+            }
+
+            var daysWithBiggerRemaining = from dayAndRemaining in plan.RemainingPerDay
+                                          where dayAndRemaining.Value > plan.RemainingPT
+                                          select dayAndRemaining;
+            var daysToConsider = plan.RemainingPerDay.Take(daysWithBiggerRemaining.Count() + 1);
+            return daysToConsider.Last().Key.GetX(daysToConsider.GetAlpha(plan.PlanPT, plan.RemainingPT!.Value));
+        }
+
+        public static int GetEndX(this PlanData plan)
+        {
+            if (plan.RemainingPerDay.Count == 0)
+            {
+                return -1;
+            }
+
+            return plan.RemainingPerDay.Last().Key.GetX(plan.RemainingPerDay.GetAlpha(plan.PlanPT));
+        }
+
+        private static double GetAlpha(this IEnumerable<KeyValuePair<Day, double>> remainingPerDay, double planPT, double remainingPT = 0)
+        {
+            // Example 1: Last day goes from 0.25 to -0.75 PT => Alpha should be 0.25
+            // Example 2: Last day goes from 0.75 to -0.25 PT => Alpha should be 0.75
+            double finalPT = remainingPerDay.Last().Value;
+            double lastDayPT = (remainingPerDay.Count() > 1 ? remainingPerDay.ElementAt(remainingPerDay.Count() - 2).Value : planPT) - finalPT;
+            double overshotPT = remainingPT - finalPT;
+            return 1 - (overshotPT / lastDayPT);
         }
     }
 }

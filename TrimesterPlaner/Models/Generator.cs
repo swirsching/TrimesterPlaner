@@ -34,9 +34,6 @@ namespace TrimesterPlaner.Models
         private record HeightsType(int Fehlerteam, int Burndown, int Header, int Developer, int Remaining, int Vacation, int DateRow);
         private HeightsType Heights { get; } = new(200, 500, 40, 70, 5, 20, 60);
 
-        private record WidthsType(int WeekDay, int WeekEndDay, int Left);
-        private WidthsType Widths { get; } = new(50, 5, 40);
-
         private record LineMarginsType(int Offset, int TextMargin);
         private record MarginsType(int Plan, LineMarginsType Lines, int BurndownVertical);
         private MarginsType Margins { get; } = new(2, new(2, 20), 50);
@@ -136,21 +133,13 @@ namespace TrimesterPlaner.Models
                  
         public SvgDocument? Generate(PreparedData data)
         {
-            int width = Widths.Left;
-            foreach (var week in data.Weeks)
-            {
-                foreach (var day in week.Days)
-                {
-                    day.X = width;
-                    width += day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay;
-                }
-            }
-
-            var lastGoodDay = (from week in data.Weeks
-                               from day in week.Days
-                               where !day.IsBadArea
-                               select day).Last();
-            int plannedWidth = lastGoodDay.X + (lastGoodDay.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay);
+            int width = (from week in data.Weeks
+                         from day in week.Days
+                         select day).Last().GetX(1);
+            int plannedWidth = (from week in data.Weeks
+                                from day in week.Days
+                                where !day.IsBadArea
+                                select day).Last().GetX(1);
 
             int fehlerteamHeight = data.Fehlerteam ? Heights.Fehlerteam + Margins.BurndownVertical : 0;
             int burndownHeight = data.Burndown ? Heights.Burndown + Margins.BurndownVertical : 0;
@@ -228,8 +217,8 @@ namespace TrimesterPlaner.Models
             {
                 foreach (Day day in week.Days)
                 {
-                    capacityPoints.Add(new Point(day.X, day.Capacity));
-                    totalPoints.Add(new Point(day.X, day.Total));
+                    capacityPoints.Add(new Point(day.GetX(0), day.Capacity));
+                    totalPoints.Add(new Point(day.GetX(0), day.Total));
                 }
             }
             double maxValue = (from point in capacityPoints.Concat(totalPoints)
@@ -288,14 +277,13 @@ namespace TrimesterPlaner.Models
             {
                 foreach (Day day in week.Days)
                 {
-                    int x = day.X + Widths.WeekDay / 2;
                     if (day.Date.DayOfWeek is DayOfWeek.Monday or DayOfWeek.Friday)
                     {
-                        group.Children.Add(MakeText(day.Date.ToString("dd.MM."), SvgTextAnchor.Middle, FontSizes.Small).Translate(x, Heights.Header / 2).Rotate(day.Date.DayOfWeek == DayOfWeek.Monday ? -90 : 90));
+                        group.Children.Add(MakeText(day.Date.ToString("dd.MM."), SvgTextAnchor.Middle, FontSizes.Small).Translate(day.GetX(0.5), Heights.Header / 2).Rotate(day.Date.DayOfWeek == DayOfWeek.Monday ? -90 : 90));
                     }
-                    if (day.Date.DayOfWeek == DayOfWeek.Wednesday)
+                    else if (day.Date.DayOfWeek == DayOfWeek.Wednesday)
                     {
-                        group.Children.Add(MakeText($"KW {week.Weeknum}", SvgTextAnchor.Middle, FontSizes.Big).Translate(x, Heights.Header / 2));
+                        group.Children.Add(MakeText($"KW {week.Weeknum}", SvgTextAnchor.Middle, FontSizes.Big).Translate(day.GetX(0.5), Heights.Header / 2));
                     }
                 }
             }
@@ -319,10 +307,10 @@ namespace TrimesterPlaner.Models
             {
                 group.Children.Add(new SvgRectangle()
                 { 
-                    Width = freeDay.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay,
+                    Width = freeDay.IsWeekend() ? Widths.WeekEndDay : Widths.WeekDay,
                     Height = Heights.Developer,
                     Fill = Colors.Weekend,
-                }.Translate(freeDay.X, 0));
+                }.Translate(freeDay.GetX(0), 0));
             }
 
             group.Children.Add(GeneratePlans(developer.Plans));
@@ -337,7 +325,7 @@ namespace TrimesterPlaner.Models
 
             foreach (PlanData plan in plans)
             {
-                group.Children.Add(GeneratePlan(plan).Translate(plan.RemainingPerDay.First().Key.X, 0));
+                group.Children.Add(GeneratePlan(plan));
             }
 
             return group;
@@ -347,7 +335,7 @@ namespace TrimesterPlaner.Models
         {
             SvgGroup group = new();
 
-            int width = plan.RemainingPerDay.Last().Key.X - plan.RemainingPerDay.First().Key.X + Widths.WeekDay;
+            int width = plan.GetEndX() - plan.GetStartX();
             int innerWidth = width - 2 * Margins.Plan;
             int innerHeight = Heights.Developer - 2 * Margins.Plan;
             group.Children.Add(new SvgRectangle
@@ -396,23 +384,14 @@ namespace TrimesterPlaner.Models
 
             if (plan.RemainingPT is not null)
             {
-                var daysWithBiggerRemaining = from dayAndRemaining in plan.RemainingPerDay
-                                              where dayAndRemaining.Value > plan.RemainingPT || plan.RemainingPT < 0.01
-                                              select dayAndRemaining.Key;
-                if (daysWithBiggerRemaining.Any())
+                group.Children.Add(new SvgRectangle
                 {
-                    int remainingWidth = daysWithBiggerRemaining.Last().X - daysWithBiggerRemaining.First().X;
-                    remainingWidth += daysWithBiggerRemaining.Last().Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay;
-                    remainingWidth -= 2 * Margins.Plan;
-                    group.Children.Add(new SvgRectangle
-                    {
-                        CornerRadiusX = CornerRadius,
-                        CornerRadiusY = CornerRadius,
-                        Width = remainingWidth,
-                        Height = Heights.Remaining,
-                        Fill = Colors.Remaining,
-                    }.Translate(0, innerHeight - Heights.Remaining));
-                }
+                    CornerRadiusX = CornerRadius,
+                    CornerRadiusY = CornerRadius,
+                    Width = plan.GetRemainingX() - plan.GetStartX() - 2 * Margins.Plan,
+                    Height = Heights.Remaining,
+                    Fill = Colors.Remaining,
+                }.Translate(0, innerHeight - Heights.Remaining));
             }
 
             SvgGroup outerGroup;
@@ -431,7 +410,7 @@ namespace TrimesterPlaner.Models
             {
                 outerGroup = group;
             }
-            return outerGroup.Translate(Margins.Plan, Margins.Plan);
+            return outerGroup.Translate(Margins.Plan, Margins.Plan).Translate(plan.GetStartX(), 0);
         }
 
         private SvgGroup GenerateVacations(IEnumerable<VacationData> vacations)
@@ -442,7 +421,7 @@ namespace TrimesterPlaner.Models
             {
                 if (vacation.Days.Any())
                 {
-                    group.Children.Add(GenerateVacation(vacation).Translate(vacation.Days.First().X, 0));
+                    group.Children.Add(GenerateVacation(vacation).Translate(vacation.Days.First().GetX(0), 0));
                 }
             }
 
@@ -454,7 +433,7 @@ namespace TrimesterPlaner.Models
             SvgGroup group = new();
 
             var lastDay = vacation.Days.Last();
-            int width = lastDay.X - vacation.Days.First().X + (lastDay.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay);
+            int width = lastDay.GetX(1) - vacation.Days.First().GetX(0);
             group.Children.Add(new SvgRectangle()
             {
                 CornerRadiusX = CornerRadius,
@@ -490,11 +469,7 @@ namespace TrimesterPlaner.Models
             if (days.Any())
             {
                 var day = days.First();
-                var x = day.X + offset;
-                if (isEndLine)
-                {
-                    x += day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay;
-                }
+                var x = day.GetX(isEndLine ? 1 : 0) + offset;
                 group.Children.Add(new SvgLine()
                 {
                     StartX = x,
