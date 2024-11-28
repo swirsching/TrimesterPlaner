@@ -187,7 +187,7 @@ namespace TrimesterPlaner.Models
             return new(developer.Abbreviation, freeDays, plans, vacations);
         }
 
-        private static List<PlanData> PreparePlans(IEnumerable<Day> days, Developer developer)
+        public static List<PlanData> PreparePlans(IEnumerable<Day> days, Developer developer)
         {
             if (developer.Plans.Count == 0)
             {
