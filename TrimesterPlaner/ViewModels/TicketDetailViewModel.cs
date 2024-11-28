@@ -31,8 +31,6 @@ namespace TrimesterPlaner.ViewModels
                         where plan.FirstRow == Ticket.Key
                         select new PreparedPlanDetailViewModel(developer.Abbreviation, plan);
             PlanDetails.ClearAndAdd(plans);
-
-            PreparedPT = (from planDetail in PlanDetails select planDetail.ActualPT).Sum();
         }
 
         public Ticket Ticket { get; }
@@ -44,13 +42,6 @@ namespace TrimesterPlaner.ViewModels
         { 
             get => _PlannedPT;
             set => SetProperty(ref _PlannedPT, value);
-        }
-
-        private double _PreparedPT;
-        public double PreparedPT
-        {
-            get => _PreparedPT;
-            set => SetProperty(ref _PreparedPT, value);
         }
     }
 }

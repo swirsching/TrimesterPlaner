@@ -13,7 +13,10 @@
     mc:Ignorable="d">
     <materialDesign:Card>
         <DockPanel Margin="10,5">
-            <TextBlock DockPanel.Dock="Top" Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+            <TextBlock
+                Margin="0,4,0,8"
+                DockPanel.Dock="Top"
+                Style="{StaticResource MaterialDesignHeadline6TextBlock}">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0} - {1}">
                         <Binding Path="Ticket.Key" />
@@ -22,107 +25,112 @@
                 </TextBlock.Text>
             </TextBlock>
 
-            <Grid Margin="0,0,5,0" DockPanel.Dock="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition MinWidth="60" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <GroupBox
+                Margin="0,0,5,0"
+                materialDesign:ColorZoneAssist.Mode="PrimaryDark"
+                DockPanel.Dock="Left"
+                Header="Ticket-Details">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition MinWidth="60" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                <TextBlock Text="T-Shirt:" />
-                <TextBlock
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Text="{Binding Ticket.Shirt}" />
+                    <TextBlock Text="T-Shirt:" />
+                    <TextBlock
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Ticket.Shirt}" />
 
-                <TextBlock Grid.Row="1" Text="Original Estimate:" />
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Text="{Binding Ticket.OriginalEstimate, StringFormat={}{0} PT}" />
+                    <TextBlock Grid.Row="1" Text="Original Estimate:" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Ticket.OriginalEstimate, StringFormat={}{0} PT}" />
 
-                <TextBlock Grid.Row="2" Text="Remaining Estimate:" />
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Text="{Binding Ticket.RemainingEstimate, StringFormat={}{0} PT}" />
+                    <TextBlock Grid.Row="2" Text="Remaining Estimate:" />
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Ticket.RemainingEstimate, StringFormat={}{0} PT}" />
 
-                <TextBlock Grid.Row="3" Text="Time Spent:" />
-                <TextBlock
-                    Grid.Row="3"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Text="{Binding Ticket.TimeSpent, Converter={StaticResource DoNothingOnNullConv}, StringFormat={}{0} PT, FallbackValue='?'}" />
+                    <TextBlock Grid.Row="3" Text="Time Spent:" />
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Ticket.TimeSpent, StringFormat={}{0} PT}" />
 
-                <TextBlock Grid.Row="4" Text="Total:" />
-                <TextBlock
-                    Grid.Row="4"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Text="{Binding TotalPT, StringFormat={}{0} PT}" />
+                    <TextBlock Grid.Row="4" Text="Total:" />
+                    <TextBlock
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding TotalPT, StringFormat={}{0} PT}" />
+                </Grid>
+            </GroupBox>
 
-                <TextBlock Grid.Row="5" Text="Planned:" />
-                <TextBlock
-                    Grid.Row="5"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right">
-                    <TextBlock.Text>
-                        <MultiBinding StringFormat="{}{0} PT / {1} PT">
-                            <Binding Path="PlannedPT" />
-                            <Binding Path="PreparedPT" />
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
-            </Grid>
+            <GroupBox materialDesign:ColorZoneAssist.Mode="PrimaryDark">
+                <GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-            <ItemsControl Grid.IsSharedSizeScope="True" ItemsSource="{Binding PlanDetails}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:PreparedPlanDetailViewModel}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition SharedSizeGroup="Developer" />
-                                <ColumnDefinition SharedSizeGroup="Date" />
-                                <ColumnDefinition SharedSizeGroup="PT" />
-                                <ColumnDefinition SharedSizeGroup="Description" />
-                            </Grid.ColumnDefinitions>
+                        <TextBlock Foreground="White" Text="Planung" />
+                        <TextBlock
+                            Grid.Column="1"
+                            DockPanel.Dock="Right"
+                            Foreground="White"
+                            Text="{Binding PlannedPT, StringFormat={}{0} PT}" />
+                    </Grid>
+                </GroupBox.Header>
+                <ItemsControl Grid.IsSharedSizeScope="True" ItemsSource="{Binding PlanDetails}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:PreparedPlanDetailViewModel}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition SharedSizeGroup="Developer" />
+                                    <ColumnDefinition SharedSizeGroup="Date" />
+                                    <ColumnDefinition SharedSizeGroup="PT" />
+                                    <ColumnDefinition SharedSizeGroup="Description" />
+                                </Grid.ColumnDefinitions>
 
-                            <TextBlock Margin="5,0" Text="{Binding Developer}" />
+                                <TextBlock Margin="5,0" Text="{Binding Developer}" />
 
-                            <TextBlock Grid.Column="1" Margin="5,0">
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0:dd.MM.yyyy} - {1:dd.MM.yyyy}">
-                                        <Binding Path="Start" />
-                                        <Binding Path="End" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
+                                <TextBlock Grid.Column="1" Margin="5,0">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0:dd.MM.yyyy} - {1:dd.MM.yyyy}">
+                                            <Binding Path="Start" />
+                                            <Binding Path="End" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
 
-                            <TextBlock Grid.Column="2" Margin="5,0">
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0} PT / {1} PT">
-                                        <Binding Path="PlanPT" />
-                                        <Binding Path="ActualPT" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Margin="5,0"
+                                    Text="{Binding PlanPT, StringFormat={}{0} PT}" />
 
-                            <TextBlock
-                                Grid.Column="3"
-                                Margin="5,0"
-                                Text="{Binding Description}" />
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Margin="5,0"
+                                    Text="{Binding Description}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </GroupBox>
         </DockPanel>
     </materialDesign:Card>
 </UserControl>
