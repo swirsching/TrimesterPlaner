@@ -128,10 +128,9 @@ namespace TrimesterPlaner.Models
             CalculateCapacity(days, config.Developers);
             CalculateTotal(days, allPlans);
 
-            int startWeek = GetWeeknum(days.First().Date);
             int weekCount = Helpers.GetWeeksBetweenDates(days.First().Date, days.Last().Date);
-            List<Week> weeks = new(from weeknum in Enumerable.Range(startWeek, weekCount)
-                                   select new Week(weeknum));
+            List<Week> weeks = new(from weeknum in Enumerable.Range(0, weekCount)
+                                   select new Week(GetWeeknum(days.First().Date.AddDays(7 * weeknum))));
 
             var weekEnumerator = weeks.GetEnumerator();
             weekEnumerator.MoveNext();
