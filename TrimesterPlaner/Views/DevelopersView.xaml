@@ -39,7 +39,7 @@
                     VerticalAlignment="Center"
                     Foreground="White"
                     Style="{StaticResource MaterialDesignBody2TextBlock}"
-                    Text="Entwickler" />
+                    Text="Entwickler:in" />
             </DockPanel>
         </GroupBox.Header>
         <StackPanel>

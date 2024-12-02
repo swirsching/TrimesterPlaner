@@ -54,7 +54,7 @@
                     Command="{Binding AddPlanCommand}"
                     IsEnabled="{Binding SelectedDeveloper, Converter={StaticResource NotNullToBoolConv}}"
                     Style="{StaticResource MaterialDesignFlatButton}"
-                    ToolTip="An Entwickler zuweisen">
+                    ToolTip="An Entwickler:in zuweisen">
                     <materialDesign:PackIcon Kind="ArrowRight" />
                 </Button>
                 <Button Command="{Binding RemoveCommand}" Style="{StaticResource MaterialDesignFlatButton}">

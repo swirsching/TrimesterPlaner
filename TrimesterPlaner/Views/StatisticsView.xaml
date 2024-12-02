@@ -97,13 +97,13 @@
         <GroupBox
             materialDesign:ColorZoneAssist.Mode="PrimaryDark"
             Grid.IsSharedSizeScope="True"
-            Header="Entwickler-Statistik">
+            Header="Statistik pro Entwickler:in">
             <HeaderedItemsControl ItemsSource="{Binding DeveloperStatistics}" Style="{StaticResource StatisticsStyle}" />
         </GroupBox>
         <GroupBox
             materialDesign:ColorZoneAssist.Mode="PrimaryDark"
             Grid.IsSharedSizeScope="True"
-            Header="Wochen-Statistik (WIP)">
+            Header="Wochen-Statistik">
             <HeaderedItemsControl ItemsSource="{Binding WeekStatistics}" Style="{StaticResource StatisticsStyle}" />
         </GroupBox>
     </StackPanel>
