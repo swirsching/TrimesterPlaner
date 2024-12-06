@@ -36,37 +36,9 @@ namespace TrimesterPlaner.Models
             return (int)(X + Math.Clamp(alpha, 0, 1) * (this.IsWeekend() ? Widths.WeekEndDay : Widths.WeekDay));
         }
     }
-    public record DeveloperData(string Abbreviation, IEnumerable<Day> FreeDays, IEnumerable<PlanData> Plans, IEnumerable<VacationData> Vacations);
-    public class PlanData
-    {
-        public PlanData(PlanType planType, Dictionary<Day, double> remainingPerDay, double planPT, double? remainingPT, string firstRow, string secondRow, string topLeft)
-        {
-            PlanType = planType;
-            RemainingPerDay = remainingPerDay;
-            PlanPT = planPT;
-            RemainingPT = remainingPT;
-            FirstRow = firstRow;
-            SecondRow = secondRow; 
-            TopLeft = topLeft;
-
-            for (int idx = 0; idx < RemainingPerDay.Count; idx++)
-            {
-                var (day, remaining) = RemainingPerDay.ElementAt(idx);
-                double diff = idx > 0
-                    ? remainingPerDay.ElementAt(idx - 1).Value - remaining
-                    : remaining - (idx + 1 < RemainingPerDay.Count ? RemainingPerDay.ElementAt(idx + 1).Value : 0);
-                day.Plans.Add(this, diff);
-            }
-        }
-
-        public PlanType PlanType { get; }
-        public Dictionary<Day, double> RemainingPerDay { get; }
-        public double PlanPT { get; }
-        public double? RemainingPT { get; }
-        public string FirstRow { get; }
-        public string SecondRow { get; }
-        public string TopLeft { get; }
-    }
+    public record DayWithPT(Day Day, double Before, double After);
+    public record DeveloperData(string Abbreviation, IEnumerable<Day> FreeDays, IEnumerable<DayWithPT> Days, IEnumerable<PlanData> Plans, IEnumerable<VacationData> Vacations);
+    public record PlanData(double StartPT, double EndPT, PlanType PlanType, double? RemainingPT, string FirstRow, string SecondRow, string TopLeft);
     public enum PlanType { Ticket, Bug, Special };
     public class VacationData
     {
@@ -176,17 +148,18 @@ namespace TrimesterPlaner.Models
 
         private static double GetRemainingAtDate(DateTime date, PlanData plan)
         {
-            if (date <= plan.RemainingPerDay.First().Key.Date)
-            {
-                return plan.RemainingPerDay.First().Value;
-            }
+            return 0;
+            //if (date <= plan.RemainingPerDay.First().Key.Date)
+            //{
+            //    return plan.RemainingPerDay.First().Value;
+            //}
 
-            if (date > plan.RemainingPerDay.Last().Key.Date)
-            {
-                return 0.0;
-            }
+            //if (date > plan.RemainingPerDay.Last().Key.Date)
+            //{
+            //    return 0.0;
+            //}
 
-            return Math.Max(0, plan.RemainingPerDay.FirstOrDefault((kvp) => date == kvp.Key.Date).Value);
+            //return Math.Max(0, plan.RemainingPerDay.FirstOrDefault((kvp) => date == kvp.Key.Date).Value);
         }
 
         private static DeveloperData PrepareDeveloper(IEnumerable<Day> days, Developer developer)
@@ -195,6 +168,19 @@ namespace TrimesterPlaner.Models
                                         where !developer.IsRegularWorkDay(day.Date)
                                         select day;
 
+            List<DayWithPT> daysWithPT = [];
+            double before = 0, after = 0;
+            double dailyPT = developer.GetDailyPT();
+            foreach (Day day in days) 
+            {
+                if (developer.IsWorkDay(day.Date))
+                {
+                    after += dailyPT;
+                }
+                daysWithPT.Add(new(day, before, after));
+                before = after;
+            }
+
             IEnumerable<PlanData> plans = PreparePlans(days, developer);
 
             IEnumerable<VacationData> vacations = from vacation in developer.Vacations
@@ -202,7 +188,7 @@ namespace TrimesterPlaner.Models
                                                   where vacation.End is not null
                                                   select PrepareVacation(days, vacation);
 
-            return new(developer.Abbreviation, freeDays, plans, vacations);
+            return new(developer.Abbreviation, freeDays, daysWithPT, plans, vacations);
         }
 
         public static List<PlanData> PreparePlans(IEnumerable<Day> days, Developer developer)
@@ -212,58 +198,26 @@ namespace TrimesterPlaner.Models
                 return [];
             }
 
-            double dailyPT = developer.GetDailyPT();
             List<PlanData> data = [];
-            int currentPlanIdx = 0;
-            Day? currentStart = null;
-            var dayEnumerator = days.GetEnumerator();
-            Dictionary<Day, double> remainingPerDay = [];
-            double remainingPT = 0;
-            while (currentPlanIdx < developer.Plans.Count)
+            double startPT = 0, endPT = 0;
+            foreach (var plan in developer.Plans)
             {
-                if (!dayEnumerator.MoveNext())
-                {
-                    break;
-                }
-
-                if (!developer.IsWorkDay(dayEnumerator.Current.Date))
-                {
-                    remainingPerDay.Add(dayEnumerator.Current, remainingPT);
-                    continue;
-                }
-
-                if (currentStart is null)
-                {
-                    currentStart = dayEnumerator.Current;
-                    remainingPT += developer.Plans[currentPlanIdx].GetTotalPT();
-                    remainingPerDay = [];
-                }
-
-                remainingPT -= dailyPT;
-                if (remainingPT > 0.01)
-                {
-                    remainingPerDay.Add(dayEnumerator.Current, remainingPT);
-                    continue;
-                }
-
-                remainingPerDay.Add(dayEnumerator.Current, remainingPT);
-                data.Add(PreparePlan(developer.Plans[currentPlanIdx], remainingPerDay));
-                remainingPerDay = [];
-                currentPlanIdx++;
-                currentStart = null;
+                endPT += plan.GetTotalPT();
+                data.Add(PreparePlan(plan, days, startPT, endPT));
+                startPT = endPT;
             }
 
             return data;
         }
 
-        private static PlanData PreparePlan(Plan plan, Dictionary<Day, double> remainingPerDay)
+        private static PlanData PreparePlan(Plan plan, IEnumerable<Day> days, double startPT, double endPT)
         {
             Ticket? ticket = (plan as TicketPlan)?.Ticket;
 
             return new(
+                startPT,
+                endPT,
                 GetPlanType(plan),
-                remainingPerDay,
-                plan.GetTotalPT(),
                 (plan as TicketPlan)?.TimeEstimateOverride?.RemainingEstimate ?? ticket?.RemainingEstimate,
                 ticket?.Key ?? (plan as SpecialPlan)?.Description ?? "",
                 ticket?.Summary ?? "",
