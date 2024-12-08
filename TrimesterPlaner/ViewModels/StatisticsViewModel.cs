@@ -118,30 +118,35 @@ namespace TrimesterPlaner.ViewModels
                 var capacityPT = week.Days.First().Capacity - week.Days.Last().Capacity;
                 totalCapacityPT += capacityPT;
 
-                var vacationPT = from day in week.Days
-                                 from vacation in day.Vacations
-                                 select vacation.Value;
-                var sumVacationPT = vacationPT.Sum();
+                //var vacationPT = from day in week.Days
+                //                 from developer in data.Developers
+                //                 from vacation in developer.Vacations
+                //                 select ;
+                //var sumVacationPT = vacationPT.Sum();
+                var sumVacationPT = 0.0;
                 totalVacationPT += sumVacationPT;
 
                 var ticketsPT = from day in week.Days
-                                from plan in day.Plans
-                                where plan.Key.PlanType == PlanType.Ticket
-                                select plan.Value;
+                                from developer in data.Developers
+                                from plan in developer.Plans
+                                where plan.PlanType == PlanType.Ticket
+                                select (plan.EndPT - plan.StartPT);
                 var sumTicketsPT = ticketsPT.Sum();
                 totalTicketsPT += sumTicketsPT;
 
                 var fehlerPT = from day in week.Days
-                               from plan in day.Plans
-                               where plan.Key.PlanType == PlanType.Bug
-                               select plan.Value;
+                               from developer in data.Developers
+                               from plan in developer.Plans
+                               where plan.PlanType == PlanType.Bug
+                               select (plan.EndPT - plan.StartPT);
                 var sumFehlerPT = fehlerPT.Sum();
                 totalFehlerPT += sumFehlerPT;
 
                 var specialPT = from day in week.Days
-                                from plan in day.Plans
-                                where plan.Key.PlanType == PlanType.Special
-                                select plan.Value;
+                                from developer in data.Developers
+                                from plan in developer.Plans
+                                where plan.PlanType == PlanType.Special
+                                select (plan.EndPT - plan.StartPT);
                 var sumSpecialPT = specialPT.Sum(); 
                 totalSpecialPT += sumSpecialPT;
 

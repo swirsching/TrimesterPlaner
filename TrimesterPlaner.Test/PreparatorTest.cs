@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.Reflection;
-using System.Windows.Navigation;
-using TrimesterPlaner.Extensions;
+﻿using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 
 namespace TrimesterPlaner.Test
@@ -9,20 +6,54 @@ namespace TrimesterPlaner.Test
     [TestClass]
     public class PreparatorTest
     {
-        private List<Day> Days { get; } = new(from date in Helpers.GetDaysBetweenDates(new DateTime(2024, 11, 4), new DateTime(2024, 12, 20)) select new Day(date, false));
+        [TestMethod]
+        [DataRow(0, 1, 0, 0)]
+        [DataRow(0, 1, 1, 1)]
+        [DataRow(0, 1, 0.5, 0.5)]
+        [DataRow(0.5, 1, 0.5, 0)]
+        [DataRow(2, 3.5, 2.5, 0.33)]
+        public void TestAlpha(double before, double after, double pt, double expected)
+        {
+            var alpha = PreparedDataExtensions.GetAlpha(before, after, pt);
+            Assert.AreEqual(expected, alpha, 0.01);
+        }
 
         [TestMethod]
         public void TestPlanPreparationWithoutPlans()
         {
-            List<PlanData> plans = Preparator.PreparePlans(Days, new Developer());
+            List<PlanData> plans = Preparator.PreparePlans([]);
             Assert.AreEqual(0, plans.Count);
+        }
+
+        [TestMethod]
+        public void TestPlanPreparationOnePlan()
+        {
+            List<PlanData> plans = Preparator.PreparePlans([new BugPlan() { PT = 3 }]);
+            Assert.AreEqual(1, plans.Count);
+            Assert.AreEqual(0, plans[0].StartPT);
+            Assert.AreEqual(3, plans[0].EndPT);
+            Assert.AreEqual(0, plans[0].RemainingPT);
+        }
+
+        [TestMethod]
+        public void TestPlanPreparationTwoPlans()
+        {
+            Ticket ticket = new() { OriginalEstimate = 3.2, RemainingEstimate = 3 };
+            List<PlanData> plans = Preparator.PreparePlans([new TicketPlan() { Ticket = ticket }, new BugPlan() { PT = 5.3 }]);
+            Assert.AreEqual(2, plans.Count);
+
+            Assert.AreEqual(0, plans[0].StartPT);
+            Assert.AreEqual(3.2, plans[0].EndPT);
+            Assert.AreEqual(0.2, plans[0].RemainingPT, 0.001);
+            
+            Assert.AreEqual(3.2, plans[1].StartPT);
+            Assert.AreEqual(8.5, plans[1].EndPT);
+            Assert.AreEqual(3.2, plans[1].RemainingPT);
         }
 
         [TestMethod]
         public void TestPlanPreparationMetadata()
         {
-            Developer developer = new();
-
             Ticket ticket = new() 
             {
                 Key = "E20-12345", 
@@ -32,11 +63,10 @@ namespace TrimesterPlaner.Test
             var ticketPlan = new TicketPlan()
             {
                 Ticket = ticket,
-                Developer = developer,
                 Description = "Beschreibung",
             };
 
-            List<PlanData> plans = Preparator.PreparePlans(Days, developer);
+            List<PlanData> plans = Preparator.PreparePlans([ticketPlan]);
             Assert.AreEqual(1, plans.Count);
 
             var plan = plans[0];
@@ -44,54 +74,6 @@ namespace TrimesterPlaner.Test
             Assert.AreEqual(ticket.Key, plan.FirstRow);
             Assert.AreEqual(ticket.Summary, plan.SecondRow);
             Assert.AreEqual(ticketPlan.Description, plan.TopLeft);
-        }
-
-        [TestMethod]
-        [DynamicData(nameof(PlanData), DynamicDataDisplayName = nameof(PlanDataDisplayName))]
-        public void TestPlanPreparation(Developer developer, List<double> PTs, List<string> expectedRemainingsPerDay)
-        {
-            Assert.AreEqual(PTs.Count, expectedRemainingsPerDay.Count);
-
-            foreach (var pt in PTs)
-            {
-                _ = new BugPlan()
-                {
-                    PT = pt,
-                    Developer = developer,
-                };
-            }
-
-            List<PlanData> plans = Preparator.PreparePlans(Days, developer);
-            Assert.AreEqual(PTs.Count, plans.Count);
-
-            foreach (var (plan, expectedRemainings) in plans.Zip(expectedRemainingsPerDay))
-            {
-                var remainingsPerDay = from remainingPerDay in plan.RemainingPerDay select Math.Round(remainingPerDay.Value, 2).ToString(new NumberFormatInfo() { NumberDecimalSeparator = "." });
-                Assert.AreEqual(expectedRemainings, string.Join(" ", remainingsPerDay));
-            }
-        }
-
-        public static string PlanDataDisplayName(MethodInfo methodInfo, object[] data)
-        {
-            var developer = (Developer)data[0];
-            var PTs = (List<double>)data[1];
-            return $"{methodInfo.Name} - [{developer.GetDailyPT().ToString(new NumberFormatInfo() { NumberDecimalSeparator = "." })} PT pro Tag, {developer.FreeDays.Count} freie Tage, {string.Join("+", PTs)} PT]";
-        }
-
-        public static IEnumerable<object[]> PlanData
-        {
-            get =>
-            [
-                // Tests with one plan:
-                [new Developer() { Verwaltung = 0, FreeDays = [] }, new List<double>() { 14 }, new List<string>() { "13 12 11 10 9 8 7 6 5 4 3 2 1 0" }],
-                [new Developer() { Verwaltung = 0 }, new List<double>() { 10 }, new List<string>() { "9 8 7 6 5 5 5 4 3 2 1 0" } ],
-                [new Developer(), new List<double>() { 3 }, new List<string>() { "2.1 1.2 0.3 -0.6" } ],
-                [new Developer() { FTE = 80, Sonderrolle = 20 }, new List<double>() { 4 }, new List<string>() { "3.44 2.88 2.32 1.76 1.2 1.2 1.2 0.64 0.08 -0.48" } ],
-
-                // Tests with two plans:
-                [new Developer() { FreeDays = [] }, new List<double>() { 3, 5 }, new List<string>() { "2.1 1.2 0.3 -0.6", "3.5 2.6 1.7 0.8 -0.1" }],
-                [new Developer() { FreeDays = [] }, new List<double>() { 5, 3 }, new List<string>() { "4.1 3.2 2.3 1.4 0.5 -0.4", "1.7 0.8 -0.1" }],
-            ];
         }
     }
 }

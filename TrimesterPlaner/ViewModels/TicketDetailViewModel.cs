@@ -29,7 +29,7 @@ namespace TrimesterPlaner.ViewModels
                         from plan in developer.Plans
                         where plan.PlanType == PlanType.Ticket
                         where plan.FirstRow == Ticket.Key
-                        select new PreparedPlanDetailViewModel(developer.Abbreviation, plan);
+                        select new PreparedPlanDetailViewModel(developer, plan);
             PlanDetails.ClearAndAdd(plans);
         }
 

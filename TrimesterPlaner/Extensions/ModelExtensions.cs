@@ -201,48 +201,44 @@ namespace TrimesterPlaner.Extensions
             return day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
         }
 
-        public static int GetStartX(this PlanData plan)
+        public static int GetX(this DeveloperData developer, double pt)
         {
-            if (plan.RemainingPerDay.Count == 0)
-            {
-                return -1;
-            }
-
-            return plan.RemainingPerDay.First().Key.GetX(0);
+            return developer.GetDay(pt)?.GetX(pt) ?? 0;
         }
 
-        public static int GetRemainingX(this PlanData plan)
+        public static DayWithPT? GetDay(this DeveloperData developer, double pt)
         {
-            if (plan.RemainingPerDay.Count == 0 || plan.RemainingPT is null)
-            {
-                return -1;
-            }
-
-            var daysWithBiggerRemaining = from dayAndRemaining in plan.RemainingPerDay
-                                          where dayAndRemaining.Value > plan.RemainingPT
-                                          select dayAndRemaining;
-            var daysToConsider = plan.RemainingPerDay.Take(daysWithBiggerRemaining.Count() + 1);
-            return daysToConsider.Last().Key.GetX(daysToConsider.GetAlpha(plan.PlanPT, plan.RemainingPT!.Value));
+            var relevantDays = from day in developer.Days
+                               where day.Before <= pt && pt <= day.After 
+                               where day.Before != day.After // Do not use days where no work happens
+                               select day;
+            return relevantDays.FirstOrDefault();
         }
 
-        public static int GetEndX(this PlanData plan)
+        public static int GetX(this DayWithPT day, double pt)
         {
-            if (plan.RemainingPerDay.Count == 0)
-            {
-                return -1;
-            }
-
-            return plan.RemainingPerDay.Last().Key.GetX(plan.RemainingPerDay.GetAlpha(plan.PlanPT));
+            return day.Day.GetX(GetAlpha(day.Before, day.After, pt));
         }
 
-        private static double GetAlpha(this IEnumerable<KeyValuePair<Day, double>> remainingPerDay, double planPT, double remainingPT = 0)
+        public static double GetAlpha(double before, double after, double pt)
         {
-            // Example 1: Last day goes from 0.25 to -0.75 PT => Alpha should be 0.25
-            // Example 2: Last day goes from 0.75 to -0.25 PT => Alpha should be 0.75
-            double finalPT = remainingPerDay.Last().Value;
-            double lastDayPT = (remainingPerDay.Count() > 1 ? remainingPerDay.ElementAt(remainingPerDay.Count() - 2).Value : planPT) - finalPT;
-            double overshotPT = remainingPT - finalPT;
-            return 1 - (overshotPT / lastDayPT);
+            return (pt - before) / (after - before);
+        }
+
+        public static double GetRemainingAtDate(this PlanData plan, DateTime date)
+        {
+            return 0;
+            //if (date <= plan.RemainingPerDay.First().Key.Date)
+            //{
+            //    return plan.RemainingPerDay.First().Value;
+            //}
+
+            //if (date > plan.RemainingPerDay.Last().Key.Date)
+            //{
+            //    return 0.0;
+            //}
+
+            //return Math.Max(0, plan.RemainingPerDay.FirstOrDefault((kvp) => date == kvp.Key.Date).Value);
         }
     }
 }

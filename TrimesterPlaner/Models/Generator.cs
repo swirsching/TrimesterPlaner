@@ -1,8 +1,4 @@
 ﻿using Svg;
-using System.Drawing;
-using System.Windows.Media;
-using System.Windows.Media.Media3D;
-using System.Windows.Shapes;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Utilities;
 
@@ -313,30 +309,25 @@ namespace TrimesterPlaner.Models
                 }.Translate(freeDay.GetX(0), 0));
             }
 
-            group.Children.Add(GeneratePlans(developer.Plans));
+            group.Children.Add(GeneratePlans(developer, developer.Plans));
             group.Children.Add(GenerateVacations(developer.Vacations));
 
             return group;
         }
 
-        private SvgGroup GeneratePlans(IEnumerable<PlanData> plans)
+        private SvgGroup GeneratePlans(DeveloperData developer, IEnumerable<PlanData> plans)
         {
             SvgGroup group = new();
 
-            int? startX = null, endX = null;
             foreach (PlanData plan in plans)
             {
-                startX ??= plan.GetStartX();
-                endX ??= plan.GetEndX();
-                group.Children.Add(GeneratePlan(plan, startX!.Value, endX!.Value));
-                startX = endX;
-                endX = null;
+                group.Children.Add(GeneratePlan(plan, developer.GetX(plan.StartPT), developer.GetX(plan.EndPT), developer.GetX(plan.RemainingPT)));
             }
 
             return group;
         }
 
-        private SvgGroup GeneratePlan(PlanData plan, int startX, int endX)
+        private SvgGroup GeneratePlan(PlanData plan, int startX, int endX, int remainingX)
         {
             SvgGroup group = new();
 
@@ -387,13 +378,13 @@ namespace TrimesterPlaner.Models
                 group.Children.Add(MakeText(plan.TopLeft, SvgTextAnchor.Start, FontSizes.Small, innerWidth).Translate(2 * Margins.Plan, Heights.Developer / 6));
             }
 
-            if (plan.RemainingPT is not null)
+            if (startX != remainingX)
             {
                 group.Children.Add(new SvgRectangle
                 {
                     CornerRadiusX = CornerRadius,
                     CornerRadiusY = CornerRadius,
-                    Width = plan.GetRemainingX() - startX - 2 * Margins.Plan,
+                    Width = remainingX - startX - 2 * Margins.Plan,
                     Height = Heights.Remaining,
                     Fill = Colors.Remaining,
                 }.Translate(0, innerHeight - Heights.Remaining));
