@@ -54,26 +54,6 @@ namespace TrimesterPlaner.ViewModels
             }
         }
 
-        public double FehlerPT
-        {
-            get => settings.FehlerPT;
-            set
-            {
-                settings.FehlerPT = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool Fehlerteam
-        {
-            get => settings.Fehlerteam;
-            set
-            {
-                settings.Fehlerteam = value;
-                OnPropertyChanged();
-            }
-        }
-
         public bool Burndown
         {
             get => settings.Burndown;

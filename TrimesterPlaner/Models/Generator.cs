@@ -27,8 +27,8 @@ namespace TrimesterPlaner.Models
         private record FontSizesType(int Small, int Medium, int Big);
         private FontSizesType FontSizes { get; } = new(12, 15, 20);
 
-        private record HeightsType(int Fehlerteam, int Burndown, int Header, int Developer, int Remaining, int Vacation, int DateRow);
-        private HeightsType Heights { get; } = new(200, 500, 40, 70, 5, 20, 60);
+        private record HeightsType(int Burndown, int Header, int Developer, int Remaining, int Vacation, int DateRow);
+        private HeightsType Heights { get; } = new(500, 40, 70, 5, 20, 60);
 
         private record LineMarginsType(int Offset, int TextMargin);
         private record MarginsType(int Plan, LineMarginsType Lines, int BurndownVertical);
@@ -137,10 +137,9 @@ namespace TrimesterPlaner.Models
                                 where !day.IsBadArea
                                 select day).Last().GetX(1);
 
-            int fehlerteamHeight = data.Fehlerteam ? Heights.Fehlerteam + Margins.BurndownVertical : 0;
             int burndownHeight = data.Burndown ? Heights.Burndown + Margins.BurndownVertical : 0;
             int planHeight = Heights.Header + data.Developers.Count() * Heights.Developer;
-            int height = fehlerteamHeight + burndownHeight + planHeight + Heights.DateRow;
+            int height = burndownHeight + planHeight + Heights.DateRow;
             SvgDocument document = new()
             {
                 Width = width,
@@ -153,15 +152,11 @@ namespace TrimesterPlaner.Models
             {
                 document.Children.Add(GenerateBadArea(width - plannedWidth, height - Heights.DateRow).Translate(plannedWidth, 0));
             }
-            if (data.Fehlerteam)
-            {
-                document.Children.Add(GenerateFehlerteam(data, width));
-            }
             if (data.Burndown)
             {
-                document.Children.Add(GenerateBurndown(data, width).Translate(0, fehlerteamHeight));
+                document.Children.Add(GenerateBurndown(data, width));
             }
-            document.Children.Add(GenerateTrimester(data, width).Translate(0, fehlerteamHeight + burndownHeight));
+            document.Children.Add(GenerateTrimester(data, width).Translate(0, burndownHeight));
 
             document.Children.Add(GenerateLines(data, height));
 
@@ -188,18 +183,6 @@ namespace TrimesterPlaner.Models
                 Fill = Colors.BadArea,
             });
 
-            return group;
-        }
-
-        private SvgGroup GenerateFehlerteam(PreparedData data, int width)
-        {
-            SvgGroup group = new();
-            group.Children.Add(new SvgRectangle()
-            {
-                Width = width,
-                Height = Heights.Fehlerteam,
-                Fill = Colors.Weekend,
-            });
             return group;
         }
 

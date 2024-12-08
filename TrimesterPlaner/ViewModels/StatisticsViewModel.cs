@@ -71,7 +71,6 @@ namespace TrimesterPlaner.ViewModels
                                where plan is BugPlan 
                                select plan.GetTotalPT();
                 var sumFehlerPT = fehlerPT.Sum();
-                var fehlerSoll = capacityPercentage * Settings.FehlerPT;
                 totalFehlerPT += sumFehlerPT;
 
                 var specialPT = from plan in developer.Plans 
@@ -88,7 +87,7 @@ namespace TrimesterPlaner.ViewModels
                     Math.Round(sumCapacityPT, 1),
                     Math.Round(sumVacationPT, 1),
                     Math.Round(sumTicketsPT, 1),
-                    Math.Round(sumFehlerPT - fehlerSoll, 1),
+                    Math.Round(sumFehlerPT, 1),
                     Math.Round(sumSpecialPT, 1),
                     Math.Round(remainingPT, 1)));
             }
@@ -98,7 +97,7 @@ namespace TrimesterPlaner.ViewModels
                 Math.Round(totalCapacityPT, 1),
                 Math.Round(totalVacationPT, 1),
                 Math.Round(totalTicketsPT, 1),
-                Math.Round(totalFehlerPT - Settings.FehlerPT, 1),
+                Math.Round(totalFehlerPT, 1),
                 Math.Round(totalSpecialPT, 1),
                 Math.Round(totalRemainingPT, 1)));
         }

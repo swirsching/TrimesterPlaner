@@ -61,18 +61,6 @@
                     HorizontalAlignment="Center"
                     SelectedDate="{Binding Entwicklungsschluss}" />
 
-                <TextBox
-                    Grid.Row="2"
-                    HorizontalAlignment="Center"
-                    materialDesign:TextFieldAssist.PrefixText="Fehler:"
-                    materialDesign:TextFieldAssist.SuffixText="PT"
-                    Text="{Binding FehlerPT}" />
-                <CheckBox
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    Content="Fehlerteam"
-                    IsChecked="{Binding Fehlerteam}" />
                 <CheckBox
                     Grid.Row="2"
                     Grid.Column="2"
