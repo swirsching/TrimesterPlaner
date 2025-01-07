@@ -26,6 +26,7 @@ namespace TrimesterPlaner.Models
             Key = "";
             Summary = "";
             Shirt = null;
+            IsInJQL = false;
             
             Plans = [];
         }
@@ -33,6 +34,7 @@ namespace TrimesterPlaner.Models
         public string Key { get; set; }
         public string Summary { get; set; }
         public ShirtSize? Shirt { get; set; }
+        public bool IsInJQL { get; set; }
 
         [JsonIgnore]
         public List<TicketPlan> Plans { get; }

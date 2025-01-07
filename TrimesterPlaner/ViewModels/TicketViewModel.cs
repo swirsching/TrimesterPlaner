@@ -53,6 +53,7 @@ namespace TrimesterPlaner.ViewModels
         public Ticket Ticket { get; }
         public string Key { get => Ticket.Key; }
         public string Summary { get => Ticket.Summary; }
+        public bool IsInJQL { get => Ticket.IsInJQL; }
 
         public ICommand OpenTicketInBrowserCommand { get; }
         public ICommand AddPlanCommand { get; }

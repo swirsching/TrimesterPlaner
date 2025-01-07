@@ -15,8 +15,16 @@
     <materialDesign:Card
         Margin="0,2"
         Padding="10,0,5,0"
-        materialDesign:ElevationAssist.Elevation="Dp2"
-        Style="{StaticResource MaterialDesignElevatedCard}">
+        materialDesign:ElevationAssist.Elevation="Dp2">
+        <materialDesign:Card.Style>
+            <Style BasedOn="{StaticResource MaterialDesignElevatedCard}" TargetType="{x:Type materialDesign:Card}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsInJQL}" Value="False">
+                        <Setter Property="Background" Value="#E6EAED" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </materialDesign:Card.Style>
         <DockPanel>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                 <Button

@@ -127,35 +127,27 @@ namespace TrimesterPlaner.ViewModels
 
         public async Task<IEnumerable<Ticket>> ReloadTicketsAsync()
         {
-            var jql = Settings.JQL;
-            if (Tickets.Count > 0)
-            {
-                jql += $" OR key in ({string.Join(",", from ticket in Tickets select ticket.Key)})";
-            }
+            TicketByKeyComparer comparer = new();
 
-            var loadedTickets = await JiraClient.LoadTickets(jql);
+            var loadedTickets = await JiraClient.LoadTickets(Settings.JQL, true);
             if (loadedTickets is null)
             {
                 return [];
             }
 
-            TicketByKeyComparer comparer = new();
-
-            // Remove old tickets:
-            List<Ticket> ticketsToRemove = [];
-            foreach (Ticket ticket in Tickets)
+            if (Tickets.Count > 0)
             {
-                if (!loadedTickets.Contains(ticket, comparer))
+                var additionalKeys = from ticket in Tickets
+                                     where !loadedTickets.Contains(ticket, comparer)
+                                     select ticket.Key;
+                string additionalJQL = $"key in ({string.Join(",", additionalKeys)})";
+                var additionalTickets = await JiraClient.LoadTickets(additionalJQL, false);
+                if (additionalTickets is not null)
                 {
-                    ticketsToRemove.Add(ticket);
+                    loadedTickets = loadedTickets.Concat(additionalTickets);
                 }
             }
-            foreach (Ticket ticket in ticketsToRemove)
-            {
-                RemoveTicket(ticket, false);
-            }
 
-            // Update tickets and add new tickets:
             foreach (Ticket loadedTicket in loadedTickets)
             {
                 if (Tickets.Contains(loadedTicket, comparer))
@@ -168,6 +160,10 @@ namespace TrimesterPlaner.ViewModels
                     if (!ticketToUpdate.Shirt.Equals(loadedTicket.Shirt))
                     {
                         ticketToUpdate.Shirt = loadedTicket.Shirt;
+                    }
+                    if (!ticketToUpdate.IsInJQL.Equals(loadedTicket.IsInJQL))
+                    {
+                        ticketToUpdate.IsInJQL = loadedTicket.IsInJQL;
                     }
                     if (ticketToUpdate.OriginalEstimate != loadedTicket.OriginalEstimate)
                     {

@@ -1,5 +1,4 @@
 ﻿using RestSharp;
-using System.Collections.Immutable;
 using TrimesterPlaner.Extensions;
 
 namespace TrimesterPlaner.Models
@@ -23,7 +22,7 @@ namespace TrimesterPlaner.Models
             }
         }
 
-        public async Task<IEnumerable<Ticket>?> LoadTickets(string jql)
+        public async Task<IEnumerable<Ticket>?> LoadTickets(string jql, bool isInJQL)
         {
             var parameters = new
             {
@@ -54,6 +53,7 @@ namespace TrimesterPlaner.Models
                        OriginalEstimate = ConvertToPT(issue.fields.timeoriginalestimate),
                        RemainingEstimate = ConvertToPT(issue.fields.timeestimate),
                        TimeSpent = ConvertToPT(issue.fields.timespent),
+                       IsInJQL = isInJQL,
                    };
         }
 
