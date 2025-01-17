@@ -32,6 +32,7 @@ namespace TrimesterPlaner.Models
                     "issuelinks",
                     "summary",
                     "customfield_24003", // T-Shirt
+                    "customfield_22486", // Rank
                     "timeoriginalestimate",
                     "timeestimate",
                     "timespent",
@@ -50,6 +51,7 @@ namespace TrimesterPlaner.Models
                        Key = issue.key,
                        Summary = issue.fields.summary,
                        Shirt = issue.fields.customfield_24003?.value.ToShirtSize(),
+                       Rank = issue.fields.customfield_22486,
                        OriginalEstimate = ConvertToPT(issue.fields.timeoriginalestimate),
                        RemainingEstimate = ConvertToPT(issue.fields.timeestimate),
                        TimeSpent = ConvertToPT(issue.fields.timespent),
@@ -72,7 +74,7 @@ namespace TrimesterPlaner.Models
 #pragma warning disable IDE1006 // Naming Styles
         private record TicketList(Issue[] issues);
         private record Issue(string key, Fields fields);
-        private record Fields(IssueLink[] issuelinks, string summary, Shirt customfield_24003, int? timeoriginalestimate, int? timeestimate, int? timespent);
+        private record Fields(IssueLink[] issuelinks, string summary, Shirt customfield_24003, string customfield_22486, int? timeoriginalestimate, int? timeestimate, int? timespent);
         private record Shirt(string value);
         private record IssueLink(IssueLinkType type, LinkedIssue inwardIssue, LinkedIssue outwardIssue);
         private record IssueLinkType(string name);

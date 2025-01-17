@@ -13,6 +13,7 @@ namespace TrimesterPlaner.ViewModels
     public enum TicketSortingMode
     {
         Alphabetically,
+        ByRank,
         BySize,
         ByUnplannedPT,
     }
@@ -51,6 +52,7 @@ namespace TrimesterPlaner.ViewModels
             Tickets = TicketManager.SortTickets(sortingMode switch
             {
                 TicketSortingMode.Alphabetically => SortTicketsAlphabetically,
+                TicketSortingMode.ByRank => SortTicketsByRank,
                 TicketSortingMode.BySize => SortTicketsBySize,
                 TicketSortingMode.ByUnplannedPT => SortTicketsByUnplannedPT,
                 _ => throw new NotImplementedException(),
@@ -60,6 +62,11 @@ namespace TrimesterPlaner.ViewModels
         private static int SortTicketsAlphabetically(Ticket a, Ticket b)
         {
             return a.Summary.CompareTo(b.Summary);
+        }
+
+        private static int SortTicketsByRank(Ticket a, Ticket b)
+        {
+            return a.Rank.CompareTo(b.Rank);
         }
 
         private static int SortTicketsBySize(Ticket a, Ticket b)

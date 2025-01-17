@@ -39,6 +39,15 @@
                     <Button
                         Margin="0,-10"
                         Command="{Binding SortTicketsCommand}"
+                        CommandParameter="{x:Static vm:TicketSortingMode.ByRank}"
+                        Foreground="White"
+                        Style="{StaticResource MaterialDesignToolButton}"
+                        ToolTip="Nach Rang sortieren">
+                        <materialDesign:PackIcon Kind="SortNumericAscending" />
+                    </Button>
+                    <Button
+                        Margin="0,-10"
+                        Command="{Binding SortTicketsCommand}"
                         CommandParameter="{x:Static vm:TicketSortingMode.BySize}"
                         Foreground="White"
                         Style="{StaticResource MaterialDesignToolForegroundButton}"

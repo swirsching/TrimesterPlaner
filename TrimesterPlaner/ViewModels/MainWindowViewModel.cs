@@ -164,6 +164,10 @@ namespace TrimesterPlaner.ViewModels
                     {
                         ticketToUpdate.Shirt = loadedTicket.Shirt;
                     }
+                    if (!ticketToUpdate.Rank.Equals(loadedTicket.Rank))
+                    {
+                        ticketToUpdate.Rank = loadedTicket.Rank;
+                    }
                     if (!ticketToUpdate.IsInJQL.Equals(loadedTicket.IsInJQL))
                     {
                         ticketToUpdate.IsInJQL = loadedTicket.IsInJQL;
