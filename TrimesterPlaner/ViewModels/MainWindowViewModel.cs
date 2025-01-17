@@ -140,11 +140,14 @@ namespace TrimesterPlaner.ViewModels
                 var additionalKeys = from ticket in Tickets
                                      where !loadedTickets.Contains(ticket, comparer)
                                      select ticket.Key;
-                string additionalJQL = $"key in ({string.Join(",", additionalKeys)})";
-                var additionalTickets = await JiraClient.LoadTickets(additionalJQL, false);
-                if (additionalTickets is not null)
+                if (additionalKeys.Any())
                 {
-                    loadedTickets = loadedTickets.Concat(additionalTickets);
+                    string additionalJQL = $"key in ({string.Join(",", additionalKeys)})";
+                    var additionalTickets = await JiraClient.LoadTickets(additionalJQL, false);
+                    if (additionalTickets is not null)
+                    {
+                        loadedTickets = loadedTickets.Concat(additionalTickets);
+                    }
                 }
             }
 
