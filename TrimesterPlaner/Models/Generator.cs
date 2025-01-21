@@ -292,19 +292,19 @@ namespace TrimesterPlaner.Models
                 }.Translate(freeDay.GetX(0), 0));
             }
 
-            group.Children.Add(GeneratePlans(developer, developer.Plans));
+            group.Children.Add(GeneratePlans(developer.Plans));
             group.Children.Add(GenerateVacations(developer.Vacations));
 
             return group;
         }
 
-        private SvgGroup GeneratePlans(DeveloperData developer, IEnumerable<PlanData> plans)
+        private SvgGroup GeneratePlans(IEnumerable<PlanData> plans)
         {
             SvgGroup group = new();
 
             foreach (PlanData plan in plans)
             {
-                group.Children.Add(GeneratePlan(plan, developer.GetX(plan.StartPT), developer.GetX(plan.EndPT), developer.GetX(plan.RemainingPT)));
+                group.Children.Add(GeneratePlan(plan, plan.StartX, plan.EndX, plan.RemainingX));
             }
 
             return group;

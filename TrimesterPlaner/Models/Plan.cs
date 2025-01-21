@@ -9,7 +9,10 @@ namespace TrimesterPlaner.Models
     public class Plan
     {
         public Plan()
-        { }
+        {
+            Developer = null;
+            EarliestStart = null;
+        }
 
         private Developer? _Developer;
         public Developer? Developer
@@ -22,6 +25,8 @@ namespace TrimesterPlaner.Models
                 _Developer?.Plans?.Add(this);
             }
         }
+
+        public DateTime? EarliestStart { get; set; }
     }
 
     public class TicketPlan : Plan

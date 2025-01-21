@@ -201,16 +201,32 @@ namespace TrimesterPlaner.Extensions
             return day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
         }
 
-        public static int GetX(this DeveloperData developer, double pt)
+        public static int GetX(this IEnumerable<DayWithPT> days, double pt)
         {
-            return developer.GetDay(pt)?.GetX(pt) ?? 0;
+            return days.GetDay(pt)?.GetX(pt) ?? 0;
         }
 
-        public static DayWithPT? GetDay(this DeveloperData developer, double pt)
+        public static DayWithPT? GetDay(this IEnumerable<DayWithPT> days, double pt)
         {
-            var relevantDays = from day in developer.Days
+            var relevantDays = from day in days
                                where day.Before <= pt && pt <= day.After 
                                where day.Before != day.After // Do not use days where no work happens
+                               select day;
+            return relevantDays.FirstOrDefault();
+        }
+
+        public static DayWithPT? GetDay(this IEnumerable<DayWithPT> days, int x)
+        {
+            var relevantDays = from day in days
+                               where day.Day.GetX(0) <= x && x <= day.Day.GetX(1)
+                               select day;
+            return relevantDays.FirstOrDefault();
+        }
+
+        public static DayWithPT? GetDay(this IEnumerable<DayWithPT> days, DateTime date)
+        {
+            var relevantDays = from day in days
+                               where day.Day.Date == date
                                select day;
             return relevantDays.FirstOrDefault();
         }
@@ -223,22 +239,6 @@ namespace TrimesterPlaner.Extensions
         public static double GetAlpha(double before, double after, double pt)
         {
             return (pt - before) / (after - before);
-        }
-
-        public static double GetRemainingAtDate(this PlanData plan, DateTime date)
-        {
-            return 0;
-            //if (date <= plan.RemainingPerDay.First().Key.Date)
-            //{
-            //    return plan.RemainingPerDay.First().Value;
-            //}
-
-            //if (date > plan.RemainingPerDay.Last().Key.Date)
-            //{
-            //    return 0.0;
-            //}
-
-            //return Math.Max(0, plan.RemainingPerDay.FirstOrDefault((kvp) => date == kvp.Key.Date).Value);
         }
     }
 }

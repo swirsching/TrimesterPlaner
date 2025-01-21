@@ -36,7 +36,7 @@ namespace TrimesterPlaner.Models
     }
     public record DayWithPT(Day Day, double Before, double After);
     public record DeveloperData(string Abbreviation, IEnumerable<Day> FreeDays, IEnumerable<DayWithPT> Days, IEnumerable<PlanData> Plans, IEnumerable<VacationData> Vacations);
-    public record PlanData(double StartPT, double EndPT, double RemainingPT, PlanType PlanType, string FirstRow, string SecondRow, string TopLeft);
+    public record PlanData(int StartX, int EndX, int RemainingX, PlanType PlanType, string FirstRow, string SecondRow, string TopLeft);
     public enum PlanType { Ticket, Bug, Special };
     public record VacationData(IEnumerable<Day> Days, string Label);
 
@@ -61,27 +61,22 @@ namespace TrimesterPlaner.Models
 
             config.Settings.Start ??= config.Settings.Entwicklungsstart;
 
-            List<Day> days = new(from date in Helpers.GetDaysBetweenDates(config.Settings.Start.Value, config.Settings.Start.Value.AddYears(1))
-                                 select new Day(date, date > config.Settings.Entwicklungsschluss.Value));
-            
-            int width = Widths.Left;
-            foreach (var day in days)
-            {
-                day.X = width;
-                width += day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay;
-            }
+            List<Day> days = PrepareDays(
+                config.Settings.Start.Value, 
+                config.Settings.Start.Value.AddYears(10), 
+                config.Settings.Entwicklungsschluss.Value);
 
             List<DeveloperData> developers = new(from developer in config.Developers
                                                  select PrepareDeveloper(days, developer));
 
             var lastPlannedDay = (from developer in developers
-                                  select developer.GetDay(developer.Plans.LastOrDefault()?.EndPT ?? 0))
+                                  select developer.Days.GetDay(developer.Plans.LastOrDefault()?.EndX ?? 0))
                                   .MaxBy(day => day?.Day.Date);
             days.RemoveAll(day => day.IsBadArea && (lastPlannedDay is null || day.Date > lastPlannedDay.Day.Date));
 
-            IEnumerable < PlanData > allPlans = from developer in developers
-                                                from plan in developer.Plans
-                                                select plan;
+            IEnumerable<PlanData> allPlans = from developer in developers
+                                             from plan in developer.Plans
+                                             select plan;
 
             CalculateCapacity(days, config.Developers);
             CalculateTotal(days, allPlans);
@@ -127,9 +122,24 @@ namespace TrimesterPlaner.Models
             {
                 foreach (PlanData plan in plans)
                 {
-                    day.Total += (double)plan.GetRemainingAtDate(day.Date);
+                    //day.Total += (double)plan.GetRemainingAtDate(day.Date);
                 }
             }
+        }
+
+        public static List<Day> PrepareDays(DateTime start, DateTime end, DateTime entwicklungsschluss)
+        {
+            List<Day> days = new(from date in Helpers.GetDaysBetweenDates(start, end)
+                                 select new Day(date, date > entwicklungsschluss));
+
+            int width = Widths.Left;
+            foreach (var day in days)
+            {
+                day.X = width;
+                width += day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? Widths.WeekEndDay : Widths.WeekDay;
+            }
+
+            return days;
         }
 
         private static DeveloperData PrepareDeveloper(IEnumerable<Day> days, Developer developer)
@@ -138,20 +148,9 @@ namespace TrimesterPlaner.Models
                                         where !developer.IsRegularWorkDay(day.Date)
                                         select day;
 
-            List<DayWithPT> daysWithPT = [];
-            double before = 0, after = 0;
-            double dailyPT = developer.GetDailyPT();
-            foreach (Day day in days) 
-            {
-                if (developer.IsWorkDay(day.Date))
-                {
-                    after += dailyPT;
-                }
-                daysWithPT.Add(new(day, before, after));
-                before = after;
-            }
+            IEnumerable<DayWithPT> daysWithPT = PrepareDaysForDeveloper(days, developer);
 
-            IEnumerable<PlanData> plans = PreparePlans(developer.Plans);
+            IEnumerable<PlanData> plans = PreparePlans(daysWithPT, developer.Plans);
 
             IEnumerable<VacationData> vacations = from vacation in developer.Vacations
                                                   where vacation.Start is not null
@@ -161,7 +160,24 @@ namespace TrimesterPlaner.Models
             return new(developer.Abbreviation, freeDays, daysWithPT, plans, vacations);
         }
 
-        public static List<PlanData> PreparePlans(IEnumerable<Plan> plans)
+        public static IEnumerable<DayWithPT> PrepareDaysForDeveloper(IEnumerable<Day> days, Developer developer)
+        {
+            List<DayWithPT> daysWithPT = [];
+            double before = 0, after = 0;
+            double dailyPT = developer.GetDailyPT();
+            foreach (Day day in days)
+            {
+                if (developer.IsWorkDay(day.Date))
+                {
+                    after += dailyPT;
+                }
+                daysWithPT.Add(new(day, before, after));
+                before = after;
+            }
+            return daysWithPT;
+        }
+
+        public static List<PlanData> PreparePlans(IEnumerable<DayWithPT> daysWithPT, IEnumerable<Plan> plans)
         {
             if (!plans.Any())
             {
@@ -169,25 +185,38 @@ namespace TrimesterPlaner.Models
             }
 
             List<PlanData> data = [];
-            double startPT = 0, endPT = 0;
+            double startPT = 0, endPT;
             foreach (var plan in plans)
             {
-                endPT += plan.GetTotalPT();
-                data.Add(PreparePlan(plan, startPT, endPT));
+                if (plan.EarliestStart is not null)
+                {
+                    startPT = Math.Max(startPT, daysWithPT.GetDay(plan.EarliestStart.Value)?.Before ?? startPT);
+                }
+                endPT = startPT + plan.GetTotalPT();
+                data.Add(PreparePlan(plan, daysWithPT.GetX(startPT), daysWithPT.GetX(endPT)));
                 startPT = endPT;
             }
 
             return data;
         }
 
-        private static PlanData PreparePlan(Plan plan, double startPT, double endPT)
+        private static PlanData PreparePlan(Plan plan, int startX, int endX)
         {
             Ticket? ticket = (plan as TicketPlan)?.Ticket;
 
+            int remainingX = startX; // TOD: Fix calculation
+            double? remaining = (plan as TicketPlan)?.TimeEstimateOverride?.RemainingEstimate ?? ticket?.RemainingEstimate;
+            if (remaining is not null)
+            {
+                double totalPT = plan.GetTotalPT();
+                double alpha = (totalPT - remaining.Value) / totalPT;
+                remainingX += (int)Math.Round(alpha * (endX - startX));
+            }
+
             return new(
-                startPT,
-                endPT,
-                endPT - ((plan as TicketPlan)?.TimeEstimateOverride?.RemainingEstimate ?? ticket?.RemainingEstimate ?? (endPT - startPT)),
+                startX,
+                endX,
+                remainingX,
                 GetPlanType(plan),
                 ticket?.Key ?? (plan as SpecialPlan)?.Description ?? "",
                 ticket?.Summary ?? "",

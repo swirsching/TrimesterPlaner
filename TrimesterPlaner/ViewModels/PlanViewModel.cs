@@ -8,6 +8,16 @@ namespace TrimesterPlaner.ViewModels
     {
         public Plan Plan { get; } = plan;
 
+        public DateTime? EarliestStart
+        {
+            get => Plan.EarliestStart;
+            set
+            {
+                Plan.EarliestStart = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool _IsChangingDeveloper = false;
         public bool IsChangingDeveloper
         {
