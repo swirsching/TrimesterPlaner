@@ -1,4 +1,7 @@
-﻿using System.Windows.Input;
+﻿using System.Net;
+using System.Net.Http;
+using System.Windows;
+using System.Windows.Input;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Utilities;
@@ -42,8 +45,25 @@ namespace TrimesterPlaner.ViewModels
 
         private async void ReloadTickets()
         {
+            var tickets = Tickets;
             Tickets = [];
-            Tickets = await TicketManager.ReloadTicketsAsync();
+
+            try
+            {
+                Tickets = await TicketManager.ReloadTicketsAsync();
+            } 
+            catch (HttpRequestException e)
+            {
+                if (e.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    MessageBox.Show("Der Trimester Planer konnte keine Tickets laden. Bitte überprüfe deine JQL.", "JQL invalid");
+                }
+                else
+                {
+                    MessageBox.Show("Der Trimester Planer konnte sich nicht mit Jira verbinden. Bitte überprüfe deine Internetverbindung.", "Keine Internetverbindung");   
+                }
+                Tickets = tickets;
+            }
         }
 
         private void SortTickets(TicketSortingMode sortingMode)
