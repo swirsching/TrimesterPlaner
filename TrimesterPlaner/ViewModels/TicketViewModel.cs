@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Svg;
+using System.Diagnostics;
 using System.Windows.Input;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
@@ -22,7 +23,7 @@ namespace TrimesterPlaner.ViewModels
             RemoveCommand = new RelayCommand((o) => ticketManager.RemoveTicket(Ticket));
 
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
-            entwicklungsplanManager.EntwicklungsplanChanged += CalculatePlannedPercentage;
+            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculatePlannedPercentage();
             CalculatePlannedPercentage();
         }
 
@@ -38,7 +39,7 @@ namespace TrimesterPlaner.ViewModels
             set => SetProperty(ref _SelectedDeveloper, value);
         }
 
-        private void CalculatePlannedPercentage(PreparedData? data = null)
+        private void CalculatePlannedPercentage()
         {
             PlannedPercentage = Ticket.GetPlannedPT() / Ticket.GetTotalPT();
         }

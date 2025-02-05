@@ -2,9 +2,9 @@
 
 namespace TrimesterPlaner.Views
 {
-    public partial class MainWindow : Window
+    public partial class ResultWindow : Window
     {
-        public MainWindow()
+        public ResultWindow()
         {
             InitializeComponent();
         }

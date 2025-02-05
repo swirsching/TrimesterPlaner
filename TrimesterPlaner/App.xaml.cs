@@ -26,7 +26,11 @@ namespace TrimesterPlaner
 
             services.AddTransient(typeof(IGenerator), typeof(Generator));
             services.AddTransient(typeof(IPreparator), typeof(Preparator));
+            services.AddTransient(typeof(ResultWindow));
+            services.AddTransient(typeof(ResultWindowViewModel));
+            services.AddTransient(typeof(ResultWindowMenuViewModel));
             services.AddTransient(typeof(MainWindow));
+            services.AddTransient(typeof(MainWindowMenuViewModel));
             services.AddTransient(typeof(VacationProviderViewModel));
             services.AddTransient(typeof(TicketProviderViewModel));
             services.AddTransient(typeof(PlanProviderViewModel));
@@ -35,18 +39,20 @@ namespace TrimesterPlaner
             
             var tmpServiceProvider = services.BuildServiceProvider();
             MainWindowViewModel mainWindowViewModel = new(
-                tmpServiceProvider.GetRequiredService<ConfluenceClient>(),
                 tmpServiceProvider.GetRequiredService<JiraClient>(),
                 tmpServiceProvider.GetRequiredService<IGenerator>(),
-                tmpServiceProvider.GetRequiredService<IPreparator>(),
-                tmpServiceProvider.GetRequiredService<IConfigService>());
+                tmpServiceProvider.GetRequiredService<IPreparator>());
+            MainWindowMenuViewModel menuViewModel = new(
+                tmpServiceProvider.GetRequiredService<IConfigService>(),
+                mainWindowViewModel);
             if (e.Args.Length > 0 && File.Exists(e.Args[0]))
             {
-                mainWindowViewModel.LoadCommand.Execute(e.Args[0]);
+                menuViewModel.LoadCommand.Execute(e.Args[0]);
                 _ = mainWindowViewModel.ReloadTicketsAsync();
             }
             services.AddSingleton(mainWindowViewModel);
             services.AddSingleton(typeof(IEntwicklungsplanManager), mainWindowViewModel);
+            services.AddSingleton(typeof(IConfigManager), mainWindowViewModel);
             services.AddSingleton(typeof(IDeveloperManager), mainWindowViewModel);
             services.AddSingleton(typeof(IVacationManager), mainWindowViewModel);
             services.AddSingleton(typeof(ITicketManager), mainWindowViewModel);
@@ -61,6 +67,7 @@ namespace TrimesterPlaner
             Injector.ServiceProvider = serviceProvider;
 
             serviceProvider.GetRequiredService<MainWindow>().Show();
+            serviceProvider.GetRequiredService<ResultWindow>().Show();
         }
     }
 }

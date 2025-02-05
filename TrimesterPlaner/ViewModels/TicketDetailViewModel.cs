@@ -13,7 +13,7 @@ namespace TrimesterPlaner.ViewModels
             TotalPT = ticket.GetTotalPT();
             PlanDetails = [];
 
-            entwicklungsplanManager.EntwicklungsplanChanged += CalculatePlanDetails;
+            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculatePlanDetails(data);
             CalculatePlanDetails(entwicklungsplanManager.GetLastPreparedData());
         }
 

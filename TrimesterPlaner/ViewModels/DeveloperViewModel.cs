@@ -11,7 +11,7 @@ namespace TrimesterPlaner.ViewModels
             WorkDays = from dayOfWeek in Enumerable.Range((int)DayOfWeek.Monday, 5)
                        select new WorkDayViewModel((DayOfWeek)(dayOfWeek % 7), Developer, entwicklungsplanManager);
 
-            entwicklungsplanManager.EntwicklungsplanChanged += (data) => CalculatePT();
+            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculatePT();
             CalculatePT();
         }
 

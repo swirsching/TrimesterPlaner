@@ -6,9 +6,6 @@
     xmlns:ext="clr-namespace:TrimesterPlaner.Extensions"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="clr-namespace:TrimesterPlaner.Models"
-    xmlns:rh="http://schemas.rollinghours.com/wpf"
-    xmlns:svg="clr-namespace:Svg;assembly=Svg"
     xmlns:views="clr-namespace:TrimesterPlaner.Views"
     xmlns:vm="clr-namespace:TrimesterPlaner.ViewModels"
     Title="{Binding Settings.Title, StringFormat='{}{0} - Trimester Planer'}"
@@ -20,62 +17,7 @@
     WindowState="Maximized"
     mc:Ignorable="d">
     <DockPanel>
-        <DockPanel DockPanel.Dock="Top">
-            <DockPanel DockPanel.Dock="Left">
-                <StackPanel DockPanel.Dock="Top">
-                    <Button
-                        Command="{Binding LoadCommand}"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="Laden ...">
-                        <materialDesign:PackIcon Kind="FolderOpen" />
-                    </Button>
-                    <Button
-                        Command="{Binding SaveCommand}"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="Speichern">
-                        <materialDesign:PackIcon Kind="ContentSaveOutline" />
-                    </Button>
-                    <Button
-                        Command="{Binding SaveCopyCommand}"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="Speichern unter ...">
-                        <materialDesign:PackIcon Kind="ContentSaveAllOutline" />
-                    </Button>
-                </StackPanel>
-
-                <StackPanel DockPanel.Dock="Bottom">
-                    <Button
-                        Command="{Binding ExportCommand}"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="Exportieren ...">
-                        <materialDesign:PackIcon Kind="ImageOutline" />
-                    </Button>
-                    <Button
-                        Command="{Binding CopyToClipboardCommand}"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="In Zwischenablage kopieren">
-                        <materialDesign:PackIcon Kind="ClipboardOutline" />
-                    </Button>
-                    <Button
-                        Command="{Binding PushToConfluenceCommand}"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="Hochladen (Confluence)"
-                        Visibility="{Binding HasCAT, Converter={StaticResource BoolToVisConv}}">
-                        <materialDesign:PackIcon Kind="ExportVariant" />
-                    </Button>
-                </StackPanel>
-
-                <Separator />
-            </DockPanel>
-
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                <Image
-                    Height="500"
-                    MouseWheel="Image_MouseWheel"
-                    Source="{Binding Result, Converter={StaticResource ImageConv}}" />
-            </ScrollViewer>
-        </DockPanel>
-
+        <views:MainWindowMenuView DockPanel.Dock="Top" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

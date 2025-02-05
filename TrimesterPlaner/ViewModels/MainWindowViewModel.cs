@@ -1,22 +1,26 @@
-﻿using Microsoft.Win32;
-using Svg;
+﻿using Svg;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using System.Windows.Threading;
-using TextCopy;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public delegate void EntwicklungsplanChangedHandler(PreparedData? data);
+    public delegate void EntwicklungsplanChangedHandler(PreparedData? data, SvgDocument? result);
     public interface IEntwicklungsplanManager
     {
         public event EntwicklungsplanChangedHandler? EntwicklungsplanChanged;
         public void RefreshEntwicklungsplan();
         public PreparedData? GetLastPreparedData();
+        public SvgDocument? GetLastResult();
+    }
+
+    public interface IConfigManager
+    {
+        public void Load(Config? config);
+        public Config Save();
     }
 
     public interface IDeveloperManager
@@ -51,6 +55,7 @@ namespace TrimesterPlaner.ViewModels
     public class MainWindowViewModel 
         : BindableBase
         , IEntwicklungsplanManager
+        , IConfigManager
         , IDeveloperManager
         , IVacationManager
         , ITicketManager
@@ -60,25 +65,11 @@ namespace TrimesterPlaner.ViewModels
         , ITicketProvider
         , IPlanProvider
     {
-        public MainWindowViewModel(
-            ConfluenceClient confluenceClient, 
-            JiraClient jiraClient,
-            IGenerator generator,
-            IPreparator preparator,
-            IConfigService configService)
+        public MainWindowViewModel(JiraClient jiraClient, IGenerator generator, IPreparator preparator)
         {
             JiraClient = jiraClient;
             Generator = generator;
             Preparator = preparator;
-
-            HasCAT = confluenceClient.HasCAT;
-
-            LoadCommand = new RelayCommand((o) => Load(configService.LoadConfig(o as string)));
-            SaveCommand = new RelayCommand((o) => configService.SaveConfig(MakeConfig()));
-            SaveCopyCommand = new RelayCommand((o) => configService.SaveConfigCopy(MakeConfig()));
-            ExportCommand = new RelayCommand((o) => Export());
-            CopyToClipboardCommand = new RelayCommand((o) => ClipboardService.SetText(Result.ConvertToPastableHTML()));
-            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(Result.ConvertToPastableHTML()));
 
             var timer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.Background, GenerateIfDirty, Dispatcher.CurrentDispatcher);
         }
@@ -86,21 +77,6 @@ namespace TrimesterPlaner.ViewModels
         private JiraClient JiraClient { get; }
         private IGenerator Generator { get; }
         private IPreparator Preparator { get; }
-
-        private void Export()
-        {
-            var dialog = new SaveFileDialog()
-            {
-                FileName = "TrimesterPlaner",
-                DefaultExt = ".svg",
-            };
-
-            bool? ok = dialog.ShowDialog();
-            if (ok == true)
-            {
-                Result?.Write(dialog.FileName);
-            }
-        }
 
         public void RemoveTicket(Ticket ticket)
         {
@@ -201,7 +177,7 @@ namespace TrimesterPlaner.ViewModels
             return Tickets;
         }
 
-        private void Load(Config? config)
+        public void Load(Config? config)
         {
             if (config is null)
             {
@@ -232,7 +208,8 @@ namespace TrimesterPlaner.ViewModels
 
             IsDirty = true;
         }
-        private Config MakeConfig() => new()
+
+        public Config Save() => new()
         {
             Settings = Settings,
             Developers = [.. Developers],
@@ -246,9 +223,10 @@ namespace TrimesterPlaner.ViewModels
         {
             if (IsDirty)
             {
-                LastPreparedData = Preparator.Prepare(MakeConfig());
-                Result = LastPreparedData is null ? null : Generator.Generate(LastPreparedData);
-                EntwicklungsplanChanged?.Invoke(LastPreparedData);
+                LastPreparedData = Preparator.Prepare(Save());
+                LastResult = LastPreparedData is null ? null : Generator.Generate(LastPreparedData);
+                EntwicklungsplanChanged?.Invoke(LastPreparedData, LastResult);
+                IsDirty = false;
             }
         }
 
@@ -262,9 +240,9 @@ namespace TrimesterPlaner.ViewModels
             return LastPreparedData;
         }
 
-        public Settings GetSettings()
+        public SvgDocument? GetLastResult()
         {
-            return Settings;
+            return LastResult;
         }
 
         public IEnumerable<Developer> GetDevelopers()
@@ -399,33 +377,13 @@ namespace TrimesterPlaner.ViewModels
             set => SetProperty(ref _Settings, value);
         }
 
-        public bool HasCAT { get; }
         private ObservableCollection<Developer> Developers { get; } = [];
         private ObservableCollection<Vacation> Vacations { get; } = [];
         private ObservableCollection<Ticket> Tickets { get; } = [];
         private ObservableCollection<Plan> Plans { get; } = [];
 
-        private bool _IsDirty = true;
-        public bool IsDirty
-        {
-            get => _IsDirty;
-            set => SetProperty(ref _IsDirty, value);
-        }
-
+        private bool IsDirty { get; set; } = true;
         private PreparedData? LastPreparedData { get; set; }
-
-        private SvgDocument? _Result = null;
-        public SvgDocument? Result
-        {
-            get => _Result;
-            set { if (SetProperty(ref _Result, value)) IsDirty = false; }
-        }
-
-        public ICommand LoadCommand { get; }
-        public ICommand SaveCommand { get; }
-        public ICommand SaveCopyCommand { get; }
-        public ICommand ExportCommand { get; }
-        public ICommand CopyToClipboardCommand { get; }
-        public ICommand PushToConfluenceCommand { get; }
+        private SvgDocument? LastResult { get; set; }
     }
 }

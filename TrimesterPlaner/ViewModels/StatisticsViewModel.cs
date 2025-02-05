@@ -21,7 +21,7 @@ namespace TrimesterPlaner.ViewModels
             DeveloperProvider = developerProvider;
             Settings = settings;
 
-            entwicklungsplanManager.EntwicklungsplanChanged += CalculateStatistics;
+            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculateStatistics(data);
             CalculateStatistics();
         }
 
