@@ -10,15 +10,21 @@
     xmlns:views="clr-namespace:TrimesterPlaner.Views"
     xmlns:vm="clr-namespace:TrimesterPlaner.ViewModels"
     Title="{Binding Title, StringFormat='{}{0} - Trimester Plan'}"
+    Width="1800"
+    Height="600"
     d:DataContext="{d:DesignInstance {x:Type vm:ResultWindowViewModel}}"
-    d:Height="450"
-    d:Width="800"
+    d:Height="600"
+    d:Width="1800"
     DataContext="{ext:Inject {x:Type vm:ResultWindowViewModel}}"
     Style="{StaticResource MaterialDesignWindow}"
-    WindowState="Maximized"
     mc:Ignorable="d">
     <DockPanel>
         <views:ResultWindowMenuView DockPanel.Dock="Top" />
-        <Image Source="{Binding Result, Converter={StaticResource ImageConv}}" />
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Image
+                Height="500"
+                MouseWheel="Image_MouseWheel"
+                Source="{Binding Result, Converter={StaticResource ImageConv}}" />
+        </ScrollViewer>
     </DockPanel>
 </Window>
