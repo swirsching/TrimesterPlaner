@@ -2,9 +2,9 @@
 
 namespace TrimesterPlaner.Views
 {
-    public partial class ResultWindowMenuView : UserControl
+    public partial class ResultMenuView : UserControl
     {
-        public ResultWindowMenuView()
+        public ResultMenuView()
         {
             InitializeComponent();
         }

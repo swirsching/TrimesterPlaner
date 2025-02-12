@@ -18,13 +18,5 @@
     DataContext="{ext:Inject {x:Type vm:ResultWindowViewModel}}"
     Style="{StaticResource MaterialDesignWindow}"
     mc:Ignorable="d">
-    <DockPanel>
-        <views:ResultWindowMenuView DockPanel.Dock="Top" />
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Image
-                Height="500"
-                MouseWheel="Image_MouseWheel"
-                Source="{Binding Result, Converter={StaticResource ImageConv}}" />
-        </ScrollViewer>
-    </DockPanel>
+    <views:ResultView />
 </Window>

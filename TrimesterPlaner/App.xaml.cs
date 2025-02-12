@@ -28,7 +28,8 @@ namespace TrimesterPlaner
             services.AddTransient(typeof(IPreparator), typeof(Preparator));
             services.AddTransient(typeof(ResultWindow));
             services.AddTransient(typeof(ResultWindowViewModel));
-            services.AddTransient(typeof(ResultWindowMenuViewModel));
+            services.AddTransient(typeof(ResultViewModel));
+            services.AddTransient(typeof(ResultMenuViewModel));
             services.AddTransient(typeof(MainWindow));
             services.AddTransient(typeof(MainWindowMenuViewModel));
             services.AddTransient(typeof(VacationProviderViewModel));

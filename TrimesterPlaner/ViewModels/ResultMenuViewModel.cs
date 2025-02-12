@@ -7,9 +7,9 @@ using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class ResultWindowMenuViewModel : BindableBase
+    public class ResultMenuViewModel : BindableBase
     {
-        public ResultWindowMenuViewModel(ConfluenceClient confluenceClient, IEntwicklungsplanManager entwicklungsplanManager)
+        public ResultMenuViewModel(ConfluenceClient confluenceClient, IEntwicklungsplanManager entwicklungsplanManager)
         {
             HasCAT = confluenceClient.HasCAT;
 

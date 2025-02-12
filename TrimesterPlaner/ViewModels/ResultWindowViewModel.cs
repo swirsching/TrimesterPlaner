@@ -1,5 +1,4 @@
-﻿using Svg;
-using TrimesterPlaner.Utilities;
+﻿using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
@@ -7,11 +6,7 @@ namespace TrimesterPlaner.ViewModels
     {
         public ResultWindowViewModel(IEntwicklungsplanManager entwicklungsplanManager) : base()
         {
-            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) =>
-            {
-                Title = data?.Title ?? "";
-                Result = result;
-            };
+            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => Title = data?.Title ?? "";
         }
 
         private string _Title = string.Empty;
@@ -19,13 +14,6 @@ namespace TrimesterPlaner.ViewModels
         {
             get => _Title;
             set => SetProperty(ref _Title, value);
-        }
-
-        private SvgDocument? _Result = null;
-        public SvgDocument? Result
-        {
-            get => _Result;
-            set => SetProperty(ref _Result, value);
         }
     }
 }
