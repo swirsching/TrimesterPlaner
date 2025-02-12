@@ -20,6 +20,7 @@
             <conv:NullToVisibilityConverter x:Key="NullToVisConv" />
             <conv:NotNullToVisibilityConverter x:Key="NotNullToVisConv" />
             <conv:BoolToVisibilityConverter x:Key="BoolToVisConv" />
+            <conv:InverseBoolToVisibilityConverter x:Key="InvBoolToVisConv" />
             <conv:GetTypeConverter x:Key="GetTypeConv" />
             <conv:DayOfWeekConverter x:Key="DayOfWeekConv" />
             <conv:ImageConverter x:Key="ImageConv" />
