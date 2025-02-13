@@ -17,7 +17,8 @@
     WindowState="Maximized"
     mc:Ignorable="d">
     <DockPanel>
-        <views:MainWindowMenuView DockPanel.Dock="Top" />
+        <views:ResultView DockPanel.Dock="Top" Visibility="{Binding ElementName=MainWindowMenu, Path=IsShowingResultWindow, Converter={StaticResource InvBoolToVisConv}}" />
+        <views:MainWindowMenuView x:Name="MainWindowMenu" DockPanel.Dock="Top" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

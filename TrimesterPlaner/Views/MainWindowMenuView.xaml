@@ -8,6 +8,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TrimesterPlaner.ViewModels"
+    x:Name="MainWindowMenu"
     d:DataContext="{d:DesignInstance {x:Type vm:MainWindowMenuViewModel}}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -31,6 +32,13 @@
             Style="{StaticResource MaterialDesignIconButton}"
             ToolTip="Speichern unter ...">
             <materialDesign:PackIcon Kind="ContentSaveAllOutline" />
+        </Button>
+        <Button
+            Click="ShowResultWindow"
+            Style="{StaticResource MaterialDesignIconButton}"
+            ToolTip="Plan in Fenster anzeigen"
+            Visibility="{Binding ElementName=MainWindowMenu, Path=IsShowingResultWindow, Converter={StaticResource InvBoolToVisConv}}">
+            <materialDesign:PackIcon Kind="DockWindow" />
         </Button>
     </StackPanel>
 </UserControl>

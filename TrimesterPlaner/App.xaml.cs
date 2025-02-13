@@ -63,12 +63,8 @@ namespace TrimesterPlaner
             services.AddSingleton(typeof(ITicketProvider), mainWindowViewModel);
             services.AddSingleton(typeof(IPlanProvider), mainWindowViewModel);
 
-            var serviceProvider = services.BuildServiceProvider();
-            InjectExtension.ServiceProvider = serviceProvider;
-            Injector.ServiceProvider = serviceProvider;
-
-            serviceProvider.GetRequiredService<MainWindow>().Show();
-            serviceProvider.GetRequiredService<ResultWindow>().Show();
+            InjectExtension.ServiceProvider = services.BuildServiceProvider();
+            InjectExtension.ServiceProvider.GetRequiredService<MainWindow>().Show();
         }
     }
 }
