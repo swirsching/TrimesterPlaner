@@ -181,6 +181,28 @@ namespace TrimesterPlaner.Extensions
 
             return plan.Ticket?.GetTotalPT() ?? 0;
         }
+
+        public record PlanWithPT(Plan Plan, double PT);
+        public static IEnumerable<PlanWithPT> Stretch(this IEnumerable<Plan> plans, double maxPT)
+        {
+            double totalPT = (from plan in plans 
+                              select plan.GetTotalPT()).Sum();
+
+            var stretchablePlans = from plan in plans
+                                   where plan.IsStretchable()
+                                   select plan;
+
+            double stretchPT = totalPT > maxPT ? 0 : (maxPT - totalPT) / stretchablePlans.Count();
+            
+            var stretchedPlans = from plan in plans
+                                 select new PlanWithPT(plan, plan.IsStretchable() ? stretchPT : plan.GetTotalPT());
+            return stretchedPlans;
+        }
+
+        private static bool IsStretchable(this Plan plan)
+        {
+            return plan is BugPlan bugPlan && bugPlan.PT == 0;
+        }
     }
 
     public static class TicketExtensions

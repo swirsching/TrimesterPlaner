@@ -184,16 +184,20 @@ namespace TrimesterPlaner.Models
                 return [];
             }
 
+            var maxPT = (from dayWithPT in daysWithPT
+                         where !dayWithPT.Day.IsBadArea
+                         select dayWithPT.After).Last();
+            
             List<PlanData> data = [];
-            double startPT = 0, endPT;
-            foreach (var plan in plans)
+            double startPT = 0;
+            foreach (var planWithPT in plans.Stretch(maxPT))
             {
-                if (plan.EarliestStart is not null)
+                if (planWithPT.Plan.EarliestStart is not null)
                 {
-                    startPT = Math.Max(startPT, daysWithPT.GetDay(plan.EarliestStart.Value)?.Before ?? startPT);
+                    startPT = Math.Max(startPT, daysWithPT.GetDay(planWithPT.Plan.EarliestStart.Value)?.Before ?? startPT);
                 }
-                endPT = startPT + plan.GetTotalPT();
-                data.Add(PreparePlan(plan, daysWithPT.GetX(startPT), daysWithPT.GetX(endPT)));
+                double endPT = startPT + planWithPT.PT;
+                data.Add(PreparePlan(planWithPT.Plan, daysWithPT.GetX(startPT), daysWithPT.GetX(endPT)));
                 startPT = endPT;
             }
 
