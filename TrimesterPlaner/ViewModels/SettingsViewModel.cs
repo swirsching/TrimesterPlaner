@@ -2,64 +2,77 @@
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class SettingsViewModel(Settings settings, IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
+    public class SettingsViewModel(ConfluenceClient confluenceClient, IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
     {
+        public bool HasCAT { get; } = confluenceClient.HasCAT;
+        private Settings Settings { get; } = entwicklungsplanManager.GetSettings();
+
         public DateTime? Start
         {
-            get => settings.Start;
+            get => Settings.Start;
             set
             {
-                settings.Start = value;
+                Settings.Start = value;
                 OnPropertyChanged();
             }
         }
 
         public DateTime? Entwicklungsstart
         {
-            get => settings.Entwicklungsstart;
+            get => Settings.Entwicklungsstart;
             set
             {
-                settings.Entwicklungsstart = value;
+                Settings.Entwicklungsstart = value;
                 OnPropertyChanged();
             }
         }
 
         public DateTime? Entwicklungsschluss
         {
-            get => settings.Entwicklungsschluss;
+            get => Settings.Entwicklungsschluss;
             set
             {
-                settings.Entwicklungsschluss = value;
+                Settings.Entwicklungsschluss = value;
                 OnPropertyChanged();
             }
         }
 
         public string Title
         {
-            get => settings.Title;
+            get => Settings.Title;
             set
             {
-                settings.Title = value;
+                Settings.Title = value;
                 OnPropertyChanged();
             }
         }
 
         public string JQL
         {
-            get => settings.JQL;
+            get => Settings.JQL;
             set
             {
-                settings.JQL = value;
+                Settings.JQL = value;
                 OnPropertyChanged();
             }
         }
 
         public bool Burndown
         {
-            get => settings.Burndown;
+            get => Settings.Burndown;
             set
             {
-                settings.Burndown = value;
+                Settings.Burndown = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int PageID
+        {
+            get => Settings.PageID;
+            set
+            {
+                Settings.PageID = value;
                 OnPropertyChanged();
             }
         }

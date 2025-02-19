@@ -56,8 +56,8 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <views:SettingsView Margin="0,0,0,1" DataContext="{Binding Settings, Converter={StaticResource Injector}, ConverterParameter={x:Type vm:SettingsViewModel}}" />
-                <views:StatisticsView Grid.Row="1" DataContext="{Binding Settings, Converter={StaticResource Injector}, ConverterParameter={x:Type vm:StatisticsViewModel}}" />
+                <views:SettingsView Margin="0,0,0,1" />
+                <views:StatisticsView Grid.Row="1" />
             </Grid>
         </Grid>
     </DockPanel>

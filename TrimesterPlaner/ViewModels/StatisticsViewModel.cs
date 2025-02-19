@@ -16,10 +16,10 @@ namespace TrimesterPlaner.ViewModels
 
     public class StatisticsViewModel : BindableBase
     {
-        public StatisticsViewModel(Settings settings, IDeveloperProvider developerProvider, IEntwicklungsplanManager entwicklungsplanManager)
+        public StatisticsViewModel(IDeveloperProvider developerProvider, IEntwicklungsplanManager entwicklungsplanManager)
         {
             DeveloperProvider = developerProvider;
-            Settings = settings;
+            Settings = entwicklungsplanManager.GetSettings();
 
             entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculateStatistics(data);
             CalculateStatistics();

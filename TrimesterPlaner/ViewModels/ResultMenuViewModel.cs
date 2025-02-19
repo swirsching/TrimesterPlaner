@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System.Windows.Input;
 using TextCopy;
 using TrimesterPlaner.Extensions;
@@ -29,7 +28,7 @@ namespace TrimesterPlaner.ViewModels
                 }
             });
             CopyToClipboardCommand = new RelayCommand((o) => ClipboardService.SetText(entwicklungsplanManager.GetLastResult().ConvertToPastableHTML()));
-            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(entwicklungsplanManager.GetLastResult().ConvertToPastableHTML()));
+            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(entwicklungsplanManager.GetSettings().PageID, entwicklungsplanManager.GetLastResult().ConvertToPastableHTML()));
         }
 
         public bool HasCAT { get; }

@@ -10,6 +10,7 @@
             Entwicklungsschluss = null;
             JQL = "";
             Burndown = true;
+            PageID = 0;
         }
 
         public string Title { get; set; }
@@ -18,5 +19,6 @@
         public DateTime? Entwicklungsschluss { get; set; }
         public string JQL { get; set; }
         public bool Burndown { get; set; }
+        public int PageID { get; set; }
     }
 }

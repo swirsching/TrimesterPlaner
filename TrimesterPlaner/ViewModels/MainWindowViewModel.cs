@@ -15,6 +15,7 @@ namespace TrimesterPlaner.ViewModels
         public void RefreshEntwicklungsplan();
         public PreparedData? GetLastPreparedData();
         public SvgDocument? GetLastResult();
+        public Settings GetSettings();
     }
 
     public interface IConfigManager
@@ -243,6 +244,11 @@ namespace TrimesterPlaner.ViewModels
         public SvgDocument? GetLastResult()
         {
             return LastResult;
+        }
+
+        public Settings GetSettings()
+        {
+            return Settings;
         }
 
         public IEnumerable<Developer> GetDevelopers()
