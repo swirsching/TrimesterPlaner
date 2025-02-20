@@ -197,7 +197,7 @@ namespace TrimesterPlaner.Models
                     startPT = Math.Max(startPT, daysWithPT.GetDay(planWithPT.Plan.EarliestStart.Value)?.Before ?? startPT);
                 }
                 double endPT = startPT + planWithPT.PT;
-                data.Add(PreparePlan(planWithPT.Plan, daysWithPT.GetX(startPT), daysWithPT.GetX(endPT)));
+                data.Add(PreparePlan(planWithPT.Plan, daysWithPT.GetX(startPT, PositionInPlan.Start), daysWithPT.GetX(endPT, PositionInPlan.End)));
                 startPT = endPT;
             }
 

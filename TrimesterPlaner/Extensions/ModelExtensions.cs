@@ -216,6 +216,7 @@ namespace TrimesterPlaner.Extensions
         }
     }
 
+    public enum PositionInPlan { Start, End }
     public static class PreparedDataExtensions
     {
         public static bool IsWeekend(this Day day)
@@ -223,18 +224,28 @@ namespace TrimesterPlaner.Extensions
             return day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
         }
 
-        public static int GetX(this IEnumerable<DayWithPT> days, double pt)
+        public static int GetX(this IEnumerable<DayWithPT> days, double pt, PositionInPlan positionInPlan)
         {
-            return days.GetDay(pt)?.GetX(pt) ?? 0;
-        }
-
-        public static DayWithPT? GetDay(this IEnumerable<DayWithPT> days, double pt)
-        {
+            double epsilon = 0.1;
             var relevantDays = from day in days
-                               where day.Before <= pt && pt <= day.After 
-                               where day.Before != day.After // Do not use days where no work happens
+                               where day.Before - epsilon <= pt && pt <= day.After + epsilon
                                select day;
-            return relevantDays.FirstOrDefault();
+            if (!relevantDays.Any())
+            {
+                return 0;
+            }
+
+            if (relevantDays.Count() == 1)
+            {
+                return relevantDays.First().GetX(pt, positionInPlan);
+            }
+
+            return positionInPlan switch
+            {
+                PositionInPlan.Start => relevantDays.Last().GetX(pt, positionInPlan),
+                PositionInPlan.End => relevantDays.First().GetX(pt, positionInPlan),
+                _ => throw new NotImplementedException()
+            };
         }
 
         public static DayWithPT? GetDay(this IEnumerable<DayWithPT> days, int x)
@@ -253,9 +264,18 @@ namespace TrimesterPlaner.Extensions
             return relevantDays.FirstOrDefault();
         }
 
-        public static int GetX(this DayWithPT day, double pt)
+        private static int GetX(this DayWithPT day, double pt, PositionInPlan positionInPlan)
         {
-            return day.Day.GetX(GetAlpha(day.Before, day.After, pt));
+            var alpha = GetAlpha(day.Before, day.After, pt);
+            if (alpha > 0.9 && positionInPlan == PositionInPlan.End)
+            {
+                alpha = 1.0;
+            }
+            else if (alpha < 0.1 && positionInPlan == PositionInPlan.Start)
+            {
+                alpha = 0.0;
+            }
+            return day.Day.GetX(alpha);
         }
 
         public static double GetAlpha(double before, double after, double pt)
