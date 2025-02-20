@@ -153,6 +153,7 @@ namespace TrimesterPlaner.Extensions
         }
     }
 
+    public record PlanWithPT(Plan Plan, double PT);
     public static class PlanExtensions
     {
         public static double GetTotalPT(this Plan plan)
@@ -182,7 +183,6 @@ namespace TrimesterPlaner.Extensions
             return plan.Ticket?.GetTotalPT() ?? 0;
         }
 
-        public record PlanWithPT(Plan Plan, double PT);
         public static IEnumerable<PlanWithPT> Stretch(this IEnumerable<Plan> plans, double maxPT)
         {
             double totalPT = (from plan in plans 
@@ -250,18 +250,12 @@ namespace TrimesterPlaner.Extensions
 
         public static DayWithPT? GetDay(this IEnumerable<DayWithPT> days, int x)
         {
-            var relevantDays = from day in days
-                               where day.Day.GetX(0) <= x && x <= day.Day.GetX(1)
-                               select day;
-            return relevantDays.FirstOrDefault();
+            return days.FirstOrDefault((d) => d.Day.GetX(0) <= x && x <= d.Day.GetX(1));
         }
 
         public static DayWithPT? GetDay(this IEnumerable<DayWithPT> days, DateTime date)
         {
-            var relevantDays = from day in days
-                               where day.Day.Date == date
-                               select day;
-            return relevantDays.FirstOrDefault();
+            return days.FirstOrDefault((d) => d.Day.Date == date);
         }
 
         private static int GetX(this DayWithPT day, double pt, PositionInPlan positionInPlan)

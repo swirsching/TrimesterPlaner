@@ -36,7 +36,7 @@ namespace TrimesterPlaner.Models
     }
     public record DayWithPT(Day Day, double Before, double After);
     public record DeveloperData(string Abbreviation, IEnumerable<Day> FreeDays, IEnumerable<DayWithPT> Days, IEnumerable<PlanData> Plans, IEnumerable<VacationData> Vacations);
-    public record PlanData(int StartX, int EndX, int RemainingX, PlanType PlanType, string FirstRow, string SecondRow, string TopLeft);
+    public record PlanData(int StartX, int EndX, int RemainingX, PlanType PlanType, string FirstRow, string SecondRow, string TopLeft, double PT);
     public enum PlanType { Ticket, Bug, Special };
     public record VacationData(IEnumerable<Day> Days, string Label);
 
@@ -197,22 +197,22 @@ namespace TrimesterPlaner.Models
                     startPT = Math.Max(startPT, daysWithPT.GetDay(planWithPT.Plan.EarliestStart.Value)?.Before ?? startPT);
                 }
                 double endPT = startPT + planWithPT.PT;
-                data.Add(PreparePlan(planWithPT.Plan, daysWithPT.GetX(startPT, PositionInPlan.Start), daysWithPT.GetX(endPT, PositionInPlan.End)));
+                data.Add(PreparePlan(planWithPT, daysWithPT.GetX(startPT, PositionInPlan.Start), daysWithPT.GetX(endPT, PositionInPlan.End)));
                 startPT = endPT;
             }
 
             return data;
         }
 
-        private static PlanData PreparePlan(Plan plan, int startX, int endX)
+        private static PlanData PreparePlan(PlanWithPT planWithPT, int startX, int endX)
         {
-            Ticket? ticket = (plan as TicketPlan)?.Ticket;
+            Ticket? ticket = (planWithPT.Plan as TicketPlan)?.Ticket;
 
             int remainingX = startX; // TOD: Fix calculation
-            double? remaining = (plan as TicketPlan)?.TimeEstimateOverride?.RemainingEstimate ?? ticket?.RemainingEstimate;
+            double? remaining = (planWithPT.Plan as TicketPlan)?.TimeEstimateOverride?.RemainingEstimate ?? ticket?.RemainingEstimate;
             if (remaining is not null)
             {
-                double totalPT = plan.GetTotalPT();
+                double totalPT = planWithPT.PT;
                 double alpha = (totalPT - remaining.Value) / totalPT;
                 remainingX += (int)Math.Round(alpha * (endX - startX));
             }
@@ -221,10 +221,11 @@ namespace TrimesterPlaner.Models
                 startX,
                 endX,
                 remainingX,
-                GetPlanType(plan),
-                ticket?.Key ?? (plan as SpecialPlan)?.Description ?? "",
+                GetPlanType(planWithPT.Plan),
+                ticket?.Key ?? (planWithPT.Plan as SpecialPlan)?.Description ?? "",
                 ticket?.Summary ?? "",
-                (plan as TicketPlan)?.Description ?? "");
+                (planWithPT.Plan as TicketPlan)?.Description ?? "",
+                planWithPT.PT);
         }
 
         private static PlanType GetPlanType(Plan plan)

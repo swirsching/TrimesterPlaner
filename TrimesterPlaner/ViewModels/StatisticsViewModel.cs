@@ -16,66 +16,62 @@ namespace TrimesterPlaner.ViewModels
 
     public class StatisticsViewModel : BindableBase
     {
-        public StatisticsViewModel(IDeveloperProvider developerProvider, IEntwicklungsplanManager entwicklungsplanManager)
+        public StatisticsViewModel(IEntwicklungsplanManager entwicklungsplanManager)
         {
-            DeveloperProvider = developerProvider;
             Settings = entwicklungsplanManager.GetSettings();
 
-            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculateStatistics(data);
-            CalculateStatistics();
-        }
-
-        private void CalculateStatistics(PreparedData? data = null)
-        {
-            CalculateDeveloperStatistics();
-            if (data is not null)
+            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) =>
             {
+                if (data is null)
+                {
+                    return;
+                }
+
+                CalculateDeveloperStatistics(data);
                 CalculateWeekStatistics(data);
-            }
+            };
         }
 
-        private void CalculateDeveloperStatistics()
+        private void CalculateDeveloperStatistics(PreparedData data)
         {
             DeveloperStatistics.Clear();
 
-            var developers = DeveloperProvider.GetDevelopers();
-            double totalCapacityPT = (from developer in developers
-                                      from day in Settings.GetDaysOfEntwicklungsperiode()
-                                      where developer.IsWorkDay(day)
-                                      select developer.GetDailyPT()).Sum();
-            double totalVacationPT = 0, totalTicketsPT = 0, totalFehlerPT = 0, totalSpecialPT = 0, totalRemainingPT = 0;
-            foreach (var developer in developers)
+            double totalCapacityPT = 0, totalVacationPT = 0, totalTicketsPT = 0, totalFehlerPT = 0, totalSpecialPT = 0, totalRemainingPT = 0;
+            foreach (var developer in data.Developers)
             {
-                double dailyPT = developer.GetDailyPT();
+                if (developer is null)
+                {
+                    continue;
+                }
+                var firstWorkDay = developer.Days.FirstOrDefault((d) => d.Before != d.After);
+                if (firstWorkDay is null)
+                {
+                    continue;
+                }
 
-                var capacityPT = from day in Settings.GetDaysOfEntwicklungsperiode()
-                                 where developer.IsWorkDay(day)
-                                 select dailyPT;
-                var sumCapacityPT = capacityPT.Sum();
-                var capacityPercentage = sumCapacityPT / totalCapacityPT;
+                var sumCapacityPT = developer.Days.Last((d) => !d.Day.IsBadArea).After;
+                totalCapacityPT += sumCapacityPT;
 
                 var vacationPT = from vacation in developer.Vacations
-                                 from day in vacation.GetDays()
-                                 where developer.IsRegularWorkDay(day)
-                                 select dailyPT;
+                                 select vacation.Days.Count((d) => !developer.FreeDays.Contains(d)) * (firstWorkDay.After - firstWorkDay.Before);
                 var sumVacationPT = vacationPT.Sum();
                 totalVacationPT += sumVacationPT;
 
-                var ticketsPT = from plan in developer.Plans 
-                               where plan is TicketPlan 
-                               select plan.GetTotalPT();
+                var ticketsPT = from plan in developer.Plans
+                                where plan.PlanType == PlanType.Ticket
+                                select plan.PT;
                 var sumTicketsPT = ticketsPT.Sum();
                 totalTicketsPT += sumTicketsPT;
 
                 var fehlerPT = from plan in developer.Plans 
-                               where plan is BugPlan 
-                               select plan.GetTotalPT();
+                               where plan.PlanType == PlanType.Bug
+                               select plan.PT;
                 var sumFehlerPT = fehlerPT.Sum();
                 totalFehlerPT += sumFehlerPT;
 
                 var specialPT = from plan in developer.Plans 
-                                where plan is SpecialPlan 
-                                select plan.GetTotalPT();
+                                where plan.PlanType == PlanType.Special
+                                select plan.PT;
                 var sumSpecialPT = specialPT.Sum();
                 totalSpecialPT += sumSpecialPT;
 
@@ -172,7 +168,6 @@ namespace TrimesterPlaner.ViewModels
                 Math.Round(totalRemainingPT, 1)));
         }
 
-        private IDeveloperProvider DeveloperProvider { get; }
         private Settings Settings { get; }
 
         public ObservableCollection<Statistics> DeveloperStatistics { get; } = [];

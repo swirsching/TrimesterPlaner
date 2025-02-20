@@ -105,7 +105,7 @@
         <GroupBox
             materialDesign:ColorZoneAssist.Mode="PrimaryDark"
             Grid.IsSharedSizeScope="True"
-            Header="Wochen-Statistik">
+            Header="Statistik pro Woche">
             <HeaderedItemsControl ItemsSource="{Binding WeekStatistics}" Style="{StaticResource StatisticsStyle}" />
         </GroupBox>
     </StackPanel>
