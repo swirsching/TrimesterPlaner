@@ -1,4 +1,5 @@
-﻿using TrimesterPlaner.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using TrimesterPlaner.Models;
 
 namespace TrimesterPlaner.Extensions
 {
@@ -275,6 +276,64 @@ namespace TrimesterPlaner.Extensions
         public static double GetAlpha(double before, double after, double pt)
         {
             return (pt - before) / (after - before);
+        }
+
+        public static double GetPT(this VacationData vacation, DeveloperData developer, Day? day = null)
+        {
+            if (day is null)
+            {
+                return (from d in vacation.Days
+                        select vacation.GetPT(developer, d)).Sum();
+            }
+
+            if (!vacation.Days.Contains(day))
+            {
+                return 0;
+            }
+
+            if (developer.FreeDays.Contains(day))
+            {
+                return 0;
+            }
+
+            var firstWorkDay = developer.Days.FirstOrDefault((d) => d.Before != d.After);
+            if (firstWorkDay is null)
+            {
+                return 0;
+            }
+
+            return firstWorkDay.After - firstWorkDay.Before;
+        }
+
+        public static double GetPT(this PlanData plan, DeveloperData developer, Day day)
+        {
+            var dayWithPT = developer.Days.FirstOrDefault((d) => d.Day == day);
+            var startDay = developer.Days.GetDay(plan.StartX);
+            var endDay = developer.Days.GetDay(plan.EndX);
+            if (dayWithPT is null || startDay is null || endDay is null)
+            {
+                return 0;
+            }
+
+            if (day.Date < startDay.Day.Date)
+            {
+                return 0;
+            }
+            if (day.Date > endDay.Day.Date) 
+            {
+                return 0;
+            }
+
+            if (day == startDay.Day)
+            {
+                return startDay.After - plan.StartPT;
+            }
+            if (day == endDay.Day)
+            { 
+                return plan.EndPT - endDay.Before;
+            }
+
+            return dayWithPT.After - dayWithPT.Before;
         }
     }
 }
