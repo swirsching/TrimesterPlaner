@@ -18,8 +18,6 @@ namespace TrimesterPlaner.ViewModels
     {
         public StatisticsViewModel(IEntwicklungsplanManager entwicklungsplanManager)
         {
-            Settings = entwicklungsplanManager.GetSettings();
-
             entwicklungsplanManager.EntwicklungsplanChanged += (data, result) =>
             {
                 if (data is null)
@@ -159,8 +157,6 @@ namespace TrimesterPlaner.ViewModels
                 Math.Round(totalSpecialPT, 1),
                 Math.Round(totalRemainingPT, 1)));
         }
-
-        private Settings Settings { get; }
 
         public ObservableCollection<Statistics> DeveloperStatistics { get; } = [];
         public ObservableCollection<Statistics> WeekStatistics { get; } = [];
