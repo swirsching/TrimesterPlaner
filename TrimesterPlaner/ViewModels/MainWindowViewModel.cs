@@ -133,34 +133,7 @@ namespace TrimesterPlaner.ViewModels
                 if (Tickets.Contains(loadedTicket, comparer))
                 {
                     var ticketToUpdate = Tickets.Single((ticket) => comparer.Equals(loadedTicket, ticket));
-                    if (!ticketToUpdate.Summary.Equals(loadedTicket.Summary))
-                    {
-                        ticketToUpdate.Summary = loadedTicket.Summary;
-                    }
-                    if (!ticketToUpdate.Shirt.Equals(loadedTicket.Shirt))
-                    {
-                        ticketToUpdate.Shirt = loadedTicket.Shirt;
-                    }
-                    if (!ticketToUpdate.Rank.Equals(loadedTicket.Rank))
-                    {
-                        ticketToUpdate.Rank = loadedTicket.Rank;
-                    }
-                    if (!ticketToUpdate.IsInJQL.Equals(loadedTicket.IsInJQL))
-                    {
-                        ticketToUpdate.IsInJQL = loadedTicket.IsInJQL;
-                    }
-                    if (ticketToUpdate.OriginalEstimate != loadedTicket.OriginalEstimate)
-                    {
-                        ticketToUpdate.OriginalEstimate = loadedTicket.OriginalEstimate;
-                    }
-                    if (ticketToUpdate.RemainingEstimate != loadedTicket.RemainingEstimate)
-                    {
-                        ticketToUpdate.RemainingEstimate = loadedTicket.RemainingEstimate;
-                    }
-                    if (ticketToUpdate.TimeSpent != loadedTicket.TimeSpent)
-                    {
-                        ticketToUpdate.TimeSpent = loadedTicket.TimeSpent;
-                    }
+                    ticketToUpdate.Update(loadedTicket);
                 }
                 else
                 {

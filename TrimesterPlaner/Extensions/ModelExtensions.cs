@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TrimesterPlaner.Models;
+﻿using TrimesterPlaner.Models;
 
 namespace TrimesterPlaner.Extensions
 {
