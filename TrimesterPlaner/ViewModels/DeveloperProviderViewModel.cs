@@ -9,7 +9,7 @@ namespace TrimesterPlaner.ViewModels
     {
         public DeveloperProviderViewModel(IDeveloperProvider developerProvider)
         {
-            Developers = developerProvider.GetAll();
+            Developers = developerProvider.Get();
 
             AddDeveloperCommand = new RelayCommand((o) => SelectedDeveloper = developerProvider.AddDeveloper("Neuling"));
             RemoveDeveloperCommand = new RelayCommand((o) => developerProvider.Remove(SelectedDeveloper!));

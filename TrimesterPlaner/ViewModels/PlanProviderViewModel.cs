@@ -11,7 +11,7 @@ namespace TrimesterPlaner.ViewModels
     {
         public PlanProviderViewModel(IPlanProvider planProvider, DeveloperProviderViewModel developerProviderViewModel) : base()
         {
-            Plans = new() { Source = planProvider.GetAll() };
+            Plans = new() { Source = planProvider.Get() };
             Plans.Filter += FilterBySelectedDeveloper;
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
 

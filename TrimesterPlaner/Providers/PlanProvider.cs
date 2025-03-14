@@ -5,7 +5,7 @@ using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Providers
 {
-    public interface IPlanProvider : IProvider<Plan>
+    public interface IPlanProvider : ICollectionProvider<Plan>
     {
         public void AddTicketPlan(Developer developer, Ticket ticket);
         public void AddBugPlan(Developer developer);
@@ -20,12 +20,12 @@ namespace TrimesterPlaner.Providers
     {
         private ObservableCollection<Plan> Plans { get; } = [];
 
-        public IEnumerable<Plan> GetAll()
+        public IEnumerable<Plan> Get()
         {
             return Plans;
         }
 
-        public void SetAll(IEnumerable<Plan> values)
+        public void Set(IEnumerable<Plan> values)
         {
             Plans.ClearAndAdd(values);
         }

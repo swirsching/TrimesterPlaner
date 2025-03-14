@@ -6,7 +6,7 @@ using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Providers
 {
-    public interface IDeveloperProvider : IProvider<Developer>
+    public interface IDeveloperProvider : ICollectionProvider<Developer>
     {
         public Developer AddDeveloper(string name);
     }
@@ -18,12 +18,12 @@ namespace TrimesterPlaner.Providers
     {
         private ObservableCollection<Developer> Developers { get; } = [];
 
-        public IEnumerable<Developer> GetAll()
+        public IEnumerable<Developer> Get()
         {
             return Developers;
         }
 
-        public void SetAll(IEnumerable<Developer> values)
+        public void Set(IEnumerable<Developer> values)
         {
             Developers.ClearAndAdd(values, new((a, b) => a.Abbreviation.CompareTo(b.Abbreviation)));
         }

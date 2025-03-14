@@ -2,10 +2,8 @@
 
 namespace TrimesterPlaner.Providers
 {
-    public interface ISettingsProvider
+    public interface ISettingsProvider : IValueProvider<Settings>
     {
-        public void Set(Settings settings);
-        public Settings Get();
     }
 
     public class SettingsProvider : ISettingsProvider

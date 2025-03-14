@@ -30,7 +30,7 @@ namespace TrimesterPlaner.ViewModels
             set => SetProperty(ref _IsChangingDeveloper, value);
         }
 
-        public IEnumerable<Developer> Developers { get; } = developerProvider.GetAll();
+        public IEnumerable<Developer> Developers { get; } = developerProvider.Get();
 
         public Developer? SelectedDeveloper
         {

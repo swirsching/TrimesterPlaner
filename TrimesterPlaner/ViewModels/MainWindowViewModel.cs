@@ -53,10 +53,10 @@ namespace TrimesterPlaner.ViewModels
             {
                 InjectExtension.ServiceProvider!.GetRequiredService<ISettingsProvider>().Set(config.Settings);
             }
-            InjectExtension.ServiceProvider!.GetRequiredService<IDeveloperProvider>().SetAll(config.Developers);
-            InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().SetAll(config.Vacations);
-            InjectExtension.ServiceProvider!.GetRequiredService<ITicketProvider>().SetAll(config.Tickets);            
-            InjectExtension.ServiceProvider!.GetRequiredService<IPlanProvider>().SetAll(config.Plans);
+            InjectExtension.ServiceProvider!.GetRequiredService<IDeveloperProvider>().Set(config.Developers);
+            InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().Set(config.Vacations);
+            InjectExtension.ServiceProvider!.GetRequiredService<ITicketProvider>().Set(config.Tickets);            
+            InjectExtension.ServiceProvider!.GetRequiredService<IPlanProvider>().Set(config.Plans);
 
             IsDirty = true;
         }
@@ -64,10 +64,10 @@ namespace TrimesterPlaner.ViewModels
         public Config Save() => new()
         {
             Settings = InjectExtension.ServiceProvider!.GetRequiredService<ISettingsProvider>().Get(),
-            Developers = [.. InjectExtension.ServiceProvider!.GetRequiredService<IDeveloperProvider>().GetAll()],
-            Vacations = [.. InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().GetAll()],
-            Tickets = [.. InjectExtension.ServiceProvider!.GetRequiredService<ITicketProvider>().GetAll()],
-            Plans = [.. InjectExtension.ServiceProvider!.GetRequiredService<IPlanProvider>().GetAll()],
+            Developers = [.. InjectExtension.ServiceProvider!.GetRequiredService<IDeveloperProvider>().Get()],
+            Vacations = [.. InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().Get()],
+            Tickets = [.. InjectExtension.ServiceProvider!.GetRequiredService<ITicketProvider>().Get()],
+            Plans = [.. InjectExtension.ServiceProvider!.GetRequiredService<IPlanProvider>().Get()],
         };
 
         public event EntwicklungsplanChangedHandler? EntwicklungsplanChanged;

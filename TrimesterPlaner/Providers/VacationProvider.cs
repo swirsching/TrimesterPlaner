@@ -5,7 +5,7 @@ using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Providers
 {
-    public interface IVacationProvider : IProvider<Vacation>
+    public interface IVacationProvider : ICollectionProvider<Vacation>
     {
         public void AddVacation(Developer developer);
         public void RemoveVacations(Developer developer);
@@ -15,12 +15,12 @@ namespace TrimesterPlaner.Providers
     {
         private ObservableCollection<Vacation> Vacations { get; } = [];
 
-        public IEnumerable<Vacation> GetAll()
+        public IEnumerable<Vacation> Get()
         {
             return Vacations;
         }
 
-        public void SetAll(IEnumerable<Vacation> vacations)
+        public void Set(IEnumerable<Vacation> vacations)
         {
             Vacations.ClearAndAdd(vacations, new((a, b) =>
             {

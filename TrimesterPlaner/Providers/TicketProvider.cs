@@ -5,7 +5,7 @@ using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Providers
 {
-    public interface ITicketProvider : IProvider<Ticket>
+    public interface ITicketProvider : ICollectionProvider<Ticket>
     {
         public Task<IEnumerable<Ticket>> ReloadTicketsAsync();
         public IEnumerable<Ticket> SortTickets(Comparison<Ticket> comparison);
@@ -20,12 +20,12 @@ namespace TrimesterPlaner.Providers
     {
         private ObservableCollection<Ticket> Tickets { get; } = [];
 
-        public IEnumerable<Ticket> GetAll()
+        public IEnumerable<Ticket> Get()
         {
             return Tickets;
         }
 
-        public void SetAll(IEnumerable<Ticket> values)
+        public void Set(IEnumerable<Ticket> values)
         {
             Tickets.ClearAndAdd(values);
         }

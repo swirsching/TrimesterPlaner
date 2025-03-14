@@ -22,7 +22,7 @@ namespace TrimesterPlaner.ViewModels
         public TicketProviderViewModel(ITicketProvider ticketProvider) : base()
         {
             TicketProvider = ticketProvider;
-            Tickets = ticketProvider.GetAll();
+            Tickets = ticketProvider.Get();
             ReloadTicketsCommand = new RelayCommand((o) => ReloadTickets());
             SortTicketsCommand = new RelayCommand((o) => SortTickets((TicketSortingMode)o!));
         }
