@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Svg;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using TrimesterPlaner.Extensions;
@@ -25,32 +24,21 @@ namespace TrimesterPlaner.ViewModels
         public Config Save();
     }
 
-    public interface IDeveloperManager
-    {
-        public Developer AddDeveloper(string name);
-        public void RemoveDeveloper(Developer developer);
-    }
-
     public class MainWindowViewModel 
         : BindableBase
         , IEntwicklungsplanManager
         , IConfigManager
-        , IDeveloperManager
-        , IDeveloperProvider
     {
         public MainWindowViewModel(
-            JiraClient jiraClient, 
             IGenerator generator, 
             IPreparator preparator)
         {
-            JiraClient = jiraClient;
             Generator = generator;
             Preparator = preparator;
 
             var timer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.Background, GenerateIfDirty, Dispatcher.CurrentDispatcher);
         }
 
-        private JiraClient JiraClient { get; }
         private IGenerator Generator { get; }
         private IPreparator Preparator { get; }
 
@@ -65,7 +53,7 @@ namespace TrimesterPlaner.ViewModels
             {
                 InjectExtension.ServiceProvider!.GetRequiredService<ISettingsProvider>().Set(config.Settings);
             }
-            Developers.ClearAndAdd(config.Developers, new((a, b) => a.Abbreviation.CompareTo(b.Abbreviation)));
+            InjectExtension.ServiceProvider!.GetRequiredService<IDeveloperProvider>().SetAll(config.Developers);
             InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().SetAll(config.Vacations);
             InjectExtension.ServiceProvider!.GetRequiredService<ITicketProvider>().SetAll(config.Tickets);            
             InjectExtension.ServiceProvider!.GetRequiredService<IPlanProvider>().SetAll(config.Plans);
@@ -76,7 +64,7 @@ namespace TrimesterPlaner.ViewModels
         public Config Save() => new()
         {
             Settings = InjectExtension.ServiceProvider!.GetRequiredService<ISettingsProvider>().Get(),
-            Developers = [.. Developers],
+            Developers = [.. InjectExtension.ServiceProvider!.GetRequiredService<IDeveloperProvider>().GetAll()],
             Vacations = [.. InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().GetAll()],
             Tickets = [.. InjectExtension.ServiceProvider!.GetRequiredService<ITicketProvider>().GetAll()],
             Plans = [.. InjectExtension.ServiceProvider!.GetRequiredService<IPlanProvider>().GetAll()],
@@ -108,34 +96,6 @@ namespace TrimesterPlaner.ViewModels
         {
             return LastResult;
         }
-
-        public IEnumerable<Developer> GetDevelopers()
-        {
-            return Developers;
-        }
-
-        public Developer AddDeveloper(string name)
-        {
-            Developer developer = new()
-            {
-                Name = name,
-                Abbreviation = name[0..3].ToUpper(),
-            };
-            Developers.Add(developer);
-            IsDirty = true;
-            return developer;
-        }
-
-        public void RemoveDeveloper(Developer developer)
-        {
-            InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().RemoveVacations(developer);
-            InjectExtension.ServiceProvider!.GetRequiredService<IPlanProvider>().RemovePlans(developer);
-
-            Developers.Remove(developer);
-            IsDirty = true;
-        }
-
-        private ObservableCollection<Developer> Developers { get; } = [];
 
         private bool IsDirty { get; set; } = true;
         private PreparedData? LastPreparedData { get; set; }

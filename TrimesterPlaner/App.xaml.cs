@@ -24,6 +24,7 @@ namespace TrimesterPlaner
             services.AddSingleton(typeof(ConfluenceClient));
             services.AddSingleton(typeof(JiraClient));
             services.AddSingleton(typeof(DeveloperProviderViewModel));
+            services.AddSingleton(typeof(IDeveloperProvider), typeof(DeveloperProvider));
             services.AddSingleton(typeof(IPlanProvider), typeof(PlanProvider));
             services.AddSingleton(typeof(ISettingsProvider), typeof(SettingsProvider));
             services.AddSingleton(typeof(ITicketProvider), typeof(TicketProvider));
@@ -45,14 +46,11 @@ namespace TrimesterPlaner
             
             var tmpServiceProvider = services.BuildServiceProvider();
             MainWindowViewModel mainWindowViewModel = new(
-                tmpServiceProvider.GetRequiredService<JiraClient>(),
                 tmpServiceProvider.GetRequiredService<IGenerator>(),
                 tmpServiceProvider.GetRequiredService<IPreparator>());
             services.AddSingleton(mainWindowViewModel);
             services.AddSingleton(typeof(IEntwicklungsplanManager), mainWindowViewModel);
             services.AddSingleton(typeof(IConfigManager), mainWindowViewModel);
-            services.AddSingleton(typeof(IDeveloperManager), mainWindowViewModel);
-            services.AddSingleton(typeof(IDeveloperProvider), mainWindowViewModel);
 
             InjectExtension.ServiceProvider = services.BuildServiceProvider();
             InjectExtension.ServiceProvider.GetRequiredService<MainWindow>().Show();
