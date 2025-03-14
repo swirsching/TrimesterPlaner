@@ -2,24 +2,22 @@
 using System.Windows.Data;
 using System.Windows.Input;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public interface IVacationProvider
-    {
-        public IEnumerable<Vacation> GetVacations();
-    }
-
     public class VacationProviderViewModel : BindableBase
     {
-        public VacationProviderViewModel(IVacationManager vacationManager, IVacationProvider vacationProvider, DeveloperProviderViewModel developerProviderViewModel) : base()
+        public VacationProviderViewModel(
+            IVacationProvider vacationProvider,
+            DeveloperProviderViewModel developerProviderViewModel) : base()
         {
-            Vacations = new() { Source = vacationProvider.GetVacations() };
-            Vacations.Filter += FilterBySelectedDeveloper;
+            VacationsViewSource = new() { Source = vacationProvider.GetAll() };
+            VacationsViewSource.Filter += FilterBySelectedDeveloper;
             developerProviderViewModel.OnSelectedDeveloperChanged += SelectedDeveloperChanged;
 
-            AddVacationCommand = new RelayCommand((o) => vacationManager.AddVacation(SelectedDeveloper!));
+            AddVacationCommand = new RelayCommand((o) => vacationProvider.AddVacation(SelectedDeveloper!));
         }
 
         private void FilterBySelectedDeveloper(object sender, FilterEventArgs e)
@@ -40,11 +38,11 @@ namespace TrimesterPlaner.ViewModels
             set => SetProperty(ref _SelectedDeveloper, value);
         }
 
-        private CollectionViewSource Vacations { get; }
+        private CollectionViewSource VacationsViewSource { get; }
 
         public ICollectionView VacationsView
         {
-            get => Vacations.View;
+            get => VacationsViewSource.View;
         }
 
         public ICommand AddVacationCommand { get; }

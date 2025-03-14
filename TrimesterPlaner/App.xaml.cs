@@ -4,6 +4,7 @@ using System.Windows;
 using TrimesterPlaner.Converters;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 using TrimesterPlaner.ViewModels;
 using TrimesterPlaner.Views;
@@ -23,6 +24,7 @@ namespace TrimesterPlaner
             services.AddSingleton(typeof(ConfluenceClient));
             services.AddSingleton(typeof(JiraClient));
             services.AddSingleton(typeof(DeveloperProviderViewModel));
+            services.AddSingleton(typeof(IVacationProvider), typeof(VacationProvider));
 
             services.AddTransient(typeof(IGenerator), typeof(Generator));
             services.AddTransient(typeof(IPreparator), typeof(Preparator));
@@ -43,28 +45,27 @@ namespace TrimesterPlaner
                 tmpServiceProvider.GetRequiredService<JiraClient>(),
                 tmpServiceProvider.GetRequiredService<IGenerator>(),
                 tmpServiceProvider.GetRequiredService<IPreparator>());
-            MainWindowMenuViewModel menuViewModel = new(
-                tmpServiceProvider.GetRequiredService<IConfigService>(),
-                mainWindowViewModel);
-            if (e.Args.Length > 0 && File.Exists(e.Args[0]))
-            {
-                menuViewModel.LoadCommand.Execute(e.Args[0]);
-                _ = mainWindowViewModel.ReloadTicketsAsync();
-            }
             services.AddSingleton(mainWindowViewModel);
             services.AddSingleton(typeof(IEntwicklungsplanManager), mainWindowViewModel);
             services.AddSingleton(typeof(IConfigManager), mainWindowViewModel);
             services.AddSingleton(typeof(IDeveloperManager), mainWindowViewModel);
-            services.AddSingleton(typeof(IVacationManager), mainWindowViewModel);
             services.AddSingleton(typeof(ITicketManager), mainWindowViewModel);
             services.AddSingleton(typeof(IPlanManager), mainWindowViewModel);
             services.AddSingleton(typeof(IDeveloperProvider), mainWindowViewModel);
-            services.AddSingleton(typeof(IVacationProvider), mainWindowViewModel);
             services.AddSingleton(typeof(ITicketProvider), mainWindowViewModel);
             services.AddSingleton(typeof(IPlanProvider), mainWindowViewModel);
 
             InjectExtension.ServiceProvider = services.BuildServiceProvider();
             InjectExtension.ServiceProvider.GetRequiredService<MainWindow>().Show();
+
+            if (e.Args.Length > 0 && File.Exists(e.Args[0]))
+            {
+                MainWindowMenuViewModel menuViewModel = new(
+                    tmpServiceProvider.GetRequiredService<IConfigService>(),
+                    mainWindowViewModel);
+                menuViewModel.LoadCommand.Execute(e.Args[0]);
+                _ = mainWindowViewModel.ReloadTicketsAsync();
+            }
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using Svg;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Svg;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
@@ -30,12 +32,6 @@ namespace TrimesterPlaner.ViewModels
         public void RemoveDeveloper(Developer developer);
     }
 
-    public interface IVacationManager
-    {
-        public void AddVacation(Developer developer);
-        public void RemoveVacation(Vacation vacation);
-    }
-
     public interface ITicketManager
     {
         public Task<IEnumerable<Ticket>> ReloadTicketsAsync();
@@ -58,15 +54,16 @@ namespace TrimesterPlaner.ViewModels
         , IEntwicklungsplanManager
         , IConfigManager
         , IDeveloperManager
-        , IVacationManager
         , ITicketManager
         , IPlanManager
         , IDeveloperProvider
-        , IVacationProvider
         , ITicketProvider
         , IPlanProvider
     {
-        public MainWindowViewModel(JiraClient jiraClient, IGenerator generator, IPreparator preparator)
+        public MainWindowViewModel(
+            JiraClient jiraClient, 
+            IGenerator generator, 
+            IPreparator preparator)
         {
             JiraClient = jiraClient;
             Generator = generator;
@@ -163,20 +160,7 @@ namespace TrimesterPlaner.ViewModels
                 Settings = config.Settings;
             }
             Developers.ClearAndAdd(config.Developers, new((a, b) => a.Abbreviation.CompareTo(b.Abbreviation)));
-            Vacations.ClearAndAdd(config.Vacations, new((a, b) =>
-            {
-                if (a.Start is null || b.Start is null || a.Start == b.Start)
-                {
-                    if (a.Developer is null || b.Developer is null)
-                    {
-                        return 0;
-                    }
-
-                    return a.Developer.Abbreviation.CompareTo(b.Developer.Abbreviation);
-                }
-
-                return a.Start < b.Start ? -1 : 1;
-            }));
+            InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().SetAll(config.Vacations);
             Tickets.ClearAndAdd(config.Tickets);
             Plans.ClearAndAdd(config.Plans);
 
@@ -187,7 +171,7 @@ namespace TrimesterPlaner.ViewModels
         {
             Settings = Settings,
             Developers = [.. Developers],
-            Vacations = [.. Vacations],
+            Vacations = [.. InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().GetAll()],
             Tickets = [.. Tickets],
             Plans = [.. Plans],
         };
@@ -229,11 +213,6 @@ namespace TrimesterPlaner.ViewModels
             return Developers;
         }
 
-        public IEnumerable<Vacation> GetVacations()
-        {
-            return Vacations;
-        }
-
         public IEnumerable<Ticket> GetTickets()
         {
             return Tickets;
@@ -258,31 +237,14 @@ namespace TrimesterPlaner.ViewModels
 
         public void RemoveDeveloper(Developer developer)
         {
-            List<Vacation> vacationsToRemove = [.. developer.Vacations];
+            InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().RemoveVacations(developer);
             List<Plan> plansToRemove = [.. developer.Plans];
-            foreach (var vacation in vacationsToRemove)
-            {
-                RemoveVacation(vacation);
-            }
             foreach (var plan in plansToRemove)
             {
                 RemovePlan(plan); 
             }
 
             Developers.Remove(developer);
-            IsDirty = true;
-        }
-
-        public void AddVacation(Developer developer)
-        {
-            Vacations.Add(new Vacation() { Developer = developer });
-            IsDirty = true;
-        }
-
-        public void RemoveVacation(Vacation vacation)
-        {
-            vacation.Developer = null;
-            Vacations.Remove(vacation);
             IsDirty = true;
         }
 
@@ -357,7 +319,6 @@ namespace TrimesterPlaner.ViewModels
         }
 
         private ObservableCollection<Developer> Developers { get; } = [];
-        private ObservableCollection<Vacation> Vacations { get; } = [];
         private ObservableCollection<Ticket> Tickets { get; } = [];
         private ObservableCollection<Plan> Plans { get; } = [];
 
