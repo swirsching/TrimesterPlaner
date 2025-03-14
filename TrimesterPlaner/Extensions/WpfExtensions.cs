@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 
 namespace TrimesterPlaner.Extensions
 {
@@ -11,7 +12,7 @@ namespace TrimesterPlaner.Extensions
                 return ancestor;
             }
 
-            if (frameworkElement.Parent is FrameworkElement parent)
+            if (VisualTreeHelper.GetParent(frameworkElement) is FrameworkElement parent)
             {
                 return parent.FindAncestor<T>();
             }
