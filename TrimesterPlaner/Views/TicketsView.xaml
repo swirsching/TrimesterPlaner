@@ -78,7 +78,10 @@
                 </DataTemplate>
             </materialDesign:DialogHost.Resources>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Tickets}">
+                <ItemsControl
+                    AllowDrop="True"
+                    Drop="Tickets_Drop"
+                    ItemsSource="{Binding Tickets}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type models:Ticket}">
                             <views:TicketView DataContext="{Binding ., Converter={StaticResource Injector}, ConverterParameter={x:Type vm:TicketViewModel}}" />

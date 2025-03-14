@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using TrimesterPlaner.Models;
+using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Views
 {
@@ -7,6 +10,12 @@ namespace TrimesterPlaner.Views
         public TicketsView()
         {
             InitializeComponent();
+        }
+
+        private void Tickets_Drop(object sender, DragEventArgs e)
+        {
+            var vm = (TicketProviderViewModel)DataContext;
+            var ticket = e.Data.GetData(typeof(Ticket));
         }
     }
 }

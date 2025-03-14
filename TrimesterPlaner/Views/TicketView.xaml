@@ -15,7 +15,8 @@
     <materialDesign:Card
         Margin="0,2"
         Padding="10,0,5,0"
-        materialDesign:ElevationAssist.Elevation="Dp2">
+        materialDesign:ElevationAssist.Elevation="Dp2"
+        PreviewMouseLeftButtonDown="Ticket_PreviewMouseLeftButtonDown">
         <materialDesign:Card.Style>
             <Style BasedOn="{StaticResource MaterialDesignElevatedCard}" TargetType="{x:Type materialDesign:Card}">
                 <Style.Triggers>
