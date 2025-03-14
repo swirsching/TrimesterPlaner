@@ -38,11 +38,9 @@ namespace TrimesterPlaner.Providers
             }));
         }
 
-        public void Remove(Vacation vacation)
+        public void Remove(Vacation value)
         {
-            vacation.Developer = null;
-            Vacations.Remove(vacation);
-            entwicklungsplanManager.RefreshEntwicklungsplan();
+            RemoveVacation(value);
         }
 
         public void AddVacation(Developer developer)
@@ -56,10 +54,19 @@ namespace TrimesterPlaner.Providers
             List<Vacation> vacationsToRemove = [.. developer.Vacations];
             foreach (var vacation in vacationsToRemove)
             {
-                vacation.Developer = null;
-                Vacations.Remove(vacation);
+                RemoveVacation(vacation, false);
             }
             entwicklungsplanManager.RefreshEntwicklungsplan();
+        }
+
+        private void RemoveVacation(Vacation vacation, bool refresh = true)
+        {
+            vacation.Developer = null;
+            Vacations.Remove(vacation);
+            if (refresh)
+            {
+                entwicklungsplanManager.RefreshEntwicklungsplan();
+            }
         }
     }
 }

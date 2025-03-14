@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
@@ -11,16 +12,16 @@ namespace TrimesterPlaner.ViewModels
     {
         public TicketViewModel(
             Ticket ticket, 
-            IPlanManager planManager, 
-            ITicketManager ticketManager,
+            IPlanProvider planProvider, 
+            ITicketProvider ticketProvider,
             DeveloperProviderViewModel developerProviderViewModel,
             IEntwicklungsplanManager entwicklungsplanManager) : base()
         { 
             Ticket = ticket;
 
             OpenTicketInBrowserCommand = new RelayCommand((o) => OpenTicketInBrowser());
-            AddPlanCommand = new RelayCommand((o) => planManager.AddTicketPlan(SelectedDeveloper!, Ticket));
-            RemoveCommand = new RelayCommand((o) => ticketManager.RemoveTicket(Ticket));
+            AddPlanCommand = new RelayCommand((o) => planProvider.AddTicketPlan(SelectedDeveloper!, Ticket));
+            RemoveCommand = new RelayCommand((o) => ticketProvider.Remove(Ticket));
 
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
             entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculatePlannedPercentage();

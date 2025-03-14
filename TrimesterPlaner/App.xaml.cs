@@ -24,6 +24,9 @@ namespace TrimesterPlaner
             services.AddSingleton(typeof(ConfluenceClient));
             services.AddSingleton(typeof(JiraClient));
             services.AddSingleton(typeof(DeveloperProviderViewModel));
+            services.AddSingleton(typeof(IPlanProvider), typeof(PlanProvider));
+            services.AddSingleton(typeof(ISettingsProvider), typeof(SettingsProvider));
+            services.AddSingleton(typeof(ITicketProvider), typeof(TicketProvider));
             services.AddSingleton(typeof(IVacationProvider), typeof(VacationProvider));
 
             services.AddTransient(typeof(IGenerator), typeof(Generator));
@@ -49,11 +52,7 @@ namespace TrimesterPlaner
             services.AddSingleton(typeof(IEntwicklungsplanManager), mainWindowViewModel);
             services.AddSingleton(typeof(IConfigManager), mainWindowViewModel);
             services.AddSingleton(typeof(IDeveloperManager), mainWindowViewModel);
-            services.AddSingleton(typeof(ITicketManager), mainWindowViewModel);
-            services.AddSingleton(typeof(IPlanManager), mainWindowViewModel);
             services.AddSingleton(typeof(IDeveloperProvider), mainWindowViewModel);
-            services.AddSingleton(typeof(ITicketProvider), mainWindowViewModel);
-            services.AddSingleton(typeof(IPlanProvider), mainWindowViewModel);
 
             InjectExtension.ServiceProvider = services.BuildServiceProvider();
             InjectExtension.ServiceProvider.GetRequiredService<MainWindow>().Show();
@@ -61,10 +60,10 @@ namespace TrimesterPlaner
             if (e.Args.Length > 0 && File.Exists(e.Args[0]))
             {
                 MainWindowMenuViewModel menuViewModel = new(
-                    tmpServiceProvider.GetRequiredService<IConfigService>(),
+                    InjectExtension.ServiceProvider.GetRequiredService<IConfigService>(),
                     mainWindowViewModel);
                 menuViewModel.LoadCommand.Execute(e.Args[0]);
-                _ = mainWindowViewModel.ReloadTicketsAsync();
+                InjectExtension.ServiceProvider.GetRequiredService<ITicketProvider>().ReloadTicketsAsync();
             }
         }
     }

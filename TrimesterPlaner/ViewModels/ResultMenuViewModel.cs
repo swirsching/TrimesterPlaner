@@ -3,13 +3,17 @@ using System.Windows.Input;
 using TextCopy;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
     public class ResultMenuViewModel : BindableBase
     {
-        public ResultMenuViewModel(ConfluenceClient confluenceClient, IEntwicklungsplanManager entwicklungsplanManager)
+        public ResultMenuViewModel(
+            ConfluenceClient confluenceClient, 
+            ISettingsProvider settingsProvider,
+            IEntwicklungsplanManager entwicklungsplanManager)
         {
             HasCAT = confluenceClient.HasCAT;
 
@@ -28,7 +32,7 @@ namespace TrimesterPlaner.ViewModels
                 }
             });
             CopyToClipboardCommand = new RelayCommand((o) => ClipboardService.SetText(entwicklungsplanManager.GetLastResult().ConvertToPastableHTML()));
-            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(entwicklungsplanManager.GetSettings().PageID, entwicklungsplanManager.GetLastResult().ConvertToPastableHTML()));
+            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(settingsProvider.Get().PageID, entwicklungsplanManager.GetLastResult().ConvertToPastableHTML()));
         }
 
         public bool HasCAT { get; }

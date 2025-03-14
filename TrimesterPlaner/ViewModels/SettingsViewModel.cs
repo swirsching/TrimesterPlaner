@@ -1,11 +1,15 @@
 ﻿using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class SettingsViewModel(ConfluenceClient confluenceClient, IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
+    public class SettingsViewModel(
+        ConfluenceClient confluenceClient, 
+        ISettingsProvider settingsProvider,
+        IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
     {
         public bool HasCAT { get; } = confluenceClient.HasCAT;
-        private Settings Settings { get; } = entwicklungsplanManager.GetSettings();
+        private Settings Settings { get; } = settingsProvider.Get();
 
         public DateTime? Start
         {

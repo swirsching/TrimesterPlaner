@@ -2,25 +2,21 @@
 using System.Windows.Data;
 using System.Windows.Input;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public interface IPlanProvider
-    {
-        public IEnumerable<Plan> GetPlans();
-    }
-
     public class PlanProviderViewModel : BindableBase
     {
-        public PlanProviderViewModel(IPlanProvider planProvider, IPlanManager planManager, DeveloperProviderViewModel developerProviderViewModel) : base()
+        public PlanProviderViewModel(IPlanProvider planProvider, DeveloperProviderViewModel developerProviderViewModel) : base()
         {
-            Plans = new() { Source = planProvider.GetPlans() };
+            Plans = new() { Source = planProvider.GetAll() };
             Plans.Filter += FilterBySelectedDeveloper;
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
 
-            AddBugPlanCommand = new RelayCommand((o) => planManager.AddBugPlan(SelectedDeveloper!));
-            AddSpecialPlanCommand = new RelayCommand((o) => planManager.AddSpecialPlan(SelectedDeveloper!));
+            AddBugPlanCommand = new RelayCommand((o) => planProvider.AddBugPlan(SelectedDeveloper!));
+            AddSpecialPlanCommand = new RelayCommand((o) => planProvider.AddSpecialPlan(SelectedDeveloper!));
         }
 
         private void FilterBySelectedDeveloper(object sender, FilterEventArgs e)
