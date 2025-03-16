@@ -8,12 +8,13 @@ namespace TrimesterPlaner.ViewModels
 {
     public class TicketDetailViewModel : BindableBase
     {
-        public TicketDetailViewModel(Ticket ticket, IPlaner planer)
+        public TicketDetailViewModel(Ticket ticket)
         {
             Ticket = ticket;
             TotalPT = ticket.GetTotalPT();
             PlanDetails = [];
 
+            var planer = Inject.Require<IPlaner>();
             planer.PlanChanged += (data, result) => CalculatePlanDetails(data);
             CalculatePlanDetails(planer.GetLastPreparedData());
         }

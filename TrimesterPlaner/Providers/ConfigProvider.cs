@@ -4,26 +4,17 @@ using TrimesterPlaner.Services;
 
 namespace TrimesterPlaner.Providers
 {
-    public interface IConfigProvider : IValueProvider<Config>
-    {
-    }
-
-    public class ConfigProvider(
-        ISettingsProvider settingsProvider,
-        IDeveloperProvider developerProvider,
-        IVacationProvider vacationProvider,
-        ITicketProvider ticketProvider,
-        IPlanProvider planProvider) : IConfigProvider
+    public class ConfigProvider : IValueProvider<Config>
     {
         public Config Get()
         {
             return new Config
             {
-                Settings = settingsProvider.Get(),
-                Developers = [.. developerProvider.Get()],
-                Vacations = [.. vacationProvider.Get()],
-                Tickets = [.. ticketProvider.Get()],
-                Plans = [.. planProvider.Get()],
+                Settings = Inject.GetValue<Settings>(),
+                Developers = [.. Inject.GetCollection<Developer>()],
+                Vacations = [.. Inject.GetCollection<Vacation>()],
+                Tickets = [.. Inject.GetCollection<Ticket>()],
+                Plans = [.. Inject.GetCollection<Plan>()],
             };
         }
 
@@ -36,12 +27,12 @@ namespace TrimesterPlaner.Providers
 
             if (config.Settings is not null)
             {
-                settingsProvider.Set(config.Settings);
+                Inject.SetValue(config.Settings);
             }
-            developerProvider.Set(config.Developers);
-            vacationProvider.Set(config.Vacations);
-            ticketProvider.Set(config.Tickets);
-            planProvider.Set(config.Plans);
+            Inject.SetCollection(config.Developers);
+            Inject.SetCollection(config.Vacations);
+            Inject.SetCollection(config.Tickets);
+            Inject.SetCollection(config.Plans);
 
             Inject.Require<IPlaner>().RefreshPlan();
         }

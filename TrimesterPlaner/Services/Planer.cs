@@ -1,6 +1,7 @@
 ﻿using Svg;
 using System.Windows.Threading;
 using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 
 namespace TrimesterPlaner.Services
@@ -26,8 +27,7 @@ namespace TrimesterPlaner.Services
         {
             if (IsDirty)
             {
-                var config = Inject.Require<IConfigProvider>().Get();
-                LastPreparedData = Inject.Require<IPreparator>().Prepare(config);
+                LastPreparedData = Inject.Require<IPreparator>().Prepare(Inject.GetValue<Config>());
                 LastResult = LastPreparedData is null ? null : Inject.Require<IGenerator>().Generate(LastPreparedData);
                 PlanChanged?.Invoke(LastPreparedData, LastResult);
                 IsDirty = false;

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
+using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
@@ -9,14 +10,14 @@ namespace TrimesterPlaner.ViewModels
 {
     public class PlanProviderViewModel : BindableBase
     {
-        public PlanProviderViewModel(IPlanProvider planProvider, DeveloperProviderViewModel developerProviderViewModel)
+        public PlanProviderViewModel(DeveloperProviderViewModel developerProviderViewModel)
         {
-            Plans = new() { Source = planProvider.Get() };
+            Plans = new() { Source = Inject.GetCollection<Plan>() };
             Plans.Filter += FilterBySelectedDeveloper;
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
 
-            AddBugPlanCommand = new RelayCommand((o) => planProvider.AddBugPlan(SelectedDeveloper!));
-            AddSpecialPlanCommand = new RelayCommand((o) => planProvider.AddSpecialPlan(SelectedDeveloper!));
+            AddBugPlanCommand = new RelayCommand((o) => Inject.Require<IPlanProvider>().AddBugPlan(SelectedDeveloper!));
+            AddSpecialPlanCommand = new RelayCommand((o) => Inject.Require<IPlanProvider>().AddSpecialPlan(SelectedDeveloper!));
         }
 
         private void FilterBySelectedDeveloper(object sender, FilterEventArgs e)

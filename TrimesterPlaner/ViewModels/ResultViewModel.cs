@@ -1,4 +1,5 @@
 ﻿using Svg;
+using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
@@ -6,9 +7,9 @@ namespace TrimesterPlaner.ViewModels
 {
     public class ResultViewModel : BindableBase
     {
-        public ResultViewModel(IPlaner planer)
+        public ResultViewModel()
         {
-            planer.PlanChanged += (data, result) => Result = result;
+            Inject.Require<IPlaner>().PlanChanged += (data, result) => Result = result;
         }
 
         private SvgDocument? _Result = null;

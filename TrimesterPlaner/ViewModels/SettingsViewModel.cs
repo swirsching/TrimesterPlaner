@@ -1,16 +1,15 @@
-﻿using TrimesterPlaner.Models;
+﻿using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class SettingsViewModel(
-        ConfluenceClient confluenceClient,
-        ISettingsProvider settingsProvider) : BindableBase
+    public class SettingsViewModel : BindableBase
     {
-        public bool HasCAT { get; } = confluenceClient.HasCAT();
-        private Settings Settings { get; } = settingsProvider.Get();
+        public bool HasCAT { get; } = Inject.Require<IConfluenceClient>().HasCAT();
+        private Settings Settings { get; } = Inject.GetValue<Settings>();
 
         public DateTime? Start
         {

@@ -1,11 +1,12 @@
 ﻿using System.Windows.Input;
+using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class VacationViewModel(Vacation vacation, IVacationProvider vacationProvider) : BindableBase
+    public class VacationViewModel(Vacation vacation) : BindableBase
     {
         public DateTime? Start
         {
@@ -43,6 +44,6 @@ namespace TrimesterPlaner.ViewModels
             get => vacation.Developer?.Abbreviation;
         }
 
-        public ICommand RemoveCommand { get; } = new RelayCommand((o) => vacationProvider.Remove(vacation));
+        public ICommand RemoveCommand { get; } = new RelayCommand((o) => Inject.Require<IVacationProvider>().Remove(vacation));
     }
 }

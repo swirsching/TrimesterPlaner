@@ -16,9 +16,9 @@ namespace TrimesterPlaner.ViewModels
 
     public class StatisticsViewModel : BindableBase
     {
-        public StatisticsViewModel(IPlaner planer)
+        public StatisticsViewModel()
         {
-            planer.PlanChanged += (data, result) =>
+            Inject.Require<IPlaner>().PlanChanged += (data, result) =>
             {
                 if (data is null)
                 {

@@ -12,19 +12,16 @@ namespace TrimesterPlaner.ViewModels
     {
         public TicketViewModel(
             Ticket ticket,
-            IPlanProvider planProvider,
-            ITicketProvider ticketProvider,
-            DeveloperProviderViewModel developerProviderViewModel,
-            IPlaner planer)
+            DeveloperProviderViewModel developerProviderViewModel)
         {
             Ticket = ticket;
 
             OpenTicketInBrowserCommand = new RelayCommand((o) => OpenTicketInBrowser());
-            AddPlanCommand = new RelayCommand((o) => planProvider.AddTicketPlan(SelectedDeveloper!, Ticket));
-            RemoveCommand = new RelayCommand((o) => ticketProvider.Remove(Ticket));
+            AddPlanCommand = new RelayCommand((o) => Inject.Require<IPlanProvider>().AddTicketPlan(SelectedDeveloper!, Ticket));
+            RemoveCommand = new RelayCommand((o) => Inject.Require<ITicketProvider>().Remove(Ticket));
 
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
-            planer.PlanChanged += (data, result) => CalculatePlannedPercentage();
+            Inject.Require<IPlaner>().PlanChanged += (data, result) => CalculatePlannedPercentage();
             CalculatePlannedPercentage();
         }
 

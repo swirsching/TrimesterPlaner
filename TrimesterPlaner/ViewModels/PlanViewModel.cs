@@ -1,14 +1,12 @@
 ﻿using System.Windows.Input;
+using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class PlanViewModel(
-        Plan plan,
-        IPlanProvider planProvider,
-        IDeveloperProvider developerProvider) : BindableBase
+    public class PlanViewModel(Plan plan) : BindableBase
     {
         public Plan Plan { get; } = plan;
 
@@ -29,7 +27,7 @@ namespace TrimesterPlaner.ViewModels
             set => SetProperty(ref _IsChangingDeveloper, value);
         }
 
-        public IEnumerable<Developer> Developers { get; } = developerProvider.Get();
+        public IEnumerable<Developer> Developers { get; } = Inject.GetCollection<Developer>();
 
         public Developer? SelectedDeveloper
         {
@@ -44,8 +42,8 @@ namespace TrimesterPlaner.ViewModels
             }
         }
 
-        public ICommand MoveUpCommand { get; } = new RelayCommand((o) => planProvider.MoveUp(plan));
-        public ICommand MoveDownCommand { get; } = new RelayCommand((o) => planProvider.MoveDown(plan));
-        public ICommand RemoveCommand { get; } = new RelayCommand((o) => planProvider.Remove(plan));
+        public ICommand MoveUpCommand { get; } = new RelayCommand((o) => Inject.Require<IPlanProvider>().MoveUp(plan));
+        public ICommand MoveDownCommand { get; } = new RelayCommand((o) => Inject.Require<IPlanProvider>().MoveDown(plan));
+        public ICommand RemoveCommand { get; } = new RelayCommand((o) => Inject.Require<IPlanProvider>().Remove(plan));
     }
 }

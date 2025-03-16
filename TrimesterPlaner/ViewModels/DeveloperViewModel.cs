@@ -7,13 +7,13 @@ namespace TrimesterPlaner.ViewModels
 {
     public class DeveloperViewModel : BindableBase
     {
-        public DeveloperViewModel(Developer developer, IPlaner planer)
+        public DeveloperViewModel(Developer developer)
         {
             Developer = developer;
             WorkDays = from dayOfWeek in Enumerable.Range((int)DayOfWeek.Monday, 5)
                        select new WorkDayViewModel((DayOfWeek)(dayOfWeek % 7), Developer);
 
-            planer.PlanChanged += (data, result) => CalculatePT();
+            Inject.Require<IPlaner>().PlanChanged += (data, result) => CalculatePT();
             CalculatePT();
         }
 

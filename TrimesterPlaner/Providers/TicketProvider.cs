@@ -46,9 +46,8 @@ namespace TrimesterPlaner.Providers
 
         public async Task<IEnumerable<Ticket>> ReloadTicketsAsync()
         {
-            string jql = Inject.Require<ISettingsProvider>().Get().JQL;
             var jiraClient = Inject.Require<IJiraClient>();
-            var loadedTickets = await jiraClient.LoadTickets(jql, true);
+            var loadedTickets = await jiraClient.LoadTickets(Inject.GetValue<Settings>().JQL, true);
             if (loadedTickets is null)
             {
                 return [];

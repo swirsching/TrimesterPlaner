@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using TextCopy;
 using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
@@ -10,12 +11,9 @@ namespace TrimesterPlaner.ViewModels
 {
     public class ResultMenuViewModel : BindableBase
     {
-        public ResultMenuViewModel(
-            ConfluenceClient confluenceClient,
-            ISettingsProvider settingsProvider,
-            IPlaner planer)
+        public ResultMenuViewModel()
         {
-            HasCAT = confluenceClient.HasCAT();
+            HasCAT = Inject.Require<IConfluenceClient>().HasCAT();
 
             ExportCommand = new RelayCommand((o) =>
             {
@@ -28,11 +26,19 @@ namespace TrimesterPlaner.ViewModels
                 bool? ok = dialog.ShowDialog();
                 if (ok == true)
                 {
-                    planer.GetLastPlan()?.Write(dialog.FileName);
+                    Inject.Require<IPlaner>().GetLastPlan()?.Write(dialog.FileName);
                 }
             });
-            CopyToClipboardCommand = new RelayCommand((o) => ClipboardService.SetText(planer.GetLastPlan().ConvertToPastableHTML()));
-            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(settingsProvider.Get().PageID, planer.GetLastPlan().ConvertToPastableHTML()));
+            CopyToClipboardCommand = new RelayCommand((o) =>
+            {
+                ClipboardService.SetText(Inject.Require<IPlaner>().GetLastPlan().ConvertToPastableHTML());
+            });
+            PushToConfluenceCommand = new RelayCommand((o) =>
+            {
+                Inject.Require<IConfluenceClient>().UpdatePage(
+                    Inject.GetValue<Settings>().PageID,
+                    Inject.Require<IPlaner>().GetLastPlan().ConvertToPastableHTML());
+            });
         }
 
         public bool HasCAT { get; }

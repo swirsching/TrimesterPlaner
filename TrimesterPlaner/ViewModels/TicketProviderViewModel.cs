@@ -19,15 +19,12 @@ namespace TrimesterPlaner.ViewModels
 
     public class TicketProviderViewModel : BindableBase
     {
-        public TicketProviderViewModel(ITicketProvider ticketProvider)
+        public TicketProviderViewModel()
         {
-            TicketProvider = ticketProvider;
-            Tickets = ticketProvider.Get();
+            Tickets = Inject.GetCollection<Ticket>();
             ReloadTicketsCommand = new RelayCommand((o) => ReloadTickets());
             SortTicketsCommand = new RelayCommand((o) => SortTickets((TicketSortingMode)o!));
         }
-
-        private ITicketProvider TicketProvider { get; }
 
         private IEnumerable<Ticket> _Tickets = [];
         public IEnumerable<Ticket> Tickets
@@ -46,7 +43,7 @@ namespace TrimesterPlaner.ViewModels
 
             try
             {
-                Tickets = await TicketProvider.ReloadTicketsAsync();
+                Tickets = await Inject.Require<ITicketProvider>().ReloadTicketsAsync();
             }
             catch (HttpRequestException e)
             {
@@ -65,7 +62,7 @@ namespace TrimesterPlaner.ViewModels
         private void SortTickets(TicketSortingMode sortingMode)
         {
             Tickets = [];
-            Tickets = TicketProvider.SortTickets(sortingMode switch
+            Tickets = Inject.Require<ITicketProvider>().SortTickets(sortingMode switch
             {
                 TicketSortingMode.Alphabetically => SortTicketsAlphabetically,
                 TicketSortingMode.ByRank => SortTicketsByRank,
