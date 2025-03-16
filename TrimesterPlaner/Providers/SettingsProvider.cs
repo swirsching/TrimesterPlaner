@@ -15,8 +15,12 @@ namespace TrimesterPlaner.Providers
             return Settings;
         }
 
-        public void Set(Settings settings)
+        public void Set(Settings? settings)
         {
+            if (settings is null)
+            {
+                return;
+            }
             Settings = settings;
         }
     }

@@ -18,64 +18,32 @@ namespace TrimesterPlaner.ViewModels
         public SvgDocument? GetLastResult();
     }
 
-    public interface IConfigManager
-    {
-        public void Load(Config? config);
-        public Config Save();
-    }
-
     public class MainWindowViewModel 
         : BindableBase
         , IEntwicklungsplanManager
-        , IConfigManager
     {
         public MainWindowViewModel(
+            IConfigProvider configProvider,
             IGenerator generator, 
             IPreparator preparator)
         {
+            ConfigProvider = configProvider;
             Generator = generator;
             Preparator = preparator;
 
             var timer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.Background, GenerateIfDirty, Dispatcher.CurrentDispatcher);
         }
 
+        private IConfigProvider ConfigProvider { get; }
         private IGenerator Generator { get; }
         private IPreparator Preparator { get; }
-
-        public void Load(Config? config)
-        {
-            if (config is null)
-            {
-                return;
-            }
-
-            if (config.Settings is not null)
-            {
-                InjectExtension.ServiceProvider!.GetRequiredService<ISettingsProvider>().Set(config.Settings);
-            }
-            InjectExtension.ServiceProvider!.GetRequiredService<IDeveloperProvider>().Set(config.Developers);
-            InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().Set(config.Vacations);
-            InjectExtension.ServiceProvider!.GetRequiredService<ITicketProvider>().Set(config.Tickets);            
-            InjectExtension.ServiceProvider!.GetRequiredService<IPlanProvider>().Set(config.Plans);
-
-            IsDirty = true;
-        }
-
-        public Config Save() => new()
-        {
-            Settings = InjectExtension.ServiceProvider!.GetRequiredService<ISettingsProvider>().Get(),
-            Developers = [.. InjectExtension.ServiceProvider!.GetRequiredService<IDeveloperProvider>().Get()],
-            Vacations = [.. InjectExtension.ServiceProvider!.GetRequiredService<IVacationProvider>().Get()],
-            Tickets = [.. InjectExtension.ServiceProvider!.GetRequiredService<ITicketProvider>().Get()],
-            Plans = [.. InjectExtension.ServiceProvider!.GetRequiredService<IPlanProvider>().Get()],
-        };
 
         public event EntwicklungsplanChangedHandler? EntwicklungsplanChanged;
         private void GenerateIfDirty(object? sender, EventArgs e)
         {
             if (IsDirty)
             {
-                LastPreparedData = Preparator.Prepare(Save());
+                LastPreparedData = Preparator.Prepare(ConfigProvider.Get());
                 LastResult = LastPreparedData is null ? null : Generator.Generate(LastPreparedData);
                 EntwicklungsplanChanged?.Invoke(LastPreparedData, LastResult);
                 IsDirty = false;

@@ -10,6 +10,6 @@
     public interface IValueProvider<T>
     {
         public T Get();
-        public void Set(T value);
+        public void Set(T? value);
     }
 }
