@@ -13,7 +13,7 @@ namespace TrimesterPlaner.Utilities
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            InjectExtension.ServiceProvider!.GetRequiredService<IPlaner>().RefreshPlan();
+            Inject.Require<IPlaner>().RefreshPlan();
         }
 
         protected virtual bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string? propertyName = null)

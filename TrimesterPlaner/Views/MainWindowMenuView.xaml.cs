@@ -15,12 +15,12 @@ namespace TrimesterPlaner.Views
 
         private void ShowResultWindow(object sender, RoutedEventArgs e)
         {
-            var resultWindow = InjectExtension.ServiceProvider!.GetRequiredService<ResultWindow>();
+            var resultWindow = Inject.Require<ResultWindow>();
             resultWindow.Owner = this.FindAncestor<Window>();
             resultWindow.Show();
             resultWindow.Closed += (sender, e) => IsShowingResultWindow = false;
             IsShowingResultWindow = true;
-            InjectExtension.ServiceProvider!.GetRequiredService<IPlaner>().RefreshPlan();
+            Inject.Require<IPlaner>().RefreshPlan();
         }
 
         public bool IsShowingResultWindow

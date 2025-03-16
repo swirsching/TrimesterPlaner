@@ -47,16 +47,13 @@ namespace TrimesterPlaner
             services.AddTransient(typeof(DeveloperProviderViewModel));
             services.AddTransient(typeof(MainWindowViewModel));
 
-            InjectExtension.ServiceProvider = services.BuildServiceProvider();
-            InjectExtension.ServiceProvider.GetRequiredService<MainWindow>().Show();
+            Inject.ServiceProvider = services.BuildServiceProvider();
+            Inject.Require<MainWindow>().Show();
 
             if (e.Args.Length > 0 && File.Exists(e.Args[0]))
             {
-                MainWindowMenuViewModel menuViewModel = new(
-                    InjectExtension.ServiceProvider.GetRequiredService<IConfigService>(),
-                    InjectExtension.ServiceProvider.GetRequiredService<IConfigProvider>());
-                menuViewModel.LoadCommand.Execute(e.Args[0]);
-                InjectExtension.ServiceProvider.GetRequiredService<ITicketProvider>().ReloadTicketsAsync();
+                Inject.Require<MainWindowMenuViewModel>().LoadCommand.Execute(e.Args[0]);
+                Inject.Require<ITicketProvider>().ReloadTicketsAsync();
             }
         }
     }
