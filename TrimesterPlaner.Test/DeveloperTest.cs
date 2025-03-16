@@ -16,7 +16,7 @@ namespace TrimesterPlaner.Test
         public void TestDailyPT(double expectedPT, int fte, int sonderrolle, int verwaltung)
         {
             Developer developer = new()
-            { 
+            {
                 FTE = fte,
                 Sonderrolle = sonderrolle,
                 Verwaltung = verwaltung,

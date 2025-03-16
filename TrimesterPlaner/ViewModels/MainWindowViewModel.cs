@@ -1,11 +1,7 @@
-﻿using Svg;
-using System.Windows.Threading;
-using TrimesterPlaner.Providers;
-using TrimesterPlaner.Services;
-using TrimesterPlaner.Utilities;
+﻿using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class MainWindowViewModel : BindableBase 
-    {}
+    public class MainWindowViewModel : BindableBase
+    { }
 }

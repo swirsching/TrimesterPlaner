@@ -5,7 +5,7 @@ using TrimesterPlaner.Services;
 namespace TrimesterPlaner.ViewModels
 {
     public class SettingsViewModel(
-        ConfluenceClient confluenceClient, 
+        ConfluenceClient confluenceClient,
         ISettingsProvider settingsProvider,
         IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
     {

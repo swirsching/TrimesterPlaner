@@ -7,9 +7,9 @@ using TrimesterPlaner.Utilities;
 namespace TrimesterPlaner.ViewModels
 {
     public class PlanViewModel(
-        Plan plan, 
-        IPlanProvider planProvider, 
-        IDeveloperProvider developerProvider, 
+        Plan plan,
+        IPlanProvider planProvider,
+        IDeveloperProvider developerProvider,
         IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
     {
         public Plan Plan { get; } = plan;

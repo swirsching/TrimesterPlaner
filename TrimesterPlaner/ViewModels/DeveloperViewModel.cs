@@ -21,7 +21,7 @@ namespace TrimesterPlaner.ViewModels
         public string Name
         {
             get => Developer.Name;
-            set 
+            set
             {
                 Developer.Name = value;
                 OnPropertyChanged();

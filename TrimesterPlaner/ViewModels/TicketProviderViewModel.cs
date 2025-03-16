@@ -32,7 +32,7 @@ namespace TrimesterPlaner.ViewModels
         private IEnumerable<Ticket> _Tickets = [];
         public IEnumerable<Ticket> Tickets
         {
-            get => _Tickets; 
+            get => _Tickets;
             set => SetProperty(ref _Tickets, value);
         }
 
@@ -47,7 +47,7 @@ namespace TrimesterPlaner.ViewModels
             try
             {
                 Tickets = await TicketProvider.ReloadTicketsAsync();
-            } 
+            }
             catch (HttpRequestException e)
             {
                 if (e.StatusCode == HttpStatusCode.BadRequest)
@@ -56,7 +56,7 @@ namespace TrimesterPlaner.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Der Trimester Planer konnte sich nicht mit Jira verbinden. Bitte überprüfe deine Internetverbindung.", "Keine Internetverbindung");   
+                    MessageBox.Show("Der Trimester Planer konnte sich nicht mit Jira verbinden. Bitte überprüfe deine Internetverbindung.", "Keine Internetverbindung");
                 }
                 Tickets = tickets;
             }

@@ -6,7 +6,7 @@ namespace TrimesterPlaner.Utilities
 {
     public class ExceptionHandler
     {
-        public ExceptionHandler() 
+        public ExceptionHandler()
         {
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => HandleException((Exception)args.ExceptionObject);
             TaskScheduler.UnobservedTaskException += (sender, args) => HandleException(args.Exception);

@@ -11,7 +11,7 @@ namespace TrimesterPlaner.ViewModels
     public class ResultMenuViewModel : BindableBase
     {
         public ResultMenuViewModel(
-            ConfluenceClient confluenceClient, 
+            ConfluenceClient confluenceClient,
             ISettingsProvider settingsProvider,
             IPlaner trimesterPlaner)
         {

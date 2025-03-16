@@ -39,8 +39,8 @@ namespace TrimesterPlaner.ViewModels
         public ObservableCollection<PreparedPlanDetailViewModel> PlanDetails { get; }
 
         private double _PlannedPT;
-        public double PlannedPT 
-        { 
+        public double PlannedPT
+        {
             get => _PlannedPT;
             set => SetProperty(ref _PlannedPT, value);
         }

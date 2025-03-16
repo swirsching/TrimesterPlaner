@@ -7,8 +7,8 @@ using TrimesterPlaner.Utilities;
 namespace TrimesterPlaner.ViewModels
 {
     public class VacationViewModel(
-        Vacation vacation, 
-        IVacationProvider vacationProvider, 
+        Vacation vacation,
+        IVacationProvider vacationProvider,
         IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
     {
         public DateTime? Start

@@ -1,5 +1,4 @@
 ﻿using RestSharp;
-using System.Diagnostics;
 
 namespace TrimesterPlaner.Services
 {

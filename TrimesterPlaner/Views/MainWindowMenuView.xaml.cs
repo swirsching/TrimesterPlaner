@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Services;
-using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Views
 {

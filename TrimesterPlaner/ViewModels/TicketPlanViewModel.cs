@@ -35,7 +35,7 @@ namespace TrimesterPlaner.ViewModels
                     RemainingEstimate = remaining;
                     TimeSpent = spent;
                 }
-                else 
+                else
                 {
                     OriginalEstimate = plan.Ticket?.OriginalEstimate;
                     RemainingEstimate = plan.Ticket?.RemainingEstimate;

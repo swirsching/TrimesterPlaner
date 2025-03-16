@@ -2,7 +2,6 @@
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Services;
-using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Providers
 {
@@ -13,7 +12,7 @@ namespace TrimesterPlaner.Providers
     }
 
     public class TicketProvider(
-        IPlaner trimesterPlaner, 
+        IPlaner trimesterPlaner,
         IPlanProvider planProvider,
         ISettingsProvider settingsProvider,
         JiraClient jiraClient)

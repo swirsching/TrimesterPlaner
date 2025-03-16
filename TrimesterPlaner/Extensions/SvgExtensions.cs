@@ -1,8 +1,7 @@
-﻿using Svg.Transforms;
-using Svg;
+﻿using Svg;
+using Svg.Transforms;
 using System.IO;
 using System.Text;
-using TextCopy;
 
 namespace TrimesterPlaner.Extensions
 {

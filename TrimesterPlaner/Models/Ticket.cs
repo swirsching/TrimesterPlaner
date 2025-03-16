@@ -28,7 +28,7 @@ namespace TrimesterPlaner.Models
             Shirt = null;
             Rank = "";
             IsInJQL = false;
-            
+
             Plans = [];
         }
 

@@ -5,7 +5,7 @@ namespace TrimesterPlaner.Models
     public class Developer
     {
         [JsonConstructor]
-        public Developer() 
+        public Developer()
         {
             Name = "";
             Abbreviation = "";

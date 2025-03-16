@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Windows;
-using TrimesterPlaner.Converters;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Services;

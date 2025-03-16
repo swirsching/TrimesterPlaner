@@ -109,8 +109,8 @@ namespace TrimesterPlaner.Extensions
     {
         public static ShirtSize? ToShirtSize(this string shirt)
         {
-            return shirt switch 
-            { 
+            return shirt switch
+            {
                 "Mini" => ShirtSize.Mini,
                 "XXS" => ShirtSize.XXS,
                 "XS" => ShirtSize.XS,
@@ -119,7 +119,7 @@ namespace TrimesterPlaner.Extensions
                 "L" => ShirtSize.L,
                 "XL" => ShirtSize.XL,
                 "XXL" => ShirtSize.XXL,
-                _ => null, 
+                _ => null,
             };
         }
 
@@ -186,7 +186,7 @@ namespace TrimesterPlaner.Extensions
 
         public static IEnumerable<PlanWithPT> Stretch(this IEnumerable<Plan> plans, double maxPT)
         {
-            double totalPT = (from plan in plans 
+            double totalPT = (from plan in plans
                               select plan.GetTotalPT()).Sum();
 
             var stretchablePlans = from plan in plans
@@ -194,7 +194,7 @@ namespace TrimesterPlaner.Extensions
                                    select plan;
 
             double stretchPT = totalPT > maxPT ? 0 : (maxPT - totalPT) / stretchablePlans.Count();
-            
+
             var stretchedPlans = from plan in plans
                                  select new PlanWithPT(plan, plan.IsStretchable() ? stretchPT : plan.GetTotalPT());
             return stretchedPlans;
@@ -319,7 +319,7 @@ namespace TrimesterPlaner.Extensions
             {
                 return 0;
             }
-            if (day.Date > endDay.Day.Date) 
+            if (day.Date > endDay.Day.Date)
             {
                 return 0;
             }
@@ -329,7 +329,7 @@ namespace TrimesterPlaner.Extensions
                 return startDay.After - plan.StartPT;
             }
             if (day == endDay.Day)
-            { 
+            {
                 return plan.EndPT - endDay.Before;
             }
 

@@ -1,5 +1,4 @@
-﻿using Svg;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Input;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
@@ -12,12 +11,12 @@ namespace TrimesterPlaner.ViewModels
     public class TicketViewModel : BindableBase
     {
         public TicketViewModel(
-            Ticket ticket, 
-            IPlanProvider planProvider, 
+            Ticket ticket,
+            IPlanProvider planProvider,
             ITicketProvider ticketProvider,
             DeveloperProviderViewModel developerProviderViewModel,
             IPlaner trimesterPlaner) : base()
-        { 
+        {
             Ticket = ticket;
 
             OpenTicketInBrowserCommand = new RelayCommand((o) => OpenTicketInBrowser());

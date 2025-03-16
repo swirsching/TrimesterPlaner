@@ -1,8 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
+﻿using TrimesterPlaner.Models;
 using TrimesterPlaner.Services;
-using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Providers
 {

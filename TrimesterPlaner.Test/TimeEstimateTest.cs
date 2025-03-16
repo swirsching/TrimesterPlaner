@@ -18,7 +18,7 @@ namespace TrimesterPlaner.Test
 
         [TestMethod]
         // If there is a TimeSpent, the result should be RemainingEstimate plus TimeSpent
-        public void TestWithTimeSpent() 
+        public void TestWithTimeSpent()
         {
             Assert.AreEqual(5, new TimeEstimate { OriginalEstimate = 3, RemainingEstimate = 0, TimeSpent = 5 }.GetTotalPT());
             Assert.AreEqual(2, new TimeEstimate { OriginalEstimate = 3, RemainingEstimate = 0, TimeSpent = 2 }.GetTotalPT());
