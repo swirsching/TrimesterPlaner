@@ -1,7 +1,8 @@
 ﻿using RestSharp;
 using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Models;
 
-namespace TrimesterPlaner.Models
+namespace TrimesterPlaner.Services
 {
     public class JiraClient
     {

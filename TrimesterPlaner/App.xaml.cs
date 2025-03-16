@@ -3,8 +3,8 @@ using System.IO;
 using System.Windows;
 using TrimesterPlaner.Converters;
 using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 using TrimesterPlaner.ViewModels;
 using TrimesterPlaner.Views;
@@ -22,8 +22,11 @@ namespace TrimesterPlaner
             ServiceCollection services = new();
             services.AddSingleton(typeof(IConfigService), configService);
             services.AddSingleton(typeof(ConfluenceClient));
+            services.AddTransient(typeof(IGenerator), typeof(Generator));
             services.AddSingleton(typeof(JiraClient));
-            services.AddSingleton(typeof(DeveloperProviderViewModel));
+            services.AddTransient(typeof(IPreparator), typeof(Preparator));
+            services.AddSingleton(typeof(IPlaner), typeof(Planer));
+
             services.AddTransient(typeof(IConfigProvider), typeof(ConfigProvider));
             services.AddSingleton(typeof(IDeveloperProvider), typeof(DeveloperProvider));
             services.AddSingleton(typeof(IPlanProvider), typeof(PlanProvider));
@@ -31,8 +34,6 @@ namespace TrimesterPlaner
             services.AddSingleton(typeof(ITicketProvider), typeof(TicketProvider));
             services.AddSingleton(typeof(IVacationProvider), typeof(VacationProvider));
 
-            services.AddTransient(typeof(IGenerator), typeof(Generator));
-            services.AddTransient(typeof(IPreparator), typeof(Preparator));
             services.AddTransient(typeof(ResultWindow));
             services.AddTransient(typeof(ResultWindowViewModel));
             services.AddTransient(typeof(ResultViewModel));
@@ -44,14 +45,8 @@ namespace TrimesterPlaner
             services.AddTransient(typeof(PlanProviderViewModel));
             services.AddTransient(typeof(SettingsViewModel));
             services.AddTransient(typeof(StatisticsViewModel));
-            
-            var tmpServiceProvider = services.BuildServiceProvider();
-            MainWindowViewModel mainWindowViewModel = new(
-                tmpServiceProvider.GetRequiredService<IConfigProvider>(),
-                tmpServiceProvider.GetRequiredService<IGenerator>(),
-                tmpServiceProvider.GetRequiredService<IPreparator>());
-            services.AddSingleton(mainWindowViewModel);
-            services.AddSingleton(typeof(IEntwicklungsplanManager), mainWindowViewModel);
+            services.AddTransient(typeof(DeveloperProviderViewModel));
+            services.AddTransient(typeof(MainWindowViewModel));
 
             InjectExtension.ServiceProvider = services.BuildServiceProvider();
             InjectExtension.ServiceProvider.GetRequiredService<MainWindow>().Show();

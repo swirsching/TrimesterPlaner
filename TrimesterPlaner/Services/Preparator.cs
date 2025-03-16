@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Models;
 
-namespace TrimesterPlaner.Models
+namespace TrimesterPlaner.Services
 {
     public static class Widths
     {
@@ -62,8 +63,8 @@ namespace TrimesterPlaner.Models
             config.Settings.Start ??= config.Settings.Entwicklungsstart;
 
             List<Day> days = PrepareDays(
-                config.Settings.Start.Value, 
-                config.Settings.Start.Value.AddYears(10), 
+                config.Settings.Start.Value,
+                config.Settings.Start.Value.AddYears(10),
                 config.Settings.Entwicklungsschluss.Value);
 
             List<DeveloperData> developers = new(from developer in config.Developers
@@ -187,7 +188,7 @@ namespace TrimesterPlaner.Models
             var maxPT = (from dayWithPT in daysWithPT
                          where !dayWithPT.Day.IsBadArea
                          select dayWithPT.After).Last();
-            
+
             List<PlanData> data = [];
             double startPT = 0;
             foreach (var planWithPT in plans.Stretch(maxPT))

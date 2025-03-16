@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Providers
@@ -14,7 +15,7 @@ namespace TrimesterPlaner.Providers
     public class DeveloperProvider(
         IVacationProvider vacationProvider,
         IPlanProvider planProvider,
-        IEntwicklungsplanManager entwicklungsplanManager) : IDeveloperProvider
+        IPlaner trimesterPlaner) : IDeveloperProvider
     {
         private ObservableCollection<Developer> Developers { get; } = [];
 
@@ -34,7 +35,7 @@ namespace TrimesterPlaner.Providers
             planProvider.RemovePlans(developer);
 
             Developers.Remove(developer);
-            entwicklungsplanManager.RefreshEntwicklungsplan();
+            trimesterPlaner.RefreshPlan();
         }
 
         public Developer AddDeveloper(string name)
@@ -45,7 +46,7 @@ namespace TrimesterPlaner.Providers
                 Abbreviation = name[0..3].ToUpper(),
             };
             Developers.Add(developer);
-            entwicklungsplanManager.RefreshEntwicklungsplan();
+            trimesterPlaner.RefreshPlan();
             return developer;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Providers
@@ -12,7 +13,7 @@ namespace TrimesterPlaner.Providers
     }
 
     public class TicketProvider(
-        IEntwicklungsplanManager entwicklungsplanManager, 
+        IPlaner trimesterPlaner, 
         IPlanProvider planProvider,
         ISettingsProvider settingsProvider,
         JiraClient jiraClient)
@@ -88,7 +89,7 @@ namespace TrimesterPlaner.Providers
                 }
             }
 
-            entwicklungsplanManager.RefreshEntwicklungsplan();
+            trimesterPlaner.RefreshPlan();
             return Tickets;
         }
 

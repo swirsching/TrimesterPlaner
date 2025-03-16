@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
@@ -9,7 +10,7 @@ namespace TrimesterPlaner.ViewModels
         Plan plan, 
         IPlanProvider planProvider, 
         IDeveloperProvider developerProvider, 
-        IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
+        IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
     {
         public Plan Plan { get; } = plan;
 

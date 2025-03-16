@@ -1,8 +1,9 @@
 ﻿using TrimesterPlaner.Models;
+using TrimesterPlaner.Services;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class TicketPlanViewModel(TicketPlan plan, IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
+    public class TicketPlanViewModel(TicketPlan plan, IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
     {
         public string Key { get => plan.Ticket?.Key ?? ""; }
         public string Summary { get => plan.Ticket?.Summary ?? ""; }

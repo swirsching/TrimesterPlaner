@@ -1,8 +1,9 @@
 ﻿using TrimesterPlaner.Models;
+using TrimesterPlaner.Services;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class BugPlanViewModel(BugPlan plan, IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
+    public class BugPlanViewModel(BugPlan plan, IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
     {
         public double PT
         {

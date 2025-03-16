@@ -1,7 +1,7 @@
 ﻿using RestSharp;
 using System.Diagnostics;
 
-namespace TrimesterPlaner.Models
+namespace TrimesterPlaner.Services
 {
     public class ConfluenceClient
     {

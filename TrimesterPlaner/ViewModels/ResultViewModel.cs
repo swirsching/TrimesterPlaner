@@ -1,13 +1,14 @@
 ﻿using Svg;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
     public class ResultViewModel : BindableBase
     {
-        public ResultViewModel(IEntwicklungsplanManager entwicklungsplanManager) : base()
+        public ResultViewModel(IPlaner trimesterPlaner) : base()
         {
-            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => Result = result;
+            trimesterPlaner.PlanChanged += (data, result) => Result = result;
         }
 
         private SvgDocument? _Result = null;

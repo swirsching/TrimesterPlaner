@@ -4,6 +4,7 @@ using System.Windows.Input;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
@@ -15,7 +16,7 @@ namespace TrimesterPlaner.ViewModels
             IPlanProvider planProvider, 
             ITicketProvider ticketProvider,
             DeveloperProviderViewModel developerProviderViewModel,
-            IEntwicklungsplanManager entwicklungsplanManager) : base()
+            IPlaner trimesterPlaner) : base()
         { 
             Ticket = ticket;
 
@@ -24,7 +25,7 @@ namespace TrimesterPlaner.ViewModels
             RemoveCommand = new RelayCommand((o) => ticketProvider.Remove(Ticket));
 
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
-            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculatePlannedPercentage();
+            trimesterPlaner.PlanChanged += (data, result) => CalculatePlannedPercentage();
             CalculatePlannedPercentage();
         }
 

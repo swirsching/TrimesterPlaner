@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Views
@@ -20,7 +21,7 @@ namespace TrimesterPlaner.Views
             resultWindow.Show();
             resultWindow.Closed += (sender, e) => IsShowingResultWindow = false;
             IsShowingResultWindow = true;
-            InjectExtension.ServiceProvider!.GetRequiredService<IEntwicklungsplanManager>().RefreshEntwicklungsplan();
+            InjectExtension.ServiceProvider!.GetRequiredService<IPlaner>().RefreshPlan();
         }
 
         public bool IsShowingResultWindow

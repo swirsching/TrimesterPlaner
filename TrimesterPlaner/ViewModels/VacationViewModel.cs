@@ -1,11 +1,15 @@
 ﻿using System.Windows.Input;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class VacationViewModel(Vacation vacation, IVacationProvider vacationProvider, IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
+    public class VacationViewModel(
+        Vacation vacation, 
+        IVacationProvider vacationProvider, 
+        IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
     {
         public DateTime? Start
         {

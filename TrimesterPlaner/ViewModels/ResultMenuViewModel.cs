@@ -2,8 +2,8 @@
 using System.Windows.Input;
 using TextCopy;
 using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
@@ -13,7 +13,7 @@ namespace TrimesterPlaner.ViewModels
         public ResultMenuViewModel(
             ConfluenceClient confluenceClient, 
             ISettingsProvider settingsProvider,
-            IEntwicklungsplanManager entwicklungsplanManager)
+            IPlaner trimesterPlaner)
         {
             HasCAT = confluenceClient.HasCAT;
 
@@ -28,11 +28,11 @@ namespace TrimesterPlaner.ViewModels
                 bool? ok = dialog.ShowDialog();
                 if (ok == true)
                 {
-                    entwicklungsplanManager.GetLastResult()?.Write(dialog.FileName);
+                    trimesterPlaner.GetLastPlan()?.Write(dialog.FileName);
                 }
             });
-            CopyToClipboardCommand = new RelayCommand((o) => ClipboardService.SetText(entwicklungsplanManager.GetLastResult().ConvertToPastableHTML()));
-            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(settingsProvider.Get().PageID, entwicklungsplanManager.GetLastResult().ConvertToPastableHTML()));
+            CopyToClipboardCommand = new RelayCommand((o) => ClipboardService.SetText(trimesterPlaner.GetLastPlan().ConvertToPastableHTML()));
+            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(settingsProvider.Get().PageID, trimesterPlaner.GetLastPlan().ConvertToPastableHTML()));
         }
 
         public bool HasCAT { get; }

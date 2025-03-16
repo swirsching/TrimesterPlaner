@@ -2,7 +2,7 @@
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Utilities;
 
-namespace TrimesterPlaner.Models
+namespace TrimesterPlaner.Services
 {
     public interface IGenerator
     {
@@ -40,11 +40,11 @@ namespace TrimesterPlaner.Models
         private record LinesColors(SvgColourServer Today, SvgColourServer Entwicklungsstart, SvgColourServer Entwicklungsschluss);
         private record ColorsType(
             TextColorsType Text,
-            SvgColourServer BadArea, 
+            SvgColourServer BadArea,
             BurndownColorsType BurnDown,
-            SvgColourServer Weekend, 
-            StartEndBorderColors Ticket, 
-            StartEndBorderColors Bug, 
+            SvgColourServer Weekend,
+            StartEndBorderColors Ticket,
+            StartEndBorderColors Bug,
             StartEndBorderColors Special,
             SvgColourServer Remaining,
             SvgColourServer Vacation,
@@ -126,7 +126,7 @@ namespace TrimesterPlaner.Models
             }
             return MakeLine(pointCollection, color, width);
         }
-                 
+
         public SvgDocument? Generate(PreparedData data)
         {
             int width = (from week in data.Weeks
@@ -190,7 +190,7 @@ namespace TrimesterPlaner.Models
         {
             SvgGroup group = new();
             group.Children.Add(MakeAxis(width, Heights.Burndown).Translate(Widths.Left, 0));
-            
+
             List<Point> capacityPoints = [], totalPoints = [];
             foreach (Week week in data.Weeks)
             {
@@ -271,11 +271,11 @@ namespace TrimesterPlaner.Models
         }
 
         private SvgGroup GenerateDeveloper(DeveloperData developer)
-        { 
+        {
             SvgGroup group = new();
 
             group.Children.Add(new SvgRectangle()
-            { 
+            {
                 Width = Widths.Left,
                 Height = Heights.Developer,
                 Fill = Colors.Weekend,
@@ -285,7 +285,7 @@ namespace TrimesterPlaner.Models
             foreach (Day freeDay in developer.FreeDays)
             {
                 group.Children.Add(new SvgRectangle()
-                { 
+                {
                     Width = freeDay.IsWeekend() ? Widths.WeekEndDay : Widths.WeekDay,
                     Height = Heights.Developer,
                     Fill = Colors.Weekend,
@@ -318,7 +318,7 @@ namespace TrimesterPlaner.Models
             int innerWidth = width - 2 * Margins.Plan;
             int innerHeight = Heights.Developer - 2 * Margins.Plan;
             group.Children.Add(new SvgRectangle
-            { 
+            {
                 CornerRadiusX = CornerRadius,
                 CornerRadiusY = CornerRadius,
                 Width = innerWidth,
@@ -377,8 +377,8 @@ namespace TrimesterPlaner.Models
             if (plan.PlanType == PlanType.Ticket)
             {
                 outerGroup = new();
-                SvgAnchor anchor = new() 
-                { 
+                SvgAnchor anchor = new()
+                {
                     Href = $"https://confluence.ivu.de/jira/browse/{plan.FirstRow}",
                     Target = "_blank",
                 };
@@ -407,8 +407,8 @@ namespace TrimesterPlaner.Models
             return group;
         }
 
-        private SvgGroup GenerateVacation(VacationData vacation) 
-        { 
+        private SvgGroup GenerateVacation(VacationData vacation)
+        {
             SvgGroup group = new();
 
             var lastDay = vacation.Days.Last();
@@ -442,9 +442,9 @@ namespace TrimesterPlaner.Models
             SvgGroup group = new();
 
             var days = from week in weeks
-                        from d in week.Days
-                        where d.Date.IsSameDayAs(date)
-                        select d;
+                       from d in week.Days
+                       where d.Date.IsSameDayAs(date)
+                       select d;
             if (days.Any())
             {
                 var day = days.First();

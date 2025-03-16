@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.ViewModels;
 
 namespace TrimesterPlaner.Providers
@@ -15,7 +16,7 @@ namespace TrimesterPlaner.Providers
         IVacationProvider vacationProvider,
         ITicketProvider ticketProvider,
         IPlanProvider planProvider,
-        IEntwicklungsplanManager entwicklungsplanManager) : IConfigProvider
+        IPlaner trimesterPlaner) : IConfigProvider
     {
         public Config Get()
         {
@@ -45,7 +46,7 @@ namespace TrimesterPlaner.Providers
             ticketProvider.Set(config.Tickets);
             planProvider.Set(config.Plans);
 
-            entwicklungsplanManager.RefreshEntwicklungsplan();
+            trimesterPlaner.RefreshPlan();
         }
     }
 }
