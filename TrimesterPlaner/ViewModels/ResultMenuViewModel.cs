@@ -15,7 +15,7 @@ namespace TrimesterPlaner.ViewModels
             ISettingsProvider settingsProvider,
             IPlaner planer)
         {
-            HasCAT = confluenceClient.HasCAT;
+            HasCAT = confluenceClient.HasCAT();
 
             ExportCommand = new RelayCommand((o) =>
             {

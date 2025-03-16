@@ -4,7 +4,12 @@ using TrimesterPlaner.Models;
 
 namespace TrimesterPlaner.Services
 {
-    public class JiraClient
+    public interface IJiraClient
+    {
+        public Task<IEnumerable<Ticket>?> LoadTickets(string jql, bool isInJQL);
+    }
+
+    public class JiraClient : IJiraClient
     {
         private string BaseUri { get; } = "https://confluence.ivu.de/jira/rest/api/2/";
         private string SearchUri { get; } = "https://confluence.ivu.de/jira/rest/api/2/search";

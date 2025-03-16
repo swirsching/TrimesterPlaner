@@ -9,7 +9,7 @@ namespace TrimesterPlaner.ViewModels
         ConfluenceClient confluenceClient,
         ISettingsProvider settingsProvider) : BindableBase
     {
-        public bool HasCAT { get; } = confluenceClient.HasCAT;
+        public bool HasCAT { get; } = confluenceClient.HasCAT();
         private Settings Settings { get; } = settingsProvider.Get();
 
         public DateTime? Start

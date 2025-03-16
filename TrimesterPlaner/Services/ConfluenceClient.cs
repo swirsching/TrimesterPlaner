@@ -2,7 +2,13 @@
 
 namespace TrimesterPlaner.Services
 {
-    public class ConfluenceClient
+    public interface IConfluenceClient
+    {
+        public void UpdatePage(int pageID, string content);
+        public bool HasCAT();
+    }
+
+    public class ConfluenceClient : IConfluenceClient
     {
         private string BaseUri { get; } = "https://confluence.ivu.de/rest/api/";
         private string ContentUri { get; } = "https://confluence.ivu.de/rest/api/content/{0}";
@@ -14,11 +20,11 @@ namespace TrimesterPlaner.Services
             if (cat is not null)
             {
                 Client.AddDefaultHeader("Authorization", $"Bearer {cat}");
-                HasCAT = true;
+                HasConfluenceAccessToken = true;
             }
             else
             {
-                HasCAT = false;
+                HasConfluenceAccessToken = false;
             }
         }
 
@@ -59,9 +65,14 @@ namespace TrimesterPlaner.Services
             await Client.PutAsync(request);
         }
 
+        public bool HasCAT()
+        {
+            return HasConfluenceAccessToken;
+        }
+
         private RestClient Client { get; }
 
-        public bool HasCAT { get; }
+        private bool HasConfluenceAccessToken { get; }
 
 #pragma warning disable IDE1006 // Naming Styles
         private record PageMetadataResponse(string title, Version version);

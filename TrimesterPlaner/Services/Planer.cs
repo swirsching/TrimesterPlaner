@@ -1,5 +1,6 @@
 ﻿using Svg;
 using System.Windows.Threading;
+using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Providers;
 
 namespace TrimesterPlaner.Services
@@ -15,26 +16,19 @@ namespace TrimesterPlaner.Services
 
     public class Planer : IPlaner
     {
-        public Planer(IConfigProvider configProvider, IGenerator generator, IPreparator preparator)
+        public Planer()
         {
-            ConfigProvider = configProvider;
-            Generator = generator;
-            Preparator = preparator;
-
             var timer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.Background, GenerateIfDirty, Dispatcher.CurrentDispatcher);
         }
-
-        private IConfigProvider ConfigProvider { get; }
-        private IGenerator Generator { get; }
-        private IPreparator Preparator { get; }
 
         public event PlanChangedHandler? PlanChanged;
         private void GenerateIfDirty(object? sender, EventArgs e)
         {
             if (IsDirty)
             {
-                LastPreparedData = Preparator.Prepare(ConfigProvider.Get());
-                LastResult = LastPreparedData is null ? null : Generator.Generate(LastPreparedData);
+                var config = Inject.Require<IConfigProvider>().Get();
+                LastPreparedData = Inject.Require<IPreparator>().Prepare(config);
+                LastResult = LastPreparedData is null ? null : Inject.Require<IGenerator>().Generate(LastPreparedData);
                 PlanChanged?.Invoke(LastPreparedData, LastResult);
                 IsDirty = false;
             }

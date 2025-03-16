@@ -41,7 +41,7 @@ namespace TrimesterPlaner.Services
     public enum PlanType { Ticket, Bug, Special };
     public record VacationData(IEnumerable<Day> Days, string Label);
 
-    public class Preparator() : IPreparator
+    public class Preparator : IPreparator
     {
         public PreparedData? Prepare(Config config)
         {

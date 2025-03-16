@@ -1,4 +1,5 @@
-﻿using TrimesterPlaner.Models;
+﻿using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Models;
 using TrimesterPlaner.Services;
 
 namespace TrimesterPlaner.Providers
@@ -12,8 +13,7 @@ namespace TrimesterPlaner.Providers
         IDeveloperProvider developerProvider,
         IVacationProvider vacationProvider,
         ITicketProvider ticketProvider,
-        IPlanProvider planProvider,
-        IPlaner planer) : IConfigProvider
+        IPlanProvider planProvider) : IConfigProvider
     {
         public Config Get()
         {
@@ -43,7 +43,7 @@ namespace TrimesterPlaner.Providers
             ticketProvider.Set(config.Tickets);
             planProvider.Set(config.Plans);
 
-            planer.RefreshPlan();
+            Inject.Require<IPlaner>().RefreshPlan();
         }
     }
 }

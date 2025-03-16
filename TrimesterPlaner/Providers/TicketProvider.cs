@@ -11,11 +11,7 @@ namespace TrimesterPlaner.Providers
         public IEnumerable<Ticket> SortTickets(Comparison<Ticket> comparison);
     }
 
-    public class TicketProvider(
-        IPlaner planer,
-        IPlanProvider planProvider,
-        ISettingsProvider settingsProvider,
-        JiraClient jiraClient) : ITicketProvider
+    public class TicketProvider : ITicketProvider
     {
         private ObservableCollection<Ticket> Tickets { get; } = [];
 
@@ -38,7 +34,7 @@ namespace TrimesterPlaner.Providers
         {
             if (force)
             {
-                planProvider.RemovePlans(ticket);
+                Inject.Require<IPlanProvider>().RemovePlans(ticket);
             }
             if (ticket.Plans.Count == 0)
             {
@@ -50,7 +46,9 @@ namespace TrimesterPlaner.Providers
 
         public async Task<IEnumerable<Ticket>> ReloadTicketsAsync()
         {
-            var loadedTickets = await jiraClient.LoadTickets(settingsProvider.Get().JQL, true);
+            string jql = Inject.Require<ISettingsProvider>().Get().JQL;
+            var jiraClient = Inject.Require<IJiraClient>();
+            var loadedTickets = await jiraClient.LoadTickets(jql, true);
             if (loadedTickets is null)
             {
                 return [];
@@ -87,7 +85,7 @@ namespace TrimesterPlaner.Providers
                 }
             }
 
-            planer.RefreshPlan();
+            Inject.Require<IPlaner>().RefreshPlan();
             return Tickets;
         }
 

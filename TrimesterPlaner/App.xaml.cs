@@ -20,18 +20,18 @@ namespace TrimesterPlaner
 
             ServiceCollection services = new();
             services.AddSingleton(typeof(IConfigService), configService);
-            services.AddSingleton(typeof(ConfluenceClient));
-            services.AddTransient(typeof(IGenerator), typeof(Generator));
-            services.AddSingleton(typeof(JiraClient));
-            services.AddTransient(typeof(IPreparator), typeof(Preparator));
+            services.AddSingleton(typeof(IConfluenceClient), typeof(ConfluenceClient));
+            services.AddSingleton(typeof(IJiraClient), typeof(JiraClient));
             services.AddSingleton(typeof(IPlaner), typeof(Planer));
+            services.AddTransient(typeof(IGenerator), typeof(Generator));
+            services.AddTransient(typeof(IPreparator), typeof(Preparator));
 
-            services.AddTransient(typeof(IConfigProvider), typeof(ConfigProvider));
             services.AddSingleton(typeof(IDeveloperProvider), typeof(DeveloperProvider));
             services.AddSingleton(typeof(IPlanProvider), typeof(PlanProvider));
             services.AddSingleton(typeof(ISettingsProvider), typeof(SettingsProvider));
             services.AddSingleton(typeof(ITicketProvider), typeof(TicketProvider));
             services.AddSingleton(typeof(IVacationProvider), typeof(VacationProvider));
+            services.AddTransient(typeof(IConfigProvider), typeof(ConfigProvider));
 
             services.AddTransient(typeof(ResultWindow));
             services.AddTransient(typeof(ResultWindowViewModel));
