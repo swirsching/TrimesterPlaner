@@ -1,12 +1,9 @@
 ﻿using TrimesterPlaner.Models;
-using TrimesterPlaner.Services;
+using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class WorkDayViewModel(
-        DayOfWeek dayOfWeek,
-        Developer developer,
-        IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
+    public class WorkDayViewModel(DayOfWeek dayOfWeek, Developer developer) : BindableBase
     {
         public DayOfWeek DayOfWeek { get; } = dayOfWeek;
 

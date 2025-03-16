@@ -8,14 +8,14 @@ namespace TrimesterPlaner.ViewModels
 {
     public class TicketDetailViewModel : BindableBase
     {
-        public TicketDetailViewModel(Ticket ticket, IPlaner trimesterPlaner)
+        public TicketDetailViewModel(Ticket ticket, IPlaner planer)
         {
             Ticket = ticket;
             TotalPT = ticket.GetTotalPT();
             PlanDetails = [];
 
-            trimesterPlaner.PlanChanged += (data, result) => CalculatePlanDetails(data);
-            CalculatePlanDetails(trimesterPlaner.GetLastPreparedData());
+            planer.PlanChanged += (data, result) => CalculatePlanDetails(data);
+            CalculatePlanDetails(planer.GetLastPreparedData());
         }
 
         private void CalculatePlanDetails(PreparedData? data)

@@ -1,13 +1,13 @@
 ﻿using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Services;
+using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
     public class SettingsViewModel(
         ConfluenceClient confluenceClient,
-        ISettingsProvider settingsProvider,
-        IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
+        ISettingsProvider settingsProvider) : BindableBase
     {
         public bool HasCAT { get; } = confluenceClient.HasCAT;
         private Settings Settings { get; } = settingsProvider.Get();

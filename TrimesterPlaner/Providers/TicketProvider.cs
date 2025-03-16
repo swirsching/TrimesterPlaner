@@ -12,11 +12,10 @@ namespace TrimesterPlaner.Providers
     }
 
     public class TicketProvider(
-        IPlaner trimesterPlaner,
+        IPlaner planer,
         IPlanProvider planProvider,
         ISettingsProvider settingsProvider,
-        JiraClient jiraClient)
-        : ITicketProvider
+        JiraClient jiraClient) : ITicketProvider
     {
         private ObservableCollection<Ticket> Tickets { get; } = [];
 
@@ -88,7 +87,7 @@ namespace TrimesterPlaner.Providers
                 }
             }
 
-            trimesterPlaner.RefreshPlan();
+            planer.RefreshPlan();
             return Tickets;
         }
 

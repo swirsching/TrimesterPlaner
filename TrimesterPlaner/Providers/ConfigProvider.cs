@@ -13,7 +13,7 @@ namespace TrimesterPlaner.Providers
         IVacationProvider vacationProvider,
         ITicketProvider ticketProvider,
         IPlanProvider planProvider,
-        IPlaner trimesterPlaner) : IConfigProvider
+        IPlaner planer) : IConfigProvider
     {
         public Config Get()
         {
@@ -43,7 +43,7 @@ namespace TrimesterPlaner.Providers
             ticketProvider.Set(config.Tickets);
             planProvider.Set(config.Plans);
 
-            trimesterPlaner.RefreshPlan();
+            planer.RefreshPlan();
         }
     }
 }

@@ -6,9 +6,9 @@ namespace TrimesterPlaner.ViewModels
 {
     public class ResultViewModel : BindableBase
     {
-        public ResultViewModel(IPlaner trimesterPlaner) : base()
+        public ResultViewModel(IPlaner planer)
         {
-            trimesterPlaner.PlanChanged += (data, result) => Result = result;
+            planer.PlanChanged += (data, result) => Result = result;
         }
 
         private SvgDocument? _Result = null;

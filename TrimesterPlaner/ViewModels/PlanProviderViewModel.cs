@@ -9,7 +9,7 @@ namespace TrimesterPlaner.ViewModels
 {
     public class PlanProviderViewModel : BindableBase
     {
-        public PlanProviderViewModel(IPlanProvider planProvider, DeveloperProviderViewModel developerProviderViewModel) : base()
+        public PlanProviderViewModel(IPlanProvider planProvider, DeveloperProviderViewModel developerProviderViewModel)
         {
             Plans = new() { Source = planProvider.Get() };
             Plans.Filter += FilterBySelectedDeveloper;

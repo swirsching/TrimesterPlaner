@@ -13,7 +13,7 @@ namespace TrimesterPlaner.ViewModels
         public ResultMenuViewModel(
             ConfluenceClient confluenceClient,
             ISettingsProvider settingsProvider,
-            IPlaner trimesterPlaner)
+            IPlaner planer)
         {
             HasCAT = confluenceClient.HasCAT;
 
@@ -28,11 +28,11 @@ namespace TrimesterPlaner.ViewModels
                 bool? ok = dialog.ShowDialog();
                 if (ok == true)
                 {
-                    trimesterPlaner.GetLastPlan()?.Write(dialog.FileName);
+                    planer.GetLastPlan()?.Write(dialog.FileName);
                 }
             });
-            CopyToClipboardCommand = new RelayCommand((o) => ClipboardService.SetText(trimesterPlaner.GetLastPlan().ConvertToPastableHTML()));
-            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(settingsProvider.Get().PageID, trimesterPlaner.GetLastPlan().ConvertToPastableHTML()));
+            CopyToClipboardCommand = new RelayCommand((o) => ClipboardService.SetText(planer.GetLastPlan().ConvertToPastableHTML()));
+            PushToConfluenceCommand = new RelayCommand((o) => confluenceClient.UpdatePage(settingsProvider.Get().PageID, planer.GetLastPlan().ConvertToPastableHTML()));
         }
 
         public bool HasCAT { get; }

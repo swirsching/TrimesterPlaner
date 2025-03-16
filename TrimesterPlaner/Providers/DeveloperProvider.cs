@@ -13,7 +13,7 @@ namespace TrimesterPlaner.Providers
     public class DeveloperProvider(
         IVacationProvider vacationProvider,
         IPlanProvider planProvider,
-        IPlaner trimesterPlaner) : IDeveloperProvider
+        IPlaner planer) : IDeveloperProvider
     {
         private ObservableCollection<Developer> Developers { get; } = [];
 
@@ -33,7 +33,7 @@ namespace TrimesterPlaner.Providers
             planProvider.RemovePlans(developer);
 
             Developers.Remove(developer);
-            trimesterPlaner.RefreshPlan();
+            planer.RefreshPlan();
         }
 
         public Developer AddDeveloper(string name)
@@ -44,7 +44,7 @@ namespace TrimesterPlaner.Providers
                 Abbreviation = name[0..3].ToUpper(),
             };
             Developers.Add(developer);
-            trimesterPlaner.RefreshPlan();
+            planer.RefreshPlan();
             return developer;
         }
     }

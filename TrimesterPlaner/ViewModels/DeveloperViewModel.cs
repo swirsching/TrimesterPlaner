@@ -1,18 +1,19 @@
 ﻿using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Services;
+using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class DeveloperViewModel : BaseViewModel
+    public class DeveloperViewModel : BindableBase
     {
-        public DeveloperViewModel(Developer developer, IPlaner trimesterPlaner) : base(trimesterPlaner)
+        public DeveloperViewModel(Developer developer, IPlaner planer)
         {
             Developer = developer;
             WorkDays = from dayOfWeek in Enumerable.Range((int)DayOfWeek.Monday, 5)
-                       select new WorkDayViewModel((DayOfWeek)(dayOfWeek % 7), Developer, trimesterPlaner);
+                       select new WorkDayViewModel((DayOfWeek)(dayOfWeek % 7), Developer);
 
-            trimesterPlaner.PlanChanged += (data, result) => CalculatePT();
+            planer.PlanChanged += (data, result) => CalculatePT();
             CalculatePT();
         }
 

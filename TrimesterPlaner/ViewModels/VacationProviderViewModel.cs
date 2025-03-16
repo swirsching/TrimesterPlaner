@@ -11,7 +11,7 @@ namespace TrimesterPlaner.ViewModels
     {
         public VacationProviderViewModel(
             IVacationProvider vacationProvider,
-            DeveloperProviderViewModel developerProviderViewModel) : base()
+            DeveloperProviderViewModel developerProviderViewModel)
         {
             VacationsViewSource = new() { Source = vacationProvider.Get() };
             VacationsViewSource.Filter += FilterBySelectedDeveloper;

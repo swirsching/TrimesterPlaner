@@ -16,7 +16,7 @@ namespace TrimesterPlaner.Providers
         public void RemovePlans(Ticket ticket);
     }
 
-    public class PlanProvider(IPlaner trimesterPlaner) : IPlanProvider
+    public class PlanProvider(IPlaner planer) : IPlanProvider
     {
         private ObservableCollection<Plan> Plans { get; } = [];
 
@@ -38,7 +38,7 @@ namespace TrimesterPlaner.Providers
         private void AddPlan(Plan plan)
         {
             Plans.Add(plan);
-            trimesterPlaner.RefreshPlan();
+            planer.RefreshPlan();
         }
 
         public void AddTicketPlan(Developer developer, Ticket ticket) => AddPlan(new TicketPlan() { Developer = developer, Ticket = ticket });
@@ -66,7 +66,7 @@ namespace TrimesterPlaner.Providers
                 {
                     Plans.Move(currentIdx, idx);
                     ReorderPlansForDeveloper(plan.Developer!);
-                    trimesterPlaner.RefreshPlan();
+                    planer.RefreshPlan();
                     return;
                 }
             }
@@ -81,7 +81,7 @@ namespace TrimesterPlaner.Providers
                 {
                     Plans.Move(currentIdx, idx);
                     ReorderPlansForDeveloper(plan.Developer!);
-                    trimesterPlaner.RefreshPlan();
+                    planer.RefreshPlan();
                     return;
                 }
             }
@@ -94,7 +94,7 @@ namespace TrimesterPlaner.Providers
             {
                 RemovePlan(plan, false);
             }
-            trimesterPlaner.RefreshPlan();
+            planer.RefreshPlan();
         }
 
         public void RemovePlans(Ticket ticket)
@@ -104,7 +104,7 @@ namespace TrimesterPlaner.Providers
             {
                 RemovePlan(plan, false);
             }
-            trimesterPlaner.RefreshPlan();
+            planer.RefreshPlan();
         }
 
         private void RemovePlan(Plan plan, bool refresh = true)
@@ -117,7 +117,7 @@ namespace TrimesterPlaner.Providers
             Plans.Remove(plan);
             if (refresh)
             {
-                trimesterPlaner.RefreshPlan();
+                planer.RefreshPlan();
             }
         }
     }

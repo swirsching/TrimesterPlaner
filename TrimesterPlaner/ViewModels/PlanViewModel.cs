@@ -1,7 +1,6 @@
 ﻿using System.Windows.Input;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
-using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
@@ -9,8 +8,7 @@ namespace TrimesterPlaner.ViewModels
     public class PlanViewModel(
         Plan plan,
         IPlanProvider planProvider,
-        IDeveloperProvider developerProvider,
-        IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
+        IDeveloperProvider developerProvider) : BindableBase
     {
         public Plan Plan { get; } = plan;
 

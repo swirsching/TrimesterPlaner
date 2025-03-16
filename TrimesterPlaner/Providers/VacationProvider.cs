@@ -11,7 +11,7 @@ namespace TrimesterPlaner.Providers
         public void RemoveVacations(Developer developer);
     }
 
-    public class VacationProvider(IPlaner trimesterPlaner) : IVacationProvider
+    public class VacationProvider(IPlaner planer) : IVacationProvider
     {
         private ObservableCollection<Vacation> Vacations { get; } = [];
 
@@ -46,7 +46,7 @@ namespace TrimesterPlaner.Providers
         public void AddVacation(Developer developer)
         {
             Vacations.Add(new Vacation() { Developer = developer });
-            trimesterPlaner.RefreshPlan();
+            planer.RefreshPlan();
         }
 
         public void RemoveVacations(Developer developer)
@@ -56,7 +56,7 @@ namespace TrimesterPlaner.Providers
             {
                 RemoveVacation(vacation, false);
             }
-            trimesterPlaner.RefreshPlan();
+            planer.RefreshPlan();
         }
 
         private void RemoveVacation(Vacation vacation, bool refresh = true)
@@ -65,7 +65,7 @@ namespace TrimesterPlaner.Providers
             Vacations.Remove(vacation);
             if (refresh)
             {
-                trimesterPlaner.RefreshPlan();
+                planer.RefreshPlan();
             }
         }
     }

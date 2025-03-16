@@ -19,7 +19,7 @@ namespace TrimesterPlaner.ViewModels
 
     public class TicketProviderViewModel : BindableBase
     {
-        public TicketProviderViewModel(ITicketProvider ticketProvider) : base()
+        public TicketProviderViewModel(ITicketProvider ticketProvider)
         {
             TicketProvider = ticketProvider;
             Tickets = ticketProvider.Get();

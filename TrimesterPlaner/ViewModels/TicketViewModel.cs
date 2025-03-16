@@ -15,7 +15,7 @@ namespace TrimesterPlaner.ViewModels
             IPlanProvider planProvider,
             ITicketProvider ticketProvider,
             DeveloperProviderViewModel developerProviderViewModel,
-            IPlaner trimesterPlaner) : base()
+            IPlaner planer)
         {
             Ticket = ticket;
 
@@ -24,7 +24,7 @@ namespace TrimesterPlaner.ViewModels
             RemoveCommand = new RelayCommand((o) => ticketProvider.Remove(Ticket));
 
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
-            trimesterPlaner.PlanChanged += (data, result) => CalculatePlannedPercentage();
+            planer.PlanChanged += (data, result) => CalculatePlannedPercentage();
             CalculatePlannedPercentage();
         }
 

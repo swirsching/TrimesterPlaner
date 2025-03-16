@@ -1,9 +1,9 @@
 ﻿using TrimesterPlaner.Models;
-using TrimesterPlaner.Services;
+using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class BugPlanViewModel(BugPlan plan, IPlaner trimesterPlaner) : BaseViewModel(trimesterPlaner)
+    public class BugPlanViewModel(BugPlan plan) : BindableBase
     {
         public double PT
         {
