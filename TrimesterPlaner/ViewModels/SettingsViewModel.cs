@@ -8,8 +8,20 @@ namespace TrimesterPlaner.ViewModels
 {
     public class SettingsViewModel : BindableBase
     {
+        public SettingsViewModel()
+        {
+            Inject.Require<ISettingsProvider>().SettingsChanged += (settings) => 
+            { 
+                Settings = settings;
+                foreach (var property in typeof(SettingsViewModel).GetProperties())
+                {
+                    OnPropertyChanged(property.Name);
+                }
+            };
+        }
+
         public bool HasCAT { get; } = Inject.Require<IConfluenceClient>().HasCAT();
-        private Settings Settings { get; } = Inject.Require<ISettingsProvider>().Get();
+        private Settings Settings { get; set; } = Inject.Require<ISettingsProvider>().Get();
 
         public DateTime? Start
         {
@@ -18,6 +30,7 @@ namespace TrimesterPlaner.ViewModels
             {
                 Settings.Start = value;
                 OnPropertyChanged();
+                Inject.Require<ISettingsProvider>().InvokeSettingsChanged();
             }
         }
 
@@ -28,6 +41,7 @@ namespace TrimesterPlaner.ViewModels
             {
                 Settings.Entwicklungsstart = value;
                 OnPropertyChanged();
+                Inject.Require<ISettingsProvider>().InvokeSettingsChanged();
             }
         }
 
@@ -38,6 +52,7 @@ namespace TrimesterPlaner.ViewModels
             {
                 Settings.Entwicklungsschluss = value;
                 OnPropertyChanged();
+                Inject.Require<ISettingsProvider>().InvokeSettingsChanged();
             }
         }
 
@@ -48,6 +63,7 @@ namespace TrimesterPlaner.ViewModels
             {
                 Settings.Title = value;
                 OnPropertyChanged();
+                Inject.Require<ISettingsProvider>().InvokeSettingsChanged();
             }
         }
 
@@ -58,6 +74,7 @@ namespace TrimesterPlaner.ViewModels
             {
                 Settings.JQL = value;
                 OnPropertyChanged();
+                Inject.Require<ISettingsProvider>().InvokeSettingsChanged();
             }
         }
 
@@ -68,6 +85,7 @@ namespace TrimesterPlaner.ViewModels
             {
                 Settings.Burndown = value;
                 OnPropertyChanged();
+                Inject.Require<ISettingsProvider>().InvokeSettingsChanged();
             }
         }
 
@@ -78,6 +96,7 @@ namespace TrimesterPlaner.ViewModels
             {
                 Settings.PageID = value;
                 OnPropertyChanged();
+                Inject.Require<ISettingsProvider>().InvokeSettingsChanged();
             }
         }
     }
