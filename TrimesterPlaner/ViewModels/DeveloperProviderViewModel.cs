@@ -14,7 +14,7 @@ namespace TrimesterPlaner.ViewModels
             RemoveDeveloperCommand = new RelayCommand((o) => Inject.Require<IDeveloperProvider>().Remove(SelectedDeveloper!));
         }
 
-        public IEnumerable<Developer> Developers { get; } = Inject.GetCollection<Developer>();
+        public IEnumerable<Developer> Developers { get; } = Inject.Require<IDeveloperProvider>().Get();
 
         private Developer? _SelectedDeveloper;
         public Developer? SelectedDeveloper

@@ -12,7 +12,7 @@ namespace TrimesterPlaner.ViewModels
     {
         public PlanProviderViewModel(DeveloperProviderViewModel developerProviderViewModel)
         {
-            Plans = new() { Source = Inject.GetCollection<Plan>() };
+            Plans = new() { Source = Inject.Require<IPlanProvider>().Get() };
             Plans.Filter += FilterBySelectedDeveloper;
             developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
 

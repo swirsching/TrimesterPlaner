@@ -2,7 +2,6 @@
 using System.IO;
 using System.Windows;
 using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
@@ -31,8 +30,8 @@ namespace TrimesterPlaner
             services.AddSingleton(typeof(IPlanProvider), typeof(PlanProvider));
             services.AddSingleton(typeof(ITicketProvider), typeof(TicketProvider));
             services.AddSingleton(typeof(IVacationProvider), typeof(VacationProvider));
-            services.AddSingleton(typeof(IValueProvider<Settings>), typeof(SettingsProvider));
-            services.AddTransient(typeof(IValueProvider<Config>), typeof(ConfigProvider));
+            services.AddSingleton(typeof(ISettingsProvider), typeof(SettingsProvider));
+            services.AddTransient(typeof(IConfigProvider), typeof(ConfigProvider));
 
             services.AddTransient(typeof(ResultWindow));
             services.AddTransient(typeof(ResultWindowViewModel));

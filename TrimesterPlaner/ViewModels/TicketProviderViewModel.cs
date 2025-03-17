@@ -21,7 +21,7 @@ namespace TrimesterPlaner.ViewModels
     {
         public TicketProviderViewModel()
         {
-            Tickets = Inject.GetCollection<Ticket>();
+            Tickets = Inject.Require<ITicketProvider>().Get();
             ReloadTicketsCommand = new RelayCommand((o) => ReloadTickets());
             SortTicketsCommand = new RelayCommand((o) => SortTickets((TicketSortingMode)o!));
         }

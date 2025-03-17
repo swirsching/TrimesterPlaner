@@ -2,7 +2,10 @@
 
 namespace TrimesterPlaner.Providers
 {
-    public class SettingsProvider : IValueProvider<Settings>
+    public interface ISettingsProvider : IValueProvider<Settings>
+    { }
+
+    public class SettingsProvider : ISettingsProvider
     {
         private Settings Settings { get; set; } = new();
 

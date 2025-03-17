@@ -27,7 +27,7 @@ namespace TrimesterPlaner.ViewModels
             set => SetProperty(ref _IsChangingDeveloper, value);
         }
 
-        public IEnumerable<Developer> Developers { get; } = Inject.GetCollection<Developer>();
+        public IEnumerable<Developer> Developers { get; } = Inject.Require<IDeveloperProvider>().Get();
 
         public Developer? SelectedDeveloper
         {

@@ -12,7 +12,7 @@ namespace TrimesterPlaner.ViewModels
     {
         public VacationProviderViewModel(DeveloperProviderViewModel developerProviderViewModel)
         {
-            VacationsViewSource = new() { Source = Inject.GetCollection<Vacation>() };
+            VacationsViewSource = new() { Source = Inject.Require<IVacationProvider>().Get() };
             VacationsViewSource.Filter += FilterBySelectedDeveloper;
             developerProviderViewModel.OnSelectedDeveloperChanged += SelectedDeveloperChanged;
 

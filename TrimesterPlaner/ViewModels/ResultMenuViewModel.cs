@@ -2,7 +2,6 @@
 using System.Windows.Input;
 using TextCopy;
 using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
@@ -36,7 +35,7 @@ namespace TrimesterPlaner.ViewModels
             PushToConfluenceCommand = new RelayCommand((o) =>
             {
                 Inject.Require<IConfluenceClient>().UpdatePage(
-                    Inject.GetValue<Settings>().PageID,
+                    Inject.Require<ISettingsProvider>().Get().PageID,
                     Inject.Require<IPlaner>().GetLastPlan().ConvertToPastableHTML());
             });
         }

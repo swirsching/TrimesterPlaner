@@ -9,7 +9,7 @@ namespace TrimesterPlaner.ViewModels
     public class SettingsViewModel : BindableBase
     {
         public bool HasCAT { get; } = Inject.Require<IConfluenceClient>().HasCAT();
-        private Settings Settings { get; } = Inject.GetValue<Settings>();
+        private Settings Settings { get; } = Inject.Require<ISettingsProvider>().Get();
 
         public DateTime? Start
         {
