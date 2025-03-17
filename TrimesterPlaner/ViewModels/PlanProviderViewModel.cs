@@ -1,26 +1,23 @@
 ﻿using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
+using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public interface IPlanProvider
-    {
-        public IEnumerable<Plan> GetPlans();
-    }
-
     public class PlanProviderViewModel : BindableBase
     {
-        public PlanProviderViewModel(IPlanProvider planProvider, IPlanManager planManager, DeveloperProviderViewModel developerProviderViewModel) : base()
+        public PlanProviderViewModel()
         {
-            Plans = new() { Source = planProvider.GetPlans() };
+            Plans = new() { Source = Inject.Require<IPlanProvider>().Get() };
             Plans.Filter += FilterBySelectedDeveloper;
-            developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
+            Inject.Require<IDeveloperProvider>().OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
 
-            AddBugPlanCommand = new RelayCommand((o) => planManager.AddBugPlan(SelectedDeveloper!));
-            AddSpecialPlanCommand = new RelayCommand((o) => planManager.AddSpecialPlan(SelectedDeveloper!));
+            AddBugPlanCommand = new RelayCommand((o) => Inject.Require<IPlanProvider>().AddBugPlan(SelectedDeveloper!));
+            AddSpecialPlanCommand = new RelayCommand((o) => Inject.Require<IPlanProvider>().AddSpecialPlan(SelectedDeveloper!));
         }
 
         private void FilterBySelectedDeveloper(object sender, FilterEventArgs e)

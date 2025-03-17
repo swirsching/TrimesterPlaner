@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using TrimesterPlaner.Models;
 
-namespace TrimesterPlaner.Utilities
+namespace TrimesterPlaner.Services
 {
     public interface IConfigService
     {
@@ -17,7 +17,7 @@ namespace TrimesterPlaner.Utilities
     {
         private JsonSerializerOptions SerializerOptions { get; } = new(JsonSerializerDefaults.General)
         {
-            ReferenceHandler = ReferenceHandler.Preserve, 
+            ReferenceHandler = ReferenceHandler.Preserve,
             WriteIndented = true,
         };
 

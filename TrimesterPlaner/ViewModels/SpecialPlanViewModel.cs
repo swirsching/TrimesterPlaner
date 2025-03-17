@@ -1,8 +1,9 @@
 ﻿using TrimesterPlaner.Models;
+using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class SpecialPlanViewModel(SpecialPlan plan, IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
+    public class SpecialPlanViewModel(SpecialPlan plan) : BindableBase
     {
         public string Description
         {

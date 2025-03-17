@@ -1,5 +1,5 @@
 ﻿using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Services;
 
 namespace TrimesterPlaner.Utilities
 {
@@ -10,11 +12,8 @@ namespace TrimesterPlaner.Utilities
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            OnAfterPropertyChanged(propertyName);
+            Inject.Require<IPlaner>().RefreshPlan();
         }
-
-        protected virtual void OnAfterPropertyChanged(string? propertyName)
-        { }
 
         protected virtual bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string? propertyName = null)
         {

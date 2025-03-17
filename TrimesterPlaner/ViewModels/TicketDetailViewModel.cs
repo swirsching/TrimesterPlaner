@@ -1,20 +1,22 @@
 ﻿using System.Collections.ObjectModel;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
     public class TicketDetailViewModel : BindableBase
     {
-        public TicketDetailViewModel(Ticket ticket, IEntwicklungsplanManager entwicklungsplanManager)
+        public TicketDetailViewModel(Ticket ticket)
         {
             Ticket = ticket;
             TotalPT = ticket.GetTotalPT();
             PlanDetails = [];
 
-            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculatePlanDetails(data);
-            CalculatePlanDetails(entwicklungsplanManager.GetLastPreparedData());
+            var planer = Inject.Require<IPlaner>();
+            planer.PlanChanged += (data, result) => CalculatePlanDetails(data);
+            CalculatePlanDetails(planer.GetLastPreparedData());
         }
 
         private void CalculatePlanDetails(PreparedData? data)
@@ -38,8 +40,8 @@ namespace TrimesterPlaner.ViewModels
         public ObservableCollection<PreparedPlanDetailViewModel> PlanDetails { get; }
 
         private double _PlannedPT;
-        public double PlannedPT 
-        { 
+        public double PlannedPT
+        {
             get => _PlannedPT;
             set => SetProperty(ref _PlannedPT, value);
         }

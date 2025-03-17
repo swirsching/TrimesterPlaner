@@ -4,15 +4,11 @@ using System.Windows;
 using System.Windows.Input;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public interface ITicketProvider
-    {
-        public IEnumerable<Ticket> GetTickets();
-    }
-
     public enum TicketSortingMode
     {
         Alphabetically,
@@ -23,20 +19,17 @@ namespace TrimesterPlaner.ViewModels
 
     public class TicketProviderViewModel : BindableBase
     {
-        public TicketProviderViewModel(ITicketProvider ticketProvider, ITicketManager ticketManager) : base()
+        public TicketProviderViewModel()
         {
-            Tickets = ticketProvider.GetTickets();
-            TicketManager = ticketManager;
+            Tickets = Inject.Require<ITicketProvider>().Get();
             ReloadTicketsCommand = new RelayCommand((o) => ReloadTickets());
             SortTicketsCommand = new RelayCommand((o) => SortTickets((TicketSortingMode)o!));
         }
 
-        private ITicketManager TicketManager { get; }
-
         private IEnumerable<Ticket> _Tickets = [];
         public IEnumerable<Ticket> Tickets
         {
-            get => _Tickets; 
+            get => _Tickets;
             set => SetProperty(ref _Tickets, value);
         }
 
@@ -50,8 +43,8 @@ namespace TrimesterPlaner.ViewModels
 
             try
             {
-                Tickets = await TicketManager.ReloadTicketsAsync();
-            } 
+                Tickets = await Inject.Require<ITicketProvider>().ReloadTicketsAsync();
+            }
             catch (HttpRequestException e)
             {
                 if (e.StatusCode == HttpStatusCode.BadRequest)
@@ -60,7 +53,7 @@ namespace TrimesterPlaner.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Der Trimester Planer konnte sich nicht mit Jira verbinden. Bitte überprüfe deine Internetverbindung.", "Keine Internetverbindung");   
+                    MessageBox.Show("Der Trimester Planer konnte sich nicht mit Jira verbinden. Bitte überprüfe deine Internetverbindung.", "Keine Internetverbindung");
                 }
                 Tickets = tickets;
             }
@@ -69,7 +62,7 @@ namespace TrimesterPlaner.ViewModels
         private void SortTickets(TicketSortingMode sortingMode)
         {
             Tickets = [];
-            Tickets = TicketManager.SortTickets(sortingMode switch
+            Tickets = Inject.Require<ITicketProvider>().SortTickets(sortingMode switch
             {
                 TicketSortingMode.Alphabetically => SortTicketsAlphabetically,
                 TicketSortingMode.ByRank => SortTicketsByRank,

@@ -11,14 +11,14 @@ namespace TrimesterPlaner.Converters
         {
             if (parameter is Type viewModelType)
             {
-                if (InjectExtension.ServiceProvider is null)
+                if (Inject.ServiceProvider is null)
                 {
                     return Activator.CreateInstance(viewModelType, value);
                 }
 
                 try
                 {
-                    return ActivatorUtilities.CreateInstance(InjectExtension.ServiceProvider, viewModelType, value);
+                    return ActivatorUtilities.CreateInstance(Inject.ServiceProvider, viewModelType, value);
                 }
                 catch
                 {

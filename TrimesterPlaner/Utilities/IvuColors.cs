@@ -133,7 +133,7 @@ namespace TrimesterPlaner.Utilities
 
         public static Color PRIMARY_BLUE { get; } = BLUE40;
         public static Color PRIMARY_CYAN { get; } = CYAN40;
-        public static Color PRIMARY_GREEN { get; } = MAIGREEN40; 
+        public static Color PRIMARY_GREEN { get; } = MAIGREEN40;
         public static Color SECONDARY_MAIGREEN { get; } = MAIGREEN30;
         public static Color SECONDARY_GREEN { get; } = GREEN30;
         public static Color SECONDARY_AQUA { get; } = AQUA30;

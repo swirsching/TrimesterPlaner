@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
@@ -16,9 +16,9 @@ namespace TrimesterPlaner.ViewModels
 
     public class StatisticsViewModel : BindableBase
     {
-        public StatisticsViewModel(IEntwicklungsplanManager entwicklungsplanManager)
+        public StatisticsViewModel()
         {
-            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) =>
+            Inject.Require<IPlaner>().PlanChanged += (data, result) =>
             {
                 if (data is null)
                 {

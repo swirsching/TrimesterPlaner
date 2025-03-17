@@ -1,35 +1,27 @@
 ﻿using System.Windows.Input;
+using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public interface IDeveloperProvider
-    {
-        public IEnumerable<Developer> GetDevelopers();
-    }
-
     public class DeveloperProviderViewModel : BindableBase
     {
-        public DeveloperProviderViewModel(IDeveloperManager developerManager, IDeveloperProvider developerProvider)
+        public DeveloperProviderViewModel()
         {
-            Developers = developerProvider.GetDevelopers();
-
-            AddDeveloperCommand = new RelayCommand((o) => SelectedDeveloper = developerManager.AddDeveloper("Neuling"));
-            RemoveDeveloperCommand = new RelayCommand((o) => developerManager.RemoveDeveloper(SelectedDeveloper!));
+            AddDeveloperCommand = new RelayCommand((o) => SelectedDeveloper = Inject.Require<IDeveloperProvider>().AddDeveloper("Neuling"));
+            RemoveDeveloperCommand = new RelayCommand((o) => Inject.Require<IDeveloperProvider>().Remove(SelectedDeveloper!));
         }
 
-        public IEnumerable<Developer> Developers { get; }
+        public IEnumerable<Developer> Developers { get; } = Inject.Require<IDeveloperProvider>().Get();
 
         private Developer? _SelectedDeveloper;
         public Developer? SelectedDeveloper
         {
             get => _SelectedDeveloper;
-            set { if (SetProperty(ref _SelectedDeveloper, value)) OnSelectedDeveloperChanged?.Invoke(value); }
+            set { if (SetProperty(ref _SelectedDeveloper, value)) Inject.Require<IDeveloperProvider>().SelectDeveloper(value); }
         }
-
-        public delegate void OnSelectedDeveloperChangedEventHandler(Developer? selectedDeveloper);
-        public event OnSelectedDeveloperChangedEventHandler? OnSelectedDeveloperChanged;
 
         public ICommand AddDeveloperCommand { get; }
         public ICommand RemoveDeveloperCommand { get; }

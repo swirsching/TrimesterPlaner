@@ -1,5 +1,6 @@
 ﻿using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Services;
 
 namespace TrimesterPlaner.Test
 {

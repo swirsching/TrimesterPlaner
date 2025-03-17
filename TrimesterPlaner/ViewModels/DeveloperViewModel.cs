@@ -1,17 +1,19 @@
 ﻿using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Services;
+using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class DeveloperViewModel : BaseViewModel
+    public class DeveloperViewModel : BindableBase
     {
-        public DeveloperViewModel(Developer developer, IEntwicklungsplanManager entwicklungsplanManager) : base(entwicklungsplanManager)
+        public DeveloperViewModel(Developer developer)
         {
             Developer = developer;
             WorkDays = from dayOfWeek in Enumerable.Range((int)DayOfWeek.Monday, 5)
-                       select new WorkDayViewModel((DayOfWeek)(dayOfWeek % 7), Developer, entwicklungsplanManager);
+                       select new WorkDayViewModel((DayOfWeek)(dayOfWeek % 7), Developer);
 
-            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculatePT();
+            Inject.Require<IPlaner>().PlanChanged += (data, result) => CalculatePT();
             CalculatePT();
         }
 
@@ -20,7 +22,7 @@ namespace TrimesterPlaner.ViewModels
         public string Name
         {
             get => Developer.Name;
-            set 
+            set
             {
                 Developer.Name = value;
                 OnPropertyChanged();

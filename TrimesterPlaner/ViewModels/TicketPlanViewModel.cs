@@ -1,8 +1,9 @@
 ﻿using TrimesterPlaner.Models;
+using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class TicketPlanViewModel(TicketPlan plan, IEntwicklungsplanManager entwicklungsplanManager) : BaseViewModel(entwicklungsplanManager)
+    public class TicketPlanViewModel(TicketPlan plan) : BindableBase
     {
         public string Key { get => plan.Ticket?.Key ?? ""; }
         public string Summary { get => plan.Ticket?.Summary ?? ""; }
@@ -34,7 +35,7 @@ namespace TrimesterPlaner.ViewModels
                     RemainingEstimate = remaining;
                     TimeSpent = spent;
                 }
-                else 
+                else
                 {
                     OriginalEstimate = plan.Ticket?.OriginalEstimate;
                     RemainingEstimate = plan.Ticket?.RemainingEstimate;

@@ -1,29 +1,25 @@
-﻿using Svg;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Input;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
     public class TicketViewModel : BindableBase
     {
-        public TicketViewModel(
-            Ticket ticket, 
-            IPlanManager planManager, 
-            ITicketManager ticketManager,
-            DeveloperProviderViewModel developerProviderViewModel,
-            IEntwicklungsplanManager entwicklungsplanManager) : base()
-        { 
+        public TicketViewModel(Ticket ticket)
+        {
             Ticket = ticket;
 
             OpenTicketInBrowserCommand = new RelayCommand((o) => OpenTicketInBrowser());
-            AddPlanCommand = new RelayCommand((o) => planManager.AddTicketPlan(SelectedDeveloper!, Ticket));
-            RemoveCommand = new RelayCommand((o) => ticketManager.RemoveTicket(Ticket));
+            AddPlanCommand = new RelayCommand((o) => Inject.Require<IPlanProvider>().AddTicketPlan(SelectedDeveloper!, Ticket));
+            RemoveCommand = new RelayCommand((o) => Inject.Require<ITicketProvider>().Remove(Ticket));
 
-            developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
-            entwicklungsplanManager.EntwicklungsplanChanged += (data, result) => CalculatePlannedPercentage();
+            Inject.Require<IDeveloperProvider>().OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
+            Inject.Require<IPlaner>().PlanChanged += (data, result) => CalculatePlannedPercentage();
             CalculatePlannedPercentage();
         }
 

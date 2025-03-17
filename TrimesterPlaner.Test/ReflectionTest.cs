@@ -10,7 +10,7 @@ namespace TrimesterPlaner.Test
         public void TestUpdateTicket()
         {
             var ticket1 = new Ticket();
-            var ticket2 = new Ticket 
+            var ticket2 = new Ticket
             {
                 Key = "12345",
                 Summary = "Summary",

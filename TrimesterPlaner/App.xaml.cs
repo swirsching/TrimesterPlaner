@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Windows;
-using TrimesterPlaner.Converters;
 using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
+using TrimesterPlaner.Providers;
+using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 using TrimesterPlaner.ViewModels;
 using TrimesterPlaner.Views;
@@ -20,51 +20,42 @@ namespace TrimesterPlaner
 
             ServiceCollection services = new();
             services.AddSingleton(typeof(IConfigService), configService);
-            services.AddSingleton(typeof(ConfluenceClient));
-            services.AddSingleton(typeof(JiraClient));
-            services.AddSingleton(typeof(DeveloperProviderViewModel));
-
+            services.AddSingleton(typeof(IConfluenceClient), typeof(ConfluenceClient));
+            services.AddSingleton(typeof(IJiraClient), typeof(JiraClient));
+            services.AddSingleton(typeof(IPlaner), typeof(Planer));
             services.AddTransient(typeof(IGenerator), typeof(Generator));
             services.AddTransient(typeof(IPreparator), typeof(Preparator));
+
+            services.AddSingleton(typeof(IDeveloperProvider), typeof(DeveloperProvider));
+            services.AddSingleton(typeof(IPlanProvider), typeof(PlanProvider));
+            services.AddSingleton(typeof(ITicketProvider), typeof(TicketProvider));
+            services.AddSingleton(typeof(IVacationProvider), typeof(VacationProvider));
+            services.AddSingleton(typeof(ISettingsProvider), typeof(SettingsProvider));
+            services.AddTransient(typeof(IConfigProvider), typeof(ConfigProvider));
+
             services.AddTransient(typeof(ResultWindow));
+            services.AddTransient(typeof(MainWindow));
+
             services.AddTransient(typeof(ResultWindowViewModel));
             services.AddTransient(typeof(ResultViewModel));
             services.AddTransient(typeof(ResultMenuViewModel));
-            services.AddTransient(typeof(MainWindow));
             services.AddTransient(typeof(MainWindowMenuViewModel));
             services.AddTransient(typeof(VacationProviderViewModel));
             services.AddTransient(typeof(TicketProviderViewModel));
             services.AddTransient(typeof(PlanProviderViewModel));
             services.AddTransient(typeof(SettingsViewModel));
             services.AddTransient(typeof(StatisticsViewModel));
-            
-            var tmpServiceProvider = services.BuildServiceProvider();
-            MainWindowViewModel mainWindowViewModel = new(
-                tmpServiceProvider.GetRequiredService<JiraClient>(),
-                tmpServiceProvider.GetRequiredService<IGenerator>(),
-                tmpServiceProvider.GetRequiredService<IPreparator>());
-            MainWindowMenuViewModel menuViewModel = new(
-                tmpServiceProvider.GetRequiredService<IConfigService>(),
-                mainWindowViewModel);
+            services.AddTransient(typeof(DeveloperProviderViewModel));
+            services.AddTransient(typeof(MainWindowViewModel));
+
+            Inject.ServiceProvider = services.BuildServiceProvider();
+            Inject.Require<MainWindow>().Show();
+
             if (e.Args.Length > 0 && File.Exists(e.Args[0]))
             {
-                menuViewModel.LoadCommand.Execute(e.Args[0]);
-                _ = mainWindowViewModel.ReloadTicketsAsync();
+                Inject.Require<MainWindowMenuViewModel>().LoadCommand.Execute(e.Args[0]);
+                Inject.Require<ITicketProvider>().ReloadTicketsAsync();
             }
-            services.AddSingleton(mainWindowViewModel);
-            services.AddSingleton(typeof(IEntwicklungsplanManager), mainWindowViewModel);
-            services.AddSingleton(typeof(IConfigManager), mainWindowViewModel);
-            services.AddSingleton(typeof(IDeveloperManager), mainWindowViewModel);
-            services.AddSingleton(typeof(IVacationManager), mainWindowViewModel);
-            services.AddSingleton(typeof(ITicketManager), mainWindowViewModel);
-            services.AddSingleton(typeof(IPlanManager), mainWindowViewModel);
-            services.AddSingleton(typeof(IDeveloperProvider), mainWindowViewModel);
-            services.AddSingleton(typeof(IVacationProvider), mainWindowViewModel);
-            services.AddSingleton(typeof(ITicketProvider), mainWindowViewModel);
-            services.AddSingleton(typeof(IPlanProvider), mainWindowViewModel);
-
-            InjectExtension.ServiceProvider = services.BuildServiceProvider();
-            InjectExtension.ServiceProvider.GetRequiredService<MainWindow>().Show();
         }
     }
 }

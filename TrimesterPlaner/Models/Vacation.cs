@@ -17,8 +17,8 @@
             set
             {
                 _Developer?.Vacations?.Remove(this);
-                _Developer = value; 
-                _Developer?.Vacations?.Add(this); 
+                _Developer = value;
+                _Developer?.Vacations?.Add(this);
             }
         }
 

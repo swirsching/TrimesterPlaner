@@ -62,7 +62,7 @@ namespace TrimesterPlaner.Models
         public double PT { get; set; }
     }
 
-    public class SpecialPlan : Plan 
+    public class SpecialPlan : Plan
     {
         public SpecialPlan()
         {

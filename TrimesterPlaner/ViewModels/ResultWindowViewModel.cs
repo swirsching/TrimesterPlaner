@@ -1,9 +1,11 @@
-﻿using TrimesterPlaner.Utilities;
+﻿using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Providers;
+using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class ResultWindowViewModel(IEntwicklungsplanManager entwicklungsplanManager) : BindableBase()
+    public class ResultWindowViewModel : BindableBase
     {
-        public string Title { get; } = entwicklungsplanManager.GetSettings().Title;
+        public string Title { get; } = Inject.Require<ISettingsProvider>().Get().Title;
     }
 }
