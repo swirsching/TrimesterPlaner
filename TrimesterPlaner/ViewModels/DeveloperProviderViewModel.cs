@@ -20,11 +20,8 @@ namespace TrimesterPlaner.ViewModels
         public Developer? SelectedDeveloper
         {
             get => _SelectedDeveloper;
-            set { if (SetProperty(ref _SelectedDeveloper, value)) OnSelectedDeveloperChanged?.Invoke(value); }
+            set { if (SetProperty(ref _SelectedDeveloper, value)) Inject.Require<IDeveloperProvider>().SelectDeveloper(value); }
         }
-
-        public delegate void OnSelectedDeveloperChangedEventHandler(Developer? selectedDeveloper);
-        public event OnSelectedDeveloperChangedEventHandler? OnSelectedDeveloperChanged;
 
         public ICommand AddDeveloperCommand { get; }
         public ICommand RemoveDeveloperCommand { get; }

@@ -5,8 +5,11 @@ using TrimesterPlaner.Services;
 
 namespace TrimesterPlaner.Providers
 {
+    public delegate void OnSelectedDeveloperChangedEventHandler(Developer? selectedDeveloper);
     public interface IDeveloperProvider : ICollectionProvider<Developer>
     {
+        public event OnSelectedDeveloperChangedEventHandler? OnSelectedDeveloperChanged;
+        public void SelectDeveloper(Developer? developer);
         public Developer AddDeveloper(string name);
     }
 
@@ -31,6 +34,13 @@ namespace TrimesterPlaner.Providers
 
             Developers.Remove(developer);
             Inject.Require<IPlaner>().RefreshPlan();
+        }
+
+        public event OnSelectedDeveloperChangedEventHandler? OnSelectedDeveloperChanged;
+
+        public void SelectDeveloper(Developer? developer)
+        {
+            OnSelectedDeveloperChanged?.Invoke(developer);
         }
 
         public Developer AddDeveloper(string name)

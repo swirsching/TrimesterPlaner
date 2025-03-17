@@ -10,9 +10,7 @@ namespace TrimesterPlaner.ViewModels
 {
     public class TicketViewModel : BindableBase
     {
-        public TicketViewModel(
-            Ticket ticket,
-            DeveloperProviderViewModel developerProviderViewModel)
+        public TicketViewModel(Ticket ticket)
         {
             Ticket = ticket;
 
@@ -20,7 +18,7 @@ namespace TrimesterPlaner.ViewModels
             AddPlanCommand = new RelayCommand((o) => Inject.Require<IPlanProvider>().AddTicketPlan(SelectedDeveloper!, Ticket));
             RemoveCommand = new RelayCommand((o) => Inject.Require<ITicketProvider>().Remove(Ticket));
 
-            developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
+            Inject.Require<IDeveloperProvider>().OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
             Inject.Require<IPlaner>().PlanChanged += (data, result) => CalculatePlannedPercentage();
             CalculatePlannedPercentage();
         }

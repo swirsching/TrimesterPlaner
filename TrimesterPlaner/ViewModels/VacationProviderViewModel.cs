@@ -10,11 +10,11 @@ namespace TrimesterPlaner.ViewModels
 {
     public class VacationProviderViewModel : BindableBase
     {
-        public VacationProviderViewModel(DeveloperProviderViewModel developerProviderViewModel)
+        public VacationProviderViewModel()
         {
             VacationsViewSource = new() { Source = Inject.Require<IVacationProvider>().Get() };
             VacationsViewSource.Filter += FilterBySelectedDeveloper;
-            developerProviderViewModel.OnSelectedDeveloperChanged += SelectedDeveloperChanged;
+            Inject.Require<IDeveloperProvider>().OnSelectedDeveloperChanged += SelectedDeveloperChanged;
 
             AddVacationCommand = new RelayCommand((o) => Inject.Require<IVacationProvider>().AddVacation(SelectedDeveloper!));
         }

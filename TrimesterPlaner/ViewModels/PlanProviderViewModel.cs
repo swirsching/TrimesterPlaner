@@ -10,11 +10,11 @@ namespace TrimesterPlaner.ViewModels
 {
     public class PlanProviderViewModel : BindableBase
     {
-        public PlanProviderViewModel(DeveloperProviderViewModel developerProviderViewModel)
+        public PlanProviderViewModel()
         {
             Plans = new() { Source = Inject.Require<IPlanProvider>().Get() };
             Plans.Filter += FilterBySelectedDeveloper;
-            developerProviderViewModel.OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
+            Inject.Require<IDeveloperProvider>().OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
 
             AddBugPlanCommand = new RelayCommand((o) => Inject.Require<IPlanProvider>().AddBugPlan(SelectedDeveloper!));
             AddSpecialPlanCommand = new RelayCommand((o) => Inject.Require<IPlanProvider>().AddSpecialPlan(SelectedDeveloper!));
