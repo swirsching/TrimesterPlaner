@@ -23,7 +23,7 @@ namespace TrimesterPlaner.Views
             var ticket = ((TicketViewModel)fe.DataContext).Ticket;
 
             tickets.Remove(ticket);
-            DragDrop.DoDragDrop(container, new DataObject(ticket), DragDropEffects.Move);
+            DragDrop.DoDragDrop(fe, new DataObject(ticket), DragDropEffects.Move);
         }
 
         private void Ticket_Drop(object sender, DragEventArgs e)
