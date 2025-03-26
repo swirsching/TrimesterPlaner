@@ -42,8 +42,6 @@ namespace TrimesterPlaner.ViewModels
             }
         }
 
-        public ICommand MoveUpCommand { get; } = new RelayCommand((o) => Inject.Require<IPlanProvider>().MoveUp(plan));
-        public ICommand MoveDownCommand { get; } = new RelayCommand((o) => Inject.Require<IPlanProvider>().MoveDown(plan));
         public ICommand RemoveCommand { get; } = new RelayCommand((o) => Inject.Require<IPlanProvider>().Remove(plan));
     }
 }

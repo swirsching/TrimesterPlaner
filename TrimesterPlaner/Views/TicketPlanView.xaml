@@ -12,11 +12,14 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <StackPanel>
-        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding Summary}" />
-        <TextBox
-            MinWidth="80"
-            HorizontalAlignment="Left"
-            Text="{Binding Description}" />
+        <DockPanel>
+            <TextBox
+                MinWidth="80"
+                HorizontalContentAlignment="Right"
+                DockPanel.Dock="Right"
+                Text="{Binding Description}" />
+            <TextBlock Margin="0,5" Text="{Binding Summary}" />
+        </DockPanel>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

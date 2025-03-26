@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using GongSolutions.Wpf.DragDrop;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using TrimesterPlaner.Extensions;
@@ -8,7 +10,7 @@ using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {
-    public class PlanProviderViewModel : BindableBase
+    public class PlanProviderViewModel : BindableBase, IDropTarget
     {
         public PlanProviderViewModel()
         {
@@ -43,6 +45,22 @@ namespace TrimesterPlaner.ViewModels
         public ICollectionView PlansView
         {
             get => Plans.View;
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is not Plan || dropInfo.TargetItem is not Plan)
+            {
+                return;
+            }
+
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+            dropInfo.Effects = DragDropEffects.Move;
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            Inject.Require<IPlanProvider>().Move((Plan)dropInfo.Data, (Plan)dropInfo.TargetItem);
         }
 
         public ICommand AddBugPlanCommand { get; }

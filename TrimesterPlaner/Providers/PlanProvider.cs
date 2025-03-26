@@ -10,8 +10,7 @@ namespace TrimesterPlaner.Providers
         public void AddTicketPlan(Developer developer, Ticket ticket);
         public void AddBugPlan(Developer developer);
         public void AddSpecialPlan(Developer developer);
-        public void MoveUp(Plan plan);
-        public void MoveDown(Plan plan);
+        public void Move(Plan sourcePlan, Plan targetPlan);
         public void RemovePlans(Developer developer);
         public void RemovePlans(Ticket ticket);
     }
@@ -45,8 +44,11 @@ namespace TrimesterPlaner.Providers
         public void AddBugPlan(Developer developer) => AddPlan(new BugPlan() { Developer = developer });
         public void AddSpecialPlan(Developer developer) => AddPlan(new SpecialPlan() { Developer = developer });
 
-        private void ReorderPlansForDeveloper(Developer developer)
+        public void Move(Plan sourcePlan, Plan targetPlan)
         {
+            Plans.Move(Plans.IndexOf(sourcePlan), Plans.IndexOf(targetPlan));
+
+            var developer = sourcePlan.Developer!;
             developer.Plans.Clear();
             foreach (Plan plan in Plans)
             {
@@ -55,36 +57,8 @@ namespace TrimesterPlaner.Providers
                     developer.Plans.Add(plan);
                 }
             }
-        }
 
-        public void MoveUp(Plan plan)
-        {
-            int currentIdx = Plans.IndexOf(plan);
-            for (int idx = currentIdx - 1; idx >= 0; idx--)
-            {
-                if (plan.Developer == Plans[idx].Developer)
-                {
-                    Plans.Move(currentIdx, idx);
-                    ReorderPlansForDeveloper(plan.Developer!);
-                    Inject.Require<IPlaner>().RefreshPlan();
-                    return;
-                }
-            }
-        }
-
-        public void MoveDown(Plan plan)
-        {
-            int currentIdx = Plans.IndexOf(plan);
-            for (int idx = currentIdx + 1; idx < Plans.Count; idx++)
-            {
-                if (plan.Developer == Plans[idx].Developer)
-                {
-                    Plans.Move(currentIdx, idx);
-                    ReorderPlansForDeveloper(plan.Developer!);
-                    Inject.Require<IPlaner>().RefreshPlan();
-                    return;
-                }
-            }
+            Inject.Require<IPlaner>().RefreshPlan();
         }
 
         public void RemovePlans(Developer developer)
