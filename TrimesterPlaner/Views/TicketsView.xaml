@@ -86,20 +86,7 @@
                     ItemsSource="{Binding Tickets}">
                     <dd:DragDrop.DragAdornerTemplate>
                         <DataTemplate DataType="{x:Type models:Ticket}">
-                            <materialDesign:Card
-                                Padding="10,5"
-                                materialDesign:BorderBrush="Black"
-                                materialDesign:BorderThickness="1"
-                                materialDesign:ElevationAssist.Elevation="Dp6">
-                                <TextBlock>
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0}: {1}">
-                                            <Binding Path="Key" />
-                                            <Binding Path="Summary" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                            </materialDesign:Card>
+                            <views:TicketDragAdornerView DataContext="{Binding ., Converter={StaticResource Injector}, ConverterParameter={x:Type vm:TicketDragAdornerViewModel}}" />
                         </DataTemplate>
                     </dd:DragDrop.DragAdornerTemplate>
                     <ItemsControl.ItemTemplate>

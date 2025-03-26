@@ -47,6 +47,7 @@ namespace TrimesterPlaner
             services.AddTransient(typeof(StatisticsViewModel));
             services.AddTransient(typeof(DeveloperProviderViewModel));
             services.AddTransient(typeof(MainWindowViewModel));
+            services.AddTransient(typeof(TicketDragAdornerViewModel));
 
             Inject.ServiceProvider = services.BuildServiceProvider();
             Inject.Require<MainWindow>().Show();

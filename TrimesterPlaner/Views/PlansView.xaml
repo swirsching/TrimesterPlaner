@@ -2,6 +2,7 @@
     x:Class="TrimesterPlaner.Views.PlansView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TrimesterPlaner.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dd="urn:gong-wpf-dragdrop"
     xmlns:ext="clr-namespace:TrimesterPlaner.Extensions"
@@ -9,6 +10,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:TrimesterPlaner.Models"
+    xmlns:util="clr-namespace:TrimesterPlaner.Utilities"
     xmlns:views="clr-namespace:TrimesterPlaner.Views"
     xmlns:vm="clr-namespace:TrimesterPlaner.ViewModels"
     d:DataContext="{d:DesignInstance {x:Type vm:PlanProviderViewModel}}"
@@ -32,7 +34,7 @@
                     <Button
                         Margin="0,-10"
                         Command="{Binding AddSpecialPlanCommand}"
-                        Foreground="#E68003"
+                        Foreground="#EC9F3F"
                         IsEnabled="{Binding SelectedDeveloper, Converter={StaticResource NotNullToBoolConv}}"
                         Style="{StaticResource MaterialDesignToolForegroundButton}"
                         ToolTip="Spezialaufgabe hinzufügen">
@@ -49,10 +51,33 @@
         </GroupBox.Header>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ItemsControl
+                dd:DragDrop.DragMouseAnchorPoint="-0.9,0.3"
                 dd:DragDrop.DropHandler="{Binding}"
                 dd:DragDrop.IsDragSource="{Binding SelectedDeveloper, Converter={StaticResource NotNullToBoolConv}}"
                 dd:DragDrop.IsDropTarget="{Binding SelectedDeveloper, Converter={StaticResource NotNullToBoolConv}}"
                 ItemsSource="{Binding PlansView}">
+                <dd:DragDrop.DragAdornerTemplateSelector>
+                    <util:TypeBasedDataTemplateSelector>
+                        <util:TypeBasedDataTemplateSelector.Templates>
+                            <DataTemplate DataType="{x:Type models:TicketPlan}">
+                                <views:TicketDragAdornerView DataContext="{Binding Ticket, Converter={StaticResource Injector}, ConverterParameter={x:Type vm:TicketDragAdornerViewModel}}" />
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type models:BugPlan}">
+                                <controls:DragAdorner Background="#C8D400" Text="{Binding PT, StringFormat={}Fehlerteam: {0} PT}" />
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type models:SpecialPlan}">
+                                <controls:DragAdorner Background="#EC9F3F">
+                                    <controls:DragAdorner.Text>
+                                        <MultiBinding StringFormat="{}{0}: {1} Tage">
+                                            <Binding Path="Description" />
+                                            <Binding Path="Days" />
+                                        </MultiBinding>
+                                    </controls:DragAdorner.Text>
+                                </controls:DragAdorner>
+                            </DataTemplate>
+                        </util:TypeBasedDataTemplateSelector.Templates>
+                    </util:TypeBasedDataTemplateSelector>
+                </dd:DragDrop.DragAdornerTemplateSelector>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:Plan}">
                         <views:PlanView Margin="2" DataContext="{Binding ., Converter={StaticResource Injector}, ConverterParameter={x:Type vm:PlanViewModel}}" />
