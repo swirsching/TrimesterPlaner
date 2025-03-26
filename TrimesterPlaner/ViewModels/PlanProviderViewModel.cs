@@ -49,18 +49,38 @@ namespace TrimesterPlaner.ViewModels
 
         public void DragOver(IDropInfo dropInfo)
         {
-            if (dropInfo.Data is not Plan || dropInfo.TargetItem is not Plan)
+            if (dropInfo.TargetItem is not Plan)
+            {
+                return;
+            }
+
+            if (dropInfo.Data is not Plan and not Ticket)
             {
                 return;
             }
 
             dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
-            dropInfo.Effects = DragDropEffects.Move;
+            dropInfo.Effects = dropInfo.Data is Plan ? DragDropEffects.Move : DragDropEffects.Copy;
         }
 
         public void Drop(IDropInfo dropInfo)
         {
-            Inject.Require<IPlanProvider>().Move((Plan)dropInfo.Data, (Plan)dropInfo.TargetItem);
+            var planProvider = Inject.Require<IPlanProvider>();
+
+            Plan? plan = null;
+            if (dropInfo.Data is Plan draggedPlan)
+            {
+                plan = draggedPlan;
+            }
+            else if (dropInfo.Data is Ticket ticket)
+            {
+                plan = planProvider.AddTicketPlan(SelectedDeveloper!, ticket);
+            }
+
+            if (plan is not null)
+            {
+                planProvider.Move(plan, (Plan)dropInfo.TargetItem);
+            }
         }
 
         public ICommand AddBugPlanCommand { get; }

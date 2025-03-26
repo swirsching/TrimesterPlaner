@@ -58,13 +58,6 @@
                             Value="{Binding PlannedPercentage, Mode=OneWay}" />
                     </StackPanel>
                 </Button>
-                <Button
-                    Command="{Binding AddPlanCommand}"
-                    IsEnabled="{Binding SelectedDeveloper, Converter={StaticResource NotNullToBoolConv}}"
-                    Style="{StaticResource MaterialDesignFlatButton}"
-                    ToolTip="An Entwickler:in zuweisen">
-                    <materialDesign:PackIcon Kind="ArrowRight" />
-                </Button>
                 <Button Command="{Binding RemoveCommand}" Style="{StaticResource MaterialDesignFlatButton}">
                     <materialDesign:PackIcon Kind="Delete" />
                 </Button>

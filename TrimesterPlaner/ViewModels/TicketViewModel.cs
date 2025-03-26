@@ -15,24 +15,10 @@ namespace TrimesterPlaner.ViewModels
             Ticket = ticket;
 
             OpenTicketInBrowserCommand = new RelayCommand((o) => OpenTicketInBrowser());
-            AddPlanCommand = new RelayCommand((o) => Inject.Require<IPlanProvider>().AddTicketPlan(SelectedDeveloper!, Ticket));
             RemoveCommand = new RelayCommand((o) => Inject.Require<ITicketProvider>().Remove(Ticket));
 
-            Inject.Require<IDeveloperProvider>().OnSelectedDeveloperChanged += OnSelectedDeveloperChanged;
             Inject.Require<IPlaner>().PlanChanged += (data, result) => CalculatePlannedPercentage();
             CalculatePlannedPercentage();
-        }
-
-        private void OnSelectedDeveloperChanged(Developer? selectedDeveloper)
-        {
-            SelectedDeveloper = selectedDeveloper;
-        }
-
-        private Developer? _SelectedDeveloper;
-        public Developer? SelectedDeveloper
-        {
-            get => _SelectedDeveloper;
-            set => SetProperty(ref _SelectedDeveloper, value);
         }
 
         private void CalculatePlannedPercentage()
@@ -53,7 +39,6 @@ namespace TrimesterPlaner.ViewModels
         public bool IsInJQL { get => Ticket.IsInJQL; }
 
         public ICommand OpenTicketInBrowserCommand { get; }
-        public ICommand AddPlanCommand { get; }
         public ICommand RemoveCommand { get; }
 
         private void OpenTicketInBrowser()

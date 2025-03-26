@@ -7,9 +7,9 @@ namespace TrimesterPlaner.Providers
 {
     public interface IPlanProvider : ICollectionProvider<Plan>
     {
-        public void AddTicketPlan(Developer developer, Ticket ticket);
-        public void AddBugPlan(Developer developer);
-        public void AddSpecialPlan(Developer developer);
+        public Plan AddTicketPlan(Developer developer, Ticket ticket);
+        public Plan AddBugPlan(Developer developer);
+        public Plan AddSpecialPlan(Developer developer);
         public void Move(Plan sourcePlan, Plan targetPlan);
         public void RemovePlans(Developer developer);
         public void RemovePlans(Ticket ticket);
@@ -34,15 +34,16 @@ namespace TrimesterPlaner.Providers
             RemovePlan(value);
         }
 
-        private void AddPlan(Plan plan)
+        private Plan AddPlan(Plan plan)
         {
             Plans.Add(plan);
             Inject.Require<IPlaner>().RefreshPlan();
+            return plan;
         }
 
-        public void AddTicketPlan(Developer developer, Ticket ticket) => AddPlan(new TicketPlan() { Developer = developer, Ticket = ticket });
-        public void AddBugPlan(Developer developer) => AddPlan(new BugPlan() { Developer = developer });
-        public void AddSpecialPlan(Developer developer) => AddPlan(new SpecialPlan() { Developer = developer });
+        public Plan AddTicketPlan(Developer developer, Ticket ticket) => AddPlan(new TicketPlan() { Developer = developer, Ticket = ticket });
+        public Plan AddBugPlan(Developer developer) => AddPlan(new BugPlan() { Developer = developer });
+        public Plan AddSpecialPlan(Developer developer) => AddPlan(new SpecialPlan() { Developer = developer });
 
         public void Move(Plan sourcePlan, Plan targetPlan)
         {
