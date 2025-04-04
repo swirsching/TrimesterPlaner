@@ -1,5 +1,6 @@
 ﻿using Svg;
 using TrimesterPlaner.Extensions;
+using TrimesterPlaner.Models;
 using TrimesterPlaner.Utilities;
 
 namespace TrimesterPlaner.Services
@@ -274,13 +275,7 @@ namespace TrimesterPlaner.Services
         {
             SvgGroup group = new();
 
-            group.Children.Add(new SvgRectangle()
-            {
-                Width = Widths.Left,
-                Height = Heights.Developer,
-                Fill = Colors.Weekend,
-            });
-            group.Children.Add(MakeText(developer.Abbreviation, SvgTextAnchor.Middle, FontSizes.Medium).Translate(Widths.Left * 2 / 3, Heights.Developer / 2).Rotate(-90));
+            group.Children.Add(GenerateDeveloperAbbr(developer.Abbreviation));
 
             foreach (Day freeDay in developer.FreeDays)
             {
@@ -294,6 +289,21 @@ namespace TrimesterPlaner.Services
 
             group.Children.Add(GeneratePlans(developer.Plans));
             group.Children.Add(GenerateVacations(developer.Vacations));
+
+            return group;
+        }
+
+        private SvgGroup GenerateDeveloperAbbr(string abbr)
+        {
+            SvgGroup group = new();
+
+            group.Children.Add(new SvgRectangle()
+            {
+                Width = Widths.Left,
+                Height = Heights.Developer,
+                Fill = Colors.Weekend,
+            });
+            group.Children.Add(MakeText(abbr, SvgTextAnchor.Middle, FontSizes.Medium).Translate(Widths.Left * 2 / 3, Heights.Developer / 2).Rotate(-90));
 
             return group;
         }
@@ -430,36 +440,47 @@ namespace TrimesterPlaner.Services
         {
             SvgGroup group = new();
 
-            group.Children.Add(GenerateLine(data.Weeks, height, DateTime.Now, Colors.Lines.Today, "Heute", Margins.Lines.Offset, Heights.DateRow / 3, false));
-            group.Children.Add(GenerateLine(data.Weeks, height, data.Entwicklungsstart, Colors.Lines.Entwicklungsstart, "Entwicklungsstart", -Margins.Lines.Offset, Heights.DateRow * 2 / 3, false));
-            group.Children.Add(GenerateLine(data.Weeks, height, data.Entwicklungsschluss, Colors.Lines.Entwicklungsschluss, "Entwicklungsschluss", -Margins.Lines.Offset, Heights.DateRow * 2 / 3, true));
+            group.Children.Add(GenerateLine(data.Weeks.GetX(DateTime.Now, PositionInDay.Front) + Margins.Lines.Offset, height, Colors.Lines.Today, MakeLabel("Heute", DateTime.Now), Heights.DateRow / 3, false));
+            group.Children.Add(GenerateLine(data.Weeks.GetX(data.Entwicklungsstart, PositionInDay.Front) - Margins.Lines.Offset, height, Colors.Lines.Entwicklungsstart, MakeLabel("Entwicklungsstart", data.Entwicklungsstart), Heights.DateRow * 2 / 3, false));
+            group.Children.Add(GenerateLine(data.Weeks.GetX(data.Entwicklungsschluss, PositionInDay.Back) - Margins.Lines.Offset, height, Colors.Lines.Entwicklungsschluss, MakeLabel("Entwicklungsschluss", data.Entwicklungsschluss), Heights.DateRow * 2 / 3, true));
+            group.Children.Add(GenerateDeveloperAbbrLabels(data.Developers, Colors.Text.Default, data.Weeks.GetX(DateTime.Now, PositionInDay.Front) - Margins.Lines.Offset));
 
             return group;
         }
 
-        private SvgGroup GenerateLine(IEnumerable<Week> weeks, int height, DateTime date, SvgColourServer color, string label, int offset, int y, bool isEndLine)
+        private static string MakeLabel(string label, DateTime date)
+        {
+            return $"{label}: {date:dd.MM.yyyy}";
+        }
+
+        private SvgGroup GenerateLine(int x, int height, SvgColourServer color, string label, int y, bool isEndLine)
         {
             SvgGroup group = new();
 
-            var days = from week in weeks
-                       from d in week.Days
-                       where d.Date.IsSameDayAs(date)
-                       select d;
-            if (days.Any())
+            group.Children.Add(new SvgLine()
             {
-                var day = days.First();
-                var x = day.GetX(isEndLine ? 1 : 0) + offset;
-                group.Children.Add(new SvgLine()
-                {
-                    StartX = x,
-                    EndX = x,
-                    StartY = 0,
-                    EndY = height,
-                    Stroke = color,
-                    StrokeWidth = 2,
-                });
+                StartX = x,
+                EndX = x,
+                StartY = 0,
+                EndY = height,
+                Stroke = color,
+                StrokeWidth = 2,
+            });
 
-                group.Children.Add(MakeText($"{label}: {days.First().Date:dd.MM.yyyy}", isEndLine ? SvgTextAnchor.End : SvgTextAnchor.Start, FontSizes.Medium, null, color).Translate(x + (isEndLine ? -1 : 1) * Margins.Lines.TextMargin, height - Heights.DateRow + y));
+            group.Children.Add(MakeText(label, isEndLine ? SvgTextAnchor.End : SvgTextAnchor.Start, FontSizes.Medium, null, color).Translate(x + (isEndLine ? -1 : 1) * Margins.Lines.TextMargin, height - Heights.DateRow + y));
+
+            return group;
+        }
+
+        private SvgGroup GenerateDeveloperAbbrLabels(IEnumerable<DeveloperData> developers, SvgColourServer color, int x)
+        {
+            SvgGroup group = new();
+
+            int y = Heights.Header + Heights.Vacation / 2;
+            foreach (var developer in developers)
+            {
+                group.Children.Add(MakeText(developer.Abbreviation, SvgTextAnchor.End, FontSizes.Small, null, color).Translate(x, y));
+                y += Heights.Developer;
             }
 
             return group;

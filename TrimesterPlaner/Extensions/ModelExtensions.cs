@@ -217,12 +217,35 @@ namespace TrimesterPlaner.Extensions
         }
     }
 
+    public enum PositionInDay { Front, Middle, Back }
     public enum PositionInPlan { Start, End }
     public static class PreparedDataExtensions
     {
         public static bool IsWeekend(this Day day)
         {
             return day.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
+        }
+
+        public static int GetX(this IEnumerable<Week> weeks, DateTime date, PositionInDay positionInDay)
+        {
+            var days = from week in weeks
+                       from d in week.Days
+                       where d.Date.IsSameDayAs(date)
+                       select d;
+
+            if (days.Any())
+            {
+                double alpha = positionInDay switch
+                {
+                    PositionInDay.Front => 0,
+                    PositionInDay.Middle => 0.5,
+                    PositionInDay.Back => 1,
+                    _ => throw new NotImplementedException(),
+                };
+                return days.First().GetX(alpha);
+            }
+
+            return 0;
         }
 
         public static int GetX(this IEnumerable<DayWithPT> days, double pt, PositionInPlan positionInPlan)
