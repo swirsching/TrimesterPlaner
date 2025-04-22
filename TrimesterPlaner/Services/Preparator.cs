@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using Utilities.Extensions;
 
 namespace TrimesterPlaner.Services
 {
@@ -82,7 +83,7 @@ namespace TrimesterPlaner.Services
             CalculateCapacity(days, config.Developers);
             CalculateTotal(days, allPlans);
 
-            int weekCount = Helpers.GetWeeksBetweenDates(days.First().Date, days.Last().Date);
+            int weekCount = CalendarHelpers.GetWeeksBetweenDates(days.First().Date, days.Last().Date);
             List<Week> weeks = new(from weeknum in Enumerable.Range(0, weekCount)
                                    select new Week(GetWeeknum(days.First().Date.AddDays(7 * weeknum))));
 
@@ -130,7 +131,7 @@ namespace TrimesterPlaner.Services
 
         public static List<Day> PrepareDays(DateTime start, DateTime end, DateTime entwicklungsschluss)
         {
-            List<Day> days = new(from date in Helpers.GetDaysBetweenDates(start, end)
+            List<Day> days = new(from date in CalendarHelpers.GetDaysBetweenDates(start, end)
                                  select new Day(date, date > entwicklungsschluss));
 
             int width = Widths.Left;
