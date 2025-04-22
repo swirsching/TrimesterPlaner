@@ -12,7 +12,7 @@ namespace Statistics.Providers
         public Config Get()
         {
             return new Config
-            { 
+            {
                 Settings = Inject.Require<ISettingsProvider>().Get(),
                 Statistics = [.. Inject.Require<IStatisticsProvider>().Get()],
             };

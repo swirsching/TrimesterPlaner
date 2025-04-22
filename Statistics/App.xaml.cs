@@ -31,6 +31,9 @@ namespace Statistics
             services.AddTransient(typeof(MainWindowViewModel));
             services.AddTransient(typeof(MenuViewModel));
             services.AddTransient(typeof(SettingsViewModel));
+            services.AddTransient(typeof(StatisticProviderViewModel));
+            services.AddTransient(typeof(StatisticViewModel));
+            services.AddTransient(typeof(DateBasedStatisticViewModel));
 
             Inject.ServiceProvider = services.BuildServiceProvider();
             Inject.Require<MainWindow>().Show();

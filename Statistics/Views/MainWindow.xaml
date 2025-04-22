@@ -18,6 +18,7 @@
             <views:MenuView DockPanel.Dock="Left" />
             <views:SettingsView HorizontalAlignment="Center" />
         </DockPanel>
-        <Grid />
+
+        <views:StatisticsView />
     </DockPanel>
 </Window>

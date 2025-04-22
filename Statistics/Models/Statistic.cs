@@ -6,6 +6,7 @@ namespace Statistics.Models
     [JsonDerivedType(typeof(DateBasedStatistic), nameof(DateBasedStatistic))]
     public class Statistic
     {
+        public string Header { get; set; } = "";
         public string JQL { get; set; } = "";
     }
 

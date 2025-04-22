@@ -6,7 +6,9 @@ using Utilities.Providers;
 namespace Statistics.Providers
 {
     public interface IStatisticsProvider : ICollectionProvider<Statistic>
-    {}
+    {
+        public void AddStatistic();
+    }
 
     public class StatisticsProvider : IStatisticsProvider
     {
@@ -25,6 +27,11 @@ namespace Statistics.Providers
         public void Remove(Statistic value)
         {
             Statistics.Remove(value);
+        }
+
+        public void AddStatistic()
+        {
+            Statistics.Add(new DateBasedStatistic());
         }
     }
 }

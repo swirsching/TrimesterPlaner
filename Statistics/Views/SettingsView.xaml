@@ -22,7 +22,7 @@
 
         <TextBox
             VerticalAlignment="Bottom"
-            materialDesign:TextFieldAssist.PrefixText="Update every"
+            materialDesign:TextFieldAssist.PrefixText="Updates every"
             materialDesign:TextFieldAssist.SuffixText="minutes"
             Text="{Binding UpdateFrequencyInMinutes}" />
     </StackPanel>
