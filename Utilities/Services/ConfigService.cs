@@ -2,18 +2,17 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using TrimesterPlaner.Models;
 
 namespace TrimesterPlaner.Services
 {
-    public interface IConfigService
+    public interface IConfigService<ConfigType>
     {
-        public void SaveConfigCopy(Config config);
-        public void SaveConfig(Config config);
-        public Config? LoadConfig(string? path = null);
+        public void SaveConfigCopy(ConfigType config);
+        public void SaveConfig(ConfigType config);
+        public ConfigType? LoadConfig(string? path = null);
     }
 
-    public class ConfigService(string root) : IConfigService
+    public class ConfigService<ConfigType>(string root) : IConfigService<ConfigType>
     {
         private JsonSerializerOptions SerializerOptions { get; } = new(JsonSerializerDefaults.General)
         {
@@ -21,7 +20,7 @@ namespace TrimesterPlaner.Services
             WriteIndented = true,
         };
 
-        public Config? LoadConfig(string? path = null)
+        public ConfigType? LoadConfig(string? path = null)
         {
             if (path is not null)
             {
@@ -43,7 +42,7 @@ namespace TrimesterPlaner.Services
             return LoadConfigImpl(dialog.FileName);
         }
 
-        private Config? LoadConfigImpl(string path)
+        private ConfigType? LoadConfigImpl(string path)
         {
             FileName = path;
             var raw = File.ReadAllText(path);
@@ -52,12 +51,12 @@ namespace TrimesterPlaner.Services
                 return default;
             }
 
-            return JsonSerializer.Deserialize<Config>(raw, SerializerOptions);
+            return JsonSerializer.Deserialize<ConfigType>(raw, SerializerOptions);
         }
 
         private string FileName { get; set; } = string.Empty;
 
-        public void SaveConfigCopy(Config config)
+        public void SaveConfigCopy(ConfigType config)
         {
             var dialog = new SaveFileDialog()
             {
@@ -73,7 +72,7 @@ namespace TrimesterPlaner.Services
             }
         }
 
-        public void SaveConfig(Config config)
+        public void SaveConfig(ConfigType config)
         {
             if (!string.IsNullOrEmpty(FileName))
             {
@@ -85,7 +84,7 @@ namespace TrimesterPlaner.Services
             }
         }
 
-        private void SaveConfigImpl(Config config, string path)
+        private void SaveConfigImpl(ConfigType config, string path)
         {
             FileName = path;
             File.WriteAllText(path, JsonSerializer.Serialize(config, SerializerOptions));

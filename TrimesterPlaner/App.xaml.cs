@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Windows;
+using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Services;
 using TrimesterPlaner.ViewModels;
@@ -17,10 +18,10 @@ namespace TrimesterPlaner
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            ConfigService configService = new(Directory.GetCurrentDirectory());
+            ConfigService<Config> configService = new(Directory.GetCurrentDirectory());
 
             ServiceCollection services = new();
-            services.AddSingleton(typeof(IConfigService), configService);
+            services.AddSingleton(typeof(IConfigService<Config>), configService);
             services.AddSingleton(typeof(IConfluenceClient), typeof(ConfluenceClient));
             services.AddSingleton(typeof(IJiraClient), typeof(JiraClient));
             services.AddSingleton(typeof(IPlaner), typeof(Planer));
