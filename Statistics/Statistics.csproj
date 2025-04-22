@@ -9,12 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="gong-wpf-dragdrop" Version="4.0.0" />
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
     <PackageReference Include="RestSharp" Version="112.1.0" />
-    <PackageReference Include="Svg" Version="3.4.7" />
-    <PackageReference Include="TextCopy" Version="6.2.1" />
   </ItemGroup>
 
 </Project>
