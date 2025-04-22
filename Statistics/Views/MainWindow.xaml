@@ -1,0 +1,16 @@
+﻿<Window
+    x:Class="Statistics.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ext="clr-namespace:Utilities.Extensions;assembly=Utilities"
+    xmlns:local="clr-namespace:Statistics"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Statistics.ViewModels"
+    Title="{Binding Title, StringFormat='{}{0} - Statistics'}"
+    d:DataContext="{d:DesignInstance {x:Type vm:MainWindowViewModel}}"
+    DataContext="{ext:Inject {x:Type vm:MainWindowViewModel}}"
+    WindowState="Maximized"
+    mc:Ignorable="d">
+    <Grid />
+</Window>
