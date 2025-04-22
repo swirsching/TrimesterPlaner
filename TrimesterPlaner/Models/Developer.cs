@@ -2,31 +2,19 @@
 
 namespace TrimesterPlaner.Models
 {
-    public class Developer
+    [method: JsonConstructor]
+    public class Developer()
     {
-        [JsonConstructor]
-        public Developer()
-        {
-            Name = "";
-            Abbreviation = "";
-            FTE = 100;
-            Sonderrolle = 0;
-            Verwaltung = 10;
-            FreeDays = [DayOfWeek.Saturday, DayOfWeek.Sunday];
-            Vacations = [];
-            Plans = [];
-        }
-
-        public string Name { get; set; }
-        public string Abbreviation { get; set; }
-        public int FTE { get; set; }
-        public int Sonderrolle { get; set; }
-        public int Verwaltung { get; set; }
-        public HashSet<DayOfWeek> FreeDays { get; set; }
+        public string Name { get; set; } = "";
+        public string Abbreviation { get; set; } = "";
+        public int FTE { get; set; } = 100;
+        public int Sonderrolle { get; set; } = 0;
+        public int Verwaltung { get; set; } = 10;
+        public HashSet<DayOfWeek> FreeDays { get; set; } = [DayOfWeek.Saturday, DayOfWeek.Sunday];
 
         [JsonIgnore]
-        public List<Vacation> Vacations { get; }
+        public List<Vacation> Vacations { get; } = [];
         [JsonIgnore]
-        public List<Plan> Plans { get; }
+        public List<Plan> Plans { get; } = [];
     }
 }

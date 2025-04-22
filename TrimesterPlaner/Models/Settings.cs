@@ -2,23 +2,12 @@
 {
     public class Settings
     {
-        public Settings()
-        {
-            Title = "";
-            Start = null;
-            Entwicklungsstart = null;
-            Entwicklungsschluss = null;
-            JQL = "";
-            Burndown = true;
-            PageID = 0;
-        }
-
-        public string Title { get; set; }
-        public DateTime? Start { get; set; }
-        public DateTime? Entwicklungsstart { get; set; }
-        public DateTime? Entwicklungsschluss { get; set; }
-        public string JQL { get; set; }
-        public bool Burndown { get; set; }
-        public int PageID { get; set; }
+        public string Title { get; set; } = "";
+        public DateTime? Start { get; set; } = null;
+        public DateTime? Entwicklungsstart { get; set; } = null;
+        public DateTime? Entwicklungsschluss { get; set; } = null;
+        public string JQL { get; set; } = "";
+        public bool Burndown { get; set; } = true;
+        public int PageID { get; set; } = 0;
     }
 }

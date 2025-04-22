@@ -21,24 +21,13 @@ namespace TrimesterPlaner.Models
     public enum ShirtSize { Mini, XXS, XS, S, M, L, XL, XXL }
     public class Ticket : TimeEstimate
     {
-        public Ticket()
-        {
-            Key = "";
-            Summary = "";
-            Shirt = null;
-            Rank = "";
-            IsInJQL = false;
-
-            Plans = [];
-        }
-
-        public string Key { get; set; }
-        public string Summary { get; set; }
-        public ShirtSize? Shirt { get; set; }
-        public string Rank { get; set; }
-        public bool IsInJQL { get; set; }
+        public string Key { get; set; } = "";
+        public string Summary { get; set; } = "";
+        public ShirtSize? Shirt { get; set; } = null;
+        public string Rank { get; set; } = "";
+        public bool IsInJQL { get; set; } = false;
 
         [JsonIgnore]
-        public List<TicketPlan> Plans { get; }
+        public List<TicketPlan> Plans { get; } = [];
     }
 }

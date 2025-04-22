@@ -8,13 +8,7 @@ namespace TrimesterPlaner.Models
     [JsonDerivedType(typeof(SpecialPlan), typeDiscriminator: nameof(SpecialPlan))]
     public class Plan
     {
-        public Plan()
-        {
-            Developer = null;
-            EarliestStart = null;
-        }
-
-        private Developer? _Developer;
+        private Developer? _Developer = null;
         public Developer? Developer
         {
             get => _Developer;
@@ -26,17 +20,12 @@ namespace TrimesterPlaner.Models
             }
         }
 
-        public DateTime? EarliestStart { get; set; }
+        public DateTime? EarliestStart { get; set; } = null;
     }
 
     public class TicketPlan : Plan
     {
-        public TicketPlan()
-        {
-            Description = "";
-        }
-
-        private Ticket? _Ticket;
+        private Ticket? _Ticket = null;
         public Ticket? Ticket
         {
             get => _Ticket;
@@ -48,28 +37,18 @@ namespace TrimesterPlaner.Models
             }
         }
 
-        public TimeEstimate? TimeEstimateOverride { get; set; }
-        public string Description { get; set; }
+        public TimeEstimate? TimeEstimateOverride { get; set; } = null;
+        public string Description { get; set; } = "";
     }
 
     public class BugPlan : Plan
     {
-        public BugPlan()
-        {
-            PT = 0;
-        }
-
-        public double PT { get; set; }
+        public double PT { get; set; } = 0;
     }
 
     public class SpecialPlan : Plan
     {
-        public SpecialPlan()
-        {
-            Description = "";
-        }
-
-        public string Description { get; set; }
-        public int Days { get; set; }
+        public string Description { get; set; } = "";
+        public int Days { get; set; } = 0;
     }
 }

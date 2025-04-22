@@ -2,15 +2,7 @@
 {
     public class Vacation
     {
-        public Vacation()
-        {
-            Developer = null;
-            Start = null;
-            End = null;
-            Label = "";
-        }
-
-        private Developer? _Developer;
+        private Developer? _Developer = null;
         public Developer? Developer
         {
             get => _Developer;
@@ -22,8 +14,8 @@
             }
         }
 
-        public DateTime? Start { get; set; }
-        public DateTime? End { get; set; }
-        public string Label { get; set; }
+        public DateTime? Start { get; set; } = null;
+        public DateTime? End { get; set; } = null;
+        public string Label { get; set; } = "";
     }
 }
