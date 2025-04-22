@@ -1,15 +1,14 @@
-﻿using System.Windows.Input;
-using TrimesterPlaner.Models;
-using TrimesterPlaner.Providers;
-using TrimesterPlaner.Utilities;
+﻿using Statistics.Models;
+using Statistics.Providers;
+using System.Windows.Input;
 using Utilities.Services;
 using Utilities.Utilities;
 
-namespace TrimesterPlaner.ViewModels
+namespace Statistics.ViewModels
 {
-    public class MainWindowMenuViewModel(IConfigService<Config> configService, IConfigProvider configProvider) : BindableBase
+    public class MenuViewModel(IConfigService<Config> configService, IConfigProvider configProvider) : PropertyChangedBase
     {
-        private static string SuggestedFileName { get; } = "TrimesterPlaner";
+        private static string SuggestedFileName { get; } = "Statistics";
 
         public ICommand LoadCommand { get; } = new RelayCommand((o) => configProvider.Set(configService.LoadConfig(o as string)));
         public ICommand SaveCommand { get; } = new RelayCommand((o) => configService.SaveConfig(configProvider.Get(), SuggestedFileName));

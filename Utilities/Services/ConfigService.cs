@@ -3,12 +3,12 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TrimesterPlaner.Services
+namespace Utilities.Services
 {
     public interface IConfigService<ConfigType>
     {
-        public void SaveConfigCopy(ConfigType config);
-        public void SaveConfig(ConfigType config);
+        public void SaveConfigCopy(ConfigType config, string suggestedFileName);
+        public void SaveConfig(ConfigType config, string suggestedFileName);
         public ConfigType? LoadConfig(string? path = null);
     }
 
@@ -56,12 +56,12 @@ namespace TrimesterPlaner.Services
 
         private string FileName { get; set; } = string.Empty;
 
-        public void SaveConfigCopy(ConfigType config)
+        public void SaveConfigCopy(ConfigType config, string suggestedFileName)
         {
             var dialog = new SaveFileDialog()
             {
                 InitialDirectory = root,
-                FileName = "TrimesterPlaner",
+                FileName = suggestedFileName,
                 Filter = "JSON|*.json",
             };
 
@@ -72,7 +72,7 @@ namespace TrimesterPlaner.Services
             }
         }
 
-        public void SaveConfig(ConfigType config)
+        public void SaveConfig(ConfigType config, string suggestedFileName)
         {
             if (!string.IsNullOrEmpty(FileName))
             {
@@ -80,7 +80,7 @@ namespace TrimesterPlaner.Services
             }
             else
             {
-                SaveConfigCopy(config);
+                SaveConfigCopy(config, suggestedFileName);
             }
         }
 

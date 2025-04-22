@@ -6,11 +6,18 @@
     xmlns:ext="clr-namespace:Utilities.Extensions;assembly=Utilities"
     xmlns:local="clr-namespace:Statistics"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:Statistics.Views"
     xmlns:vm="clr-namespace:Statistics.ViewModels"
     Title="{Binding Title, StringFormat='{}{0} - Statistics'}"
     d:DataContext="{d:DesignInstance {x:Type vm:MainWindowViewModel}}"
     DataContext="{ext:Inject {x:Type vm:MainWindowViewModel}}"
     WindowState="Maximized"
     mc:Ignorable="d">
-    <Grid />
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <views:MenuView DockPanel.Dock="Left" />
+            <views:SettingsView HorizontalAlignment="Center" />
+        </DockPanel>
+        <Grid />
+    </DockPanel>
 </Window>

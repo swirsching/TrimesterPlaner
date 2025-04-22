@@ -1,7 +1,7 @@
-﻿using TrimesterPlaner.Models;
+﻿using Statistics.Models;
 using Utilities.Providers;
 
-namespace TrimesterPlaner.Providers
+namespace Statistics.Providers
 {
     public interface ISettingsProvider : ISettingsProviderBase<Settings>
     { }
