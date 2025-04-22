@@ -13,18 +13,11 @@
                     SecondaryColor="LightBlue" />
 
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
-            </ResourceDictionary.MergedDictionaries>
 
-            <conv:NullToBoolConverter x:Key="NullToBoolConv" />
-            <conv:NotNullToBoolConverter x:Key="NotNullToBoolConv" />
-            <conv:NullToVisibilityConverter x:Key="NullToVisConv" />
-            <conv:NotNullToVisibilityConverter x:Key="NotNullToVisConv" />
-            <conv:BoolToVisibilityConverter x:Key="BoolToVisConv" />
-            <conv:InverseBoolToVisibilityConverter x:Key="InvBoolToVisConv" />
-            <conv:GetTypeConverter x:Key="GetTypeConv" />
-            <conv:DayOfWeekConverter x:Key="DayOfWeekConv" />
+                <ResourceDictionary Source="/Utilities;component/Converters/Converters.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
             <conv:ImageConverter x:Key="ImageConv" />
-            <conv:Injector x:Key="Injector" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

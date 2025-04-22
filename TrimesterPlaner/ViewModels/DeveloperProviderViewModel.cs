@@ -1,8 +1,9 @@
 ﻿using System.Windows.Input;
-using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Utilities;
+using Utilities.Extensions;
+using Utilities.Utilities;
 
 namespace TrimesterPlaner.ViewModels
 {

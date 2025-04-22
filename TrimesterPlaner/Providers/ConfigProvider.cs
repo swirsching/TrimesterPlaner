@@ -1,6 +1,6 @@
-﻿using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
+﻿using TrimesterPlaner.Models;
 using TrimesterPlaner.Services;
+using Utilities.Extensions;
 
 namespace TrimesterPlaner.Providers
 {

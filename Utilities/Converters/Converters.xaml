@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:conv="clr-namespace:Utilities.Converters"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <conv:NullToBoolConverter x:Key="NullToBoolConv" />
+    <conv:NotNullToBoolConverter x:Key="NotNullToBoolConv" />
+    <conv:NullToVisibilityConverter x:Key="NullToVisConv" />
+    <conv:NotNullToVisibilityConverter x:Key="NotNullToVisConv" />
+    <conv:BoolToVisibilityConverter x:Key="BoolToVisConv" />
+    <conv:InverseBoolToVisibilityConverter x:Key="InvBoolToVisConv" />
+    <conv:GetTypeConverter x:Key="GetTypeConv" />
+    <conv:DayOfWeekConverter x:Key="DayOfWeekConv" />
+    <conv:Injector x:Key="Injector" />
+</ResourceDictionary>

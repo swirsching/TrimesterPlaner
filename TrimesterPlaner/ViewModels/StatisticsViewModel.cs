@@ -2,6 +2,7 @@
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
+using Utilities.Extensions;
 
 namespace TrimesterPlaner.ViewModels
 {

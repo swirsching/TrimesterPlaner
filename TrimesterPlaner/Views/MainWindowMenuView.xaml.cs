@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Services;
+using Utilities.Extensions;
 
 namespace TrimesterPlaner.Views
 {

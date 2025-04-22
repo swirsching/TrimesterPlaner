@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace TrimesterPlaner.Converters
+namespace Utilities.Converters
 {
     public class InverseBoolToVisibilityConverter : IValueConverter
     {

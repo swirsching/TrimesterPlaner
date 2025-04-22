@@ -1,5 +1,5 @@
-﻿using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
+﻿using TrimesterPlaner.Models;
+using Utilities.Extensions;
 
 namespace TrimesterPlaner.Test
 {

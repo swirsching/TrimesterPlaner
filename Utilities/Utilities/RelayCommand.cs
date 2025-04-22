@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace TrimesterPlaner.Utilities
+namespace Utilities.Utilities
 {
     public class RelayCommand(Action<object?> action) : ICommand
     {

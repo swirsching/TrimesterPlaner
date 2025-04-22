@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace TrimesterPlaner.Utilities
+namespace Utilities.Utilities
 {
     public static class IvuColors
     {

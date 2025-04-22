@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows.Markup;
 
-namespace TrimesterPlaner.Extensions
+namespace Utilities.Extensions
 {
     public class Inject(Type type) : MarkupExtension
     {
-        internal static IServiceProvider? ServiceProvider { get; set; }
+        public static IServiceProvider? ServiceProvider { get; set; }
         private Type Type { get; } = type;
         public override object? ProvideValue(IServiceProvider serviceProvider) => ServiceProvider?.GetRequiredService(Type);
 

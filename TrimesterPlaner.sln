@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrimesterPlaner.Test", "Tri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statistics", "Statistics\Statistics.csproj", "{352A0D04-8407-4EEF-ADF6-2E71CD83E1A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{F10C3F37-B8FD-49F0-949B-5928CA25F2DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{352A0D04-8407-4EEF-ADF6-2E71CD83E1A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{352A0D04-8407-4EEF-ADF6-2E71CD83E1A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{352A0D04-8407-4EEF-ADF6-2E71CD83E1A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F10C3F37-B8FD-49F0-949B-5928CA25F2DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F10C3F37-B8FD-49F0-949B-5928CA25F2DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F10C3F37-B8FD-49F0-949B-5928CA25F2DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F10C3F37-B8FD-49F0-949B-5928CA25F2DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,6 @@
 ﻿using Svg;
 using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
-using TrimesterPlaner.Utilities;
+using Utilities.Utilities;
 
 namespace TrimesterPlaner.Services
 {

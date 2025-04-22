@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace TrimesterPlaner.Utilities
+namespace Utilities.Utilities
 {
     public class TypeBasedDataTemplateSelector : DataTemplateSelector
     {

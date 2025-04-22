@@ -1,4 +1,4 @@
-﻿namespace TrimesterPlaner.Extensions
+﻿namespace Utilities.Extensions
 {
     public static class ReflectionExtensions
     {

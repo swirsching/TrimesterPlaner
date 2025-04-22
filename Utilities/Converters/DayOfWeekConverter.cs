@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 
-namespace TrimesterPlaner.Converters
+namespace Utilities.Converters
 {
     public class DayOfWeekConverter : IValueConverter
     {

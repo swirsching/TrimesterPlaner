@@ -1,8 +1,8 @@
-﻿using TrimesterPlaner.Extensions;
-using TrimesterPlaner.Models;
+﻿using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
+using Utilities.Extensions;
 
 namespace TrimesterPlaner.ViewModels
 {
@@ -10,8 +10,8 @@ namespace TrimesterPlaner.ViewModels
     {
         public SettingsViewModel()
         {
-            Inject.Require<ISettingsProvider>().SettingsChanged += (settings) => 
-            { 
+            Inject.Require<ISettingsProvider>().SettingsChanged += (settings) =>
+            {
                 Settings = settings;
                 foreach (var property in typeof(SettingsViewModel).GetProperties())
                 {

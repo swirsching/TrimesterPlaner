@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using System.Windows.Data;
-using TrimesterPlaner.Extensions;
+using Utilities.Extensions;
 
-namespace TrimesterPlaner.Converters
+namespace Utilities.Converters
 {
     public class Injector : IValueConverter
     {

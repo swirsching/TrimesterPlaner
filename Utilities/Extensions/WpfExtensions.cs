@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace TrimesterPlaner.Extensions
+namespace Utilities.Extensions
 {
     public static class WpfExtensions
     {

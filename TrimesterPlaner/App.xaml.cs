@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Windows;
-using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Providers;
 using TrimesterPlaner.Services;
-using TrimesterPlaner.Utilities;
 using TrimesterPlaner.ViewModels;
 using TrimesterPlaner.Views;
+using Utilities.Extensions;
+using Utilities.Utilities;
 
 namespace TrimesterPlaner
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace TrimesterPlaner.Extensions
+namespace Utilities.Extensions
 {
     public static class CollectionExtensions
     {

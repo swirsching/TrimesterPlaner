@@ -1,7 +1,7 @@
 ﻿using Svg;
 using System.Windows.Threading;
-using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Providers;
+using Utilities.Extensions;
 
 namespace TrimesterPlaner.Services
 {
