@@ -1,6 +1,7 @@
 ﻿using RestSharp;
 using TrimesterPlaner.Extensions;
 using TrimesterPlaner.Models;
+using Utilities.Services;
 
 namespace TrimesterPlaner.Services
 {
@@ -9,25 +10,8 @@ namespace TrimesterPlaner.Services
         public Task<IEnumerable<Ticket>?> LoadTickets(string jql, bool isInJQL);
     }
 
-    public class JiraClient : IJiraClient
+    public class JiraClient : BaseJiraClient, IJiraClient
     {
-        private string BaseUri { get; } = "https://confluence.ivu.de/jira/rest/api/2/";
-        private string SearchUri { get; } = "https://confluence.ivu.de/jira/rest/api/2/search";
-
-        public JiraClient()
-        {
-            Client = new(new RestClientOptions(BaseUri));
-            var jat = Environment.GetEnvironmentVariable("JAT", EnvironmentVariableTarget.User);
-            if (jat is not null)
-            {
-                Client.AddDefaultHeader("Authorization", $"Bearer {jat}");
-            }
-            else
-            {
-                throw new Exception("Missing your jira access token. Please create a jira access token and save it in an environment variable called JAT in order to use the program.");
-            }
-        }
-
         public async Task<IEnumerable<Ticket>?> LoadTickets(string jql, bool isInJQL)
         {
             var parameters = new
@@ -74,8 +58,6 @@ namespace TrimesterPlaner.Services
 
             return Math.Round(Convert.ToDouble(time) / 28800, 2);
         }
-
-        private RestClient Client { get; }
 
 #pragma warning disable IDE1006 // Naming Styles
         private record TicketList(Issue[] issues);

@@ -1,6 +1,6 @@
 ﻿using RestSharp;
 
-namespace TrimesterPlaner.Services
+namespace Utilities.Services
 {
     public interface IConfluenceClient
     {

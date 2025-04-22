@@ -1,8 +1,8 @@
 ﻿using TrimesterPlaner.Models;
 using TrimesterPlaner.Providers;
-using TrimesterPlaner.Services;
 using TrimesterPlaner.Utilities;
 using Utilities.Extensions;
+using Utilities.Services;
 
 namespace TrimesterPlaner.ViewModels
 {
