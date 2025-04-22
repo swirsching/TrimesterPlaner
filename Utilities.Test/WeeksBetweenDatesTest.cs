@@ -1,6 +1,6 @@
 using Utilities.Extensions;
 
-namespace TrimesterPlaner.Test
+namespace Utilities.Test
 {
     [TestClass]
     public class WeeksBetweenDatesTest
